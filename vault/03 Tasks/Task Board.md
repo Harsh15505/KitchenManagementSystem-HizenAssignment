@@ -8,8 +8,6 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-203** Auth: login/logout/me, JWT cookie · P2
-- [ ] **T-204** CASL AbilityFactory + PoliciesGuard (fail-closed) + money redaction · P2
 - [ ] **T-205** Frontend shell: login, MeProvider, CASL `<Can>` nav · P2
 - [ ] **T-206** Staff management · P2
 - [ ] **T-207** Settings (+ cut-off preview *Should*) · P2
@@ -97,6 +95,8 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-204** CASL AccessGuard (fail-closed) + money redaction · P2
+- [x] **T-203** Auth: login/logout/me, JWT cookie · P2
 - [x] **T-202** Seed roles, 4 test accounts, settings · P2
 - [x] **T-209** ClockService + time helpers + TZ tests · P2
 - [x] **T-201** Permission catalogue + default roles + CASL `buildRules` · P2

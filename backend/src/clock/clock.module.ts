@@ -1,7 +1,9 @@
 import { Controller, Get, Global, Module } from '@nestjs/common';
+import { AnyUser } from '../authz/policies';
 import { ClockService } from './clock.service';
 
 @Controller('meta')
+@AnyUser()
 export class MetaController {
   constructor(private readonly clock: ClockService) {}
 

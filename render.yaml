@@ -23,6 +23,10 @@ services:
         value: production
       - key: TZ
         value: UTC # on purpose: kitchen-time logic must not depend on the host TZ
+      - key: JWT_SECRET
+        generateValue: true # random session-signing key created by Render
+      - key: SESSION_TTL_HOURS
+        value: '12'
       - key: DATABASE_URL
         sync: false # Neon direct connection string, entered in the dashboard
       - key: DIRECT_DATABASE_URL

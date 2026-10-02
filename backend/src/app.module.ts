@@ -1,17 +1,24 @@
-import { Module } from '@nestjs/common';
+import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { AuthModule } from './auth/auth.module';
+import { AuthzModule } from './authz/authz.module';
+import { OriginCheckMiddleware } from './authz/origin.middleware';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule, ClockModule],
+  imports: [PrismaModule, ClockModule, AuthzModule, AuthModule],
   controllers: [HealthController],
   providers: [
     { provide: APP_PIPE, useClass: ZodValidationPipe },
     { provide: APP_FILTER, useClass: ApiExceptionFilter },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(OriginCheckMiddleware).forRoutes('*splat');
+  }
+}

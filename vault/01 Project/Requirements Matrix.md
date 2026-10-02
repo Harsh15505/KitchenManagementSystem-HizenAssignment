@@ -14,9 +14,9 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 |---|---|---|---|---|---|---|---|
 | FR-ACC-01 | Login/logout, cookie session; 4 test accounts | Must | P2 | T-202 T-203 T-205 | ⬜ | | |
 | FR-ACC-02 | Staff management (admin) | Must | P2 | T-206 | ⬜ | | |
-| FR-ACC-03 | Server-enforced permissions + data scoping | Must | P2 | T-204 T-210 | ⬜ | | |
+| FR-ACC-03 | Server-enforced permissions + data scoping | Must | P2 | T-204 T-210 | 🟨 | `backend/src/authz/access.guard.ts` | `backend/test/auth.test.ts` |
 | FR-ACC-04 | Roles = data; permission-driven UI | Must | P2 | T-201 T-204 T-205 | 🟨 | `shared/src/permissions/`, `shared/src/authz/rules.ts` | `rules.test.ts` |
-| FR-ACC-05 | Money fields only with `money.read` | Should | P2 | T-204 | ⬜ | | |
+| FR-ACC-05 | Money fields only with `money.read` | Should | P2 | T-204 | ✅ | `money-redaction.interceptor.ts` | `auth.test.ts` BR-ACC-03 |
 | FR-ACC-06 | Roles editor UI | Could | — | backlog | ⬜ | | |
 | FR-SET-01 | Kitchen days, holidays, cut-off time/days in UI | Must | P2 | T-207 | ⬜ | | |
 | FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ⬜ | | |
@@ -98,7 +98,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ⬜ |
 | NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ⬜ |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | ⬜ |
-| NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ⬜ |
+| NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | 🟨 (cookie, guard, Origin check, throttle done) |
 | NFR-10 | Usability; driver on phone | T-705; smoke checklist | ⬜ |
 
 ## Deliverables
