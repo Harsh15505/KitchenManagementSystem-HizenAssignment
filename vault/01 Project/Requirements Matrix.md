@@ -91,7 +91,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | ID | Requirement | Where verified | Status |
 |---|---|---|---|
 | NFR-01 | Money: integer cents; reconciling totals | T-306 T-503 T-802 tests; DB CHECKs | ⬜ |
-| NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | ⬜ |
+| NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | 🟨 (time helpers + clock done; cut-off in T-502) |
 | NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | ⬜ |
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ⬜ |
 | NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | ⬜ |

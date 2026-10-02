@@ -15,7 +15,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-206** Staff management · P2
 - [ ] **T-207** Settings (+ cut-off preview *Should*) · P2
 - [ ] **T-208** Reference data CRUD · P2
-- [ ] **T-209** ClockService + time helpers + TZ tests · P2
 - [ ] **T-210** Permission matrix integration test · P2
 - [ ] **T-301** Catalogue schema · P3
 - [ ] **T-302** Dishes API + UI · P3
@@ -99,6 +98,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-209** ClockService + time helpers + TZ tests · P2
 - [x] **T-201** Permission catalogue + default roles + CASL `buildRules` · P2
 - [x] **T-107** GitHub Actions CI (TZ matrix) · P1
 - [x] **T-106** ESLint + Prettier, lint/typecheck clean · P1

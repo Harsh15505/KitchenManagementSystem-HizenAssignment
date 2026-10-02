@@ -22,7 +22,7 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 - [ ] **T-206** Staff management API + UI: list, create (role, initial password), change role, deactivate (bumps tokenVersion), reset password.
 - [ ] **T-207** Settings API + UI: platform values, kitchen working days, kitchen holidays, public-domain blocklist, toggles; *(Should)* cut-off preview.
 - [ ] **T-208** Reference data API + UI: allergens, dietary tags, kitchen stations, portion sizes, packaging types (deactivate if in use).
-- [ ] **T-209** `ClockService` + `shared/domain/time.ts` (CalendarDate, `toInstant`, `toKitchenDate`, `addDays`, `isoWeekday`, `toDbDate`/`fromDbDate`) + TZ-matrix tests; `GET /meta/clock`.
+- [x] **T-209** `ClockService` + `shared/domain/time.ts` (CalendarDate, `toInstant`, `toKitchenDate`, `addDays`, `isoWeekday`, `toDbDate`/`fromDbDate`) + TZ-matrix tests; `GET /meta/clock`.
 - [ ] **T-210** Integration test: permission matrix (each seeded role × representative routes → 200/403); the driver can't list orders; the kitchen gets no `*Cents` fields.
 
 ## Exit criteria
@@ -34,5 +34,6 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 ## Log
 
 - 2026-10-03 03:30: T-201 done. `shared/src/permissions/catalogue.ts` (39 codes), `default-roles.seed.ts` (4 roles per TRD §5.5), `shared/src/authz/rules.ts` (`buildRules`/`defineAbilityFor`; exhaustive `Record<PermissionCode, Grant>`; typed `DropSubject` so conditions are type-checked; drop actions `assignDriver`/`markReady`/`sendOut`/`deliver`). 7 tests (role matrix, driver row rule BR-DSP-07, unknown codes ignored). ESLint role guard narrowed to comparisons only (`===`, `case`, `.includes`). TRD §5.5 snippet synced.
+- 2026-10-03 03:45: T-209 done. `shared/src/domain/time.ts` (branded CalendarDate, addDays, isoWeekday, toInstant via @date-fns/tz, toLocalDate, HH:mm helpers, toDbDate/fromDbDate) with 10 tests passing under TZ=UTC/LA/Kolkata, including a DST zone. Backend `ClockService` (the only wall-clock read) + `GET /api/meta/clock`; verified with the server in TZ=America/Los_Angeles: today = 2026-10-03 (IST) while UTC was still 2 Oct.
 
 ## Outcome
