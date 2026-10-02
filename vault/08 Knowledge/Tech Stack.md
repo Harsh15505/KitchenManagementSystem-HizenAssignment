@@ -21,8 +21,8 @@ The full rationale is in `docs/TRD.md` §2 and [[Decision Log]]. **Fill in the "
 | Auth | @nestjs/jwt, cookie-parser, bcryptjs, @nestjs/throttler | latest | _tbd_ | |
 | Authorisation | @casl/ability · @casl/prisma · @casl/react | latest | 7.0.1 · 2.0.2 · 7.0.1 | abilities from permission codes; Prisma 7 runtime wrapper (ADR-023) |
 | Jobs | @nestjs/schedule | latest | _tbd_ | timers only, no polling (ADR-013) |
-| ORM | prisma / @prisma/client / @prisma/adapter-pg | **^7** (pin) | 7.10.0 (planned) | `prisma-client` generator, `moduleFormat = "cjs"` |
-| DB | PostgreSQL (Neon) | 17 | _tbd_ | Singapore |
+| ORM | prisma / @prisma/client / @prisma/adapter-pg | **^7** (pin) | 7.10.0 | `prisma-client` generator, `moduleFormat = "cjs"` |
+| DB | PostgreSQL (Neon) | 17 | Neon, ap-southeast-1 | Singapore |
 | Dates | date-fns / @date-fns/tz | 4 / latest | 4.4.0 / 1.5.0 | `TZDate` |
 | Tests | vitest / supertest | latest | vitest 5.0.3 · supertest 7.3 (no SWC: TS transpile plugin) | TZ matrix in CI |
 | Lint | eslint / typescript-eslint / prettier | 9 / latest / 3 | _tbd_ | flat config |

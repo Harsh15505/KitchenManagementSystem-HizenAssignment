@@ -14,7 +14,7 @@ updated: 2026-10-03 01:45 IST
 | GitHub repo (public) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | branch `main` |
 | Web (Vercel) | _tbd_ | project root `frontend` |
 | API (Render) | _tbd_ | free web service, Singapore, health `/api/health` |
-| Neon project | _tbd_ | `fernleaf-kitchen-ops`, Singapore, PG17 |
+| Neon project | host `ep-autumn-forest-azgcpotr.c-3.ap-southeast-1.aws.neon.tech` (db `neondb`) | Singapore. Migrations `init` + `check_constraints` applied 2026-10-03. Local dev currently points at this endpoint (owner-provided); confirm whether it is the `main` or a `dev` branch before seeding prod |
 | UptimeRobot monitor | _tbd_ | 5-min HTTP check on API `/api/health` |
 
 ## Accounts (owner)

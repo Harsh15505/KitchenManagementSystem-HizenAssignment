@@ -15,6 +15,9 @@ Read these before touching the related area. **Add a new entry every time someth
 - A **driver adapter is required**: `new PrismaPg({ connectionString })` from `@prisma/adapter-pg`, passed as `super({ adapter })`.
 - **Pin `prisma@^7` / `@prisma/client@^7`.** The Nest docs warn that another npm tag may point to a Prisma 8 pre-release.
 - `@db.Date` columns come back as JS `Date` at **UTC midnight**. Only use `toDbDate()` / `fromDbDate()`.
+- The generated client (`backend/src/generated/prisma`) is git-ignored TypeScript source. `postinstall` and `build` both run `prisma generate`, so fresh checkouts (CI, Render) build. `prisma.config.ts` falls back to an empty URL because generate needs no DB (2026-10-03, T-104).
+- **SSL mode:** `pg` warns that `sslmode=require` currently means `verify-full` and will change in pg 9. We write `sslmode=verify-full` explicitly in every connection string (2026-10-03, T-104).
+- `prisma migrate dev --create-only` after the CHECK migration produced an **empty** migration, so Prisma does not try to drop our CHECKs (verified 2026-10-03).
 - `updateManyAndReturn` (PostgreSQL) needs Prisma ≥ 6.2. We use it in cut-off processing.
 - CHECK constraints are hand-written SQL in migrations. **Review every new migration for unexpected `DROP`s.**
 - Map P2002 to 409; read `meta.target` / the constraint name to choose a specific error code (e.g. `ALREADY_INVOICED`).

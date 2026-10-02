@@ -20,7 +20,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
   *Accept:* a sample domain test passes; both apps can import it.
 - [x] **T-103** `backend` (`@fernleaf/backend`): Nest 11, global prefix `/api`, Zod env config, `GET /api/health` (no DB) + `/api/health/ready`, helmet, cookie-parser, global exception filter → error envelope, Zod validation pipe (nestjs-zod).
   *Accept:* `curl /api/health` → `{ ok: true }`; an invalid body → 400 envelope.
-- [ ] **T-104** Prisma 7: `prisma.config.ts` (dotenv), generator `prisma-client` + `output` + `moduleFormat = "cjs"`, `@prisma/adapter-pg`, PrismaService. Schema draft v1 from `docs/DATABASE_MODELS.md` §4 → `prisma validate` → first migration on the Neon `dev` branch; CHECK-constraint migration (§5).
+- [x] **T-104** Prisma 7: `prisma.config.ts` (dotenv), generator `prisma-client` + `output` + `moduleFormat = "cjs"`, `@prisma/adapter-pg`, PrismaService. Schema draft v1 from `docs/DATABASE_MODELS.md` §4 → `prisma validate` → first migration on the Neon `dev` branch; CHECK-constraint migration (§5).
   *Accept:* migration applied; `/api/health/ready` → DB ok.
 - [ ] **T-105** `frontend` (`@fernleaf/frontend`): Next 16 App Router, Tailwind 4, `shadcn init`, TanStack Query provider, `lib/api-client.ts`, `next.config.ts` rewrites `/api/:path*` → `${API_ORIGIN}/api/:path*`, `proxy.ts` (cookie-presence redirect), base layout.
   *Accept:* the web app calls `/api/health` through the rewrite locally.
@@ -48,5 +48,6 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - 2026-10-03 02:12: T-101 done (87abdf9). Version pins decided (ADR-024).
 - 2026-10-03 02:16: T-102 done. shared builds CJS + ESM + d.ts; money helpers with BR-PRC-03/BR-MNY-01 tests (11 passing). Hit the TS 6 baseUrl deprecation in the tsup dts build (Gotchas).
 - 2026-10-03 02:25: T-103 done. Nest 11 API: `/api` prefix, Zod env validation, helmet, cookie-parser, global ZodValidationPipe and ApiExceptionFilter (one error envelope; codes and statuses from `shared/src/errors.ts`), DB-free `/api/health`. 4 supertest tests pass; built server verified with curl. Replaced unplugin-swc (native addon broken on Windows) with a TS-transpile Vitest plugin.
+- 2026-10-03 02:40: T-104 done. Prisma 7.10 schema copied verbatim from DATABASE_MODELS §4 (46 models, 10 enums) validated first try; migrations `init` + `check_constraints` (30 CHECKs) applied to Neon; verified Postgres rejects a second settings row and a negative dish cost; no drift. PrismaService (pg adapter, pool 5, lazy connect) + `GET /api/health/ready` (DB round-trip 68 ms warm, 936 ms cold).
 
 ## Outcome

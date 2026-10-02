@@ -89,7 +89,6 @@ updated: 2026-10-03 01:51 IST
 
 ## ▶ Next Up
 
-- [ ] **T-104** Prisma 7 + Neon dev + schema v1 · P1
 - [ ] **T-105** frontend scaffold (rewrites, proxy.ts) · P1
 - [ ] **T-108** Provision Neon/Render/Vercel + deploy skeleton · P1
 
@@ -104,6 +103,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-104** Prisma 7 + Neon + schema v1 + CHECKs · P1
 - [x] **T-103** backend scaffold (health, env, error envelope) · P1
 - [x] **T-102** shared skeleton (tsup CJS+ESM, vitest, money helpers) · P1
 - [x] **T-101** Workspace scaffold (pnpm: frontend/backend/shared) · P1

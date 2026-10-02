@@ -8,11 +8,15 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(4000),
   WEB_ORIGIN: z.url().default('http://localhost:3000'),
+  DATABASE_URL: z.string().startsWith('postgresql://', 'DATABASE_URL must be a postgresql:// URL'),
 });
 
 export type Env = z.infer<typeof envSchema>;
 
+let cached: Env | undefined;
+
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
+  if (cached && source === process.env) return cached;
   const parsed = envSchema.safeParse(source);
   if (!parsed.success) {
     const issues = parsed.error.issues
@@ -20,5 +24,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
       .join('\n');
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
+  if (source === process.env) cached = parsed.data;
   return parsed.data;
 }

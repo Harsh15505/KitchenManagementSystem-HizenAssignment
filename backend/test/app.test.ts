@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { ApiExceptionFilter } from '../src/common/api-exception.filter';
 import { DomainError } from '../src/common/domain-error';
 import { HealthController } from '../src/health/health.controller';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 class EchoDto extends createZodDto(z.object({ quantity: z.number().int().positive() })) {}
 
@@ -33,6 +34,8 @@ describe('API skeleton', () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [HealthController, ProbeController],
       providers: [
+        // Unit-level test: no database. Readiness is exercised against Neon separately.
+        { provide: PrismaService, useValue: { $queryRaw: async () => [{ '?column?': 1 }] } },
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: ApiExceptionFilter },
       ],
@@ -49,6 +52,11 @@ describe('API skeleton', () => {
   it('GET /api/health reports liveness', async () => {
     const res = await request(app.getHttpServer()).get('/api/health').expect(200);
     expect(res.body.ok).toBe(true);
+  });
+
+  it('GET /api/health/ready reports the database as up', async () => {
+    const res = await request(app.getHttpServer()).get('/api/health/ready').expect(200);
+    expect(res.body).toMatchObject({ ok: true, db: 'up' });
   });
 
   it('invalid input returns the 400 envelope with field paths', async () => {

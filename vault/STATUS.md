@@ -54,7 +54,7 @@ Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABAS
 |---|---|---|
 | Web (Vercel) | _tbd_ | not provisioned |
 | API (Render) | _tbd_ | not provisioned |
-| DB (Neon) | _tbd_ (project `fernleaf-kitchen-ops`, Singapore) | not provisioned |
+| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ schema migrated (46 tables, 30 CHECKs) |
 | Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ pushed |
 
 ## 🧾 Key decisions so far

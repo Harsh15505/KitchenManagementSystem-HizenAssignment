@@ -32,6 +32,8 @@ pnpm dev                                     # frontend :3000, backend :4000
 | `pnpm --filter @fernleaf/backend test:int` | Integration tests (needs `TEST_DATABASE_URL`) |
 | `pnpm --filter @fernleaf/backend exec prisma migrate dev --name <name>` | New migration (dev branch) |
 | `pnpm --filter @fernleaf/backend exec prisma migrate dev --create-only` | Hand-edit SQL (CHECK constraints) |
+| `pnpm --filter @fernleaf/backend db:migrate` | `prisma migrate dev` (create + apply) |
+| `pnpm --filter @fernleaf/backend db:deploy` | `prisma migrate deploy` (production, Render build) |
 | `pnpm --filter @fernleaf/backend db:seed` | Idempotent static seed |
 | `pnpm --filter @fernleaf/backend exec prisma studio` | Inspect the DB |
 | `pnpm perf:kitchen` | 400-order kitchen board perf script (T-605) |
