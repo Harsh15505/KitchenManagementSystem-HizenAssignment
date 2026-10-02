@@ -1,6 +1,6 @@
 ---
 type: decisions
-updated: 2026-10-03 01:51 IST
+updated: 2026-10-03 02:15 IST
 ---
 
 # 🧭 Decision Log (ADRs)
@@ -155,3 +155,10 @@ Template: `_templates/Decision Template.md`.
   - Conditions are kept to simple equalities. Business state rules stay out of abilities.
 - **Alternatives:** hand-written guards with `@RequirePermissions` (less code; this was the recommended option, declined in favour of familiarity); CASL with role-based ability files (violates the brief); CASL rules stored as JSON per role (fully data-driven, but conditions need interpolation; too complex for now).
 - **Consequences:** +1–2 h setup, time-boxed. Fallback: keep `@casl/ability` and write the driver filter by hand. Adding a role = data; adding a capability = a code + one rule line.
+
+### ADR-024: Version pins at scaffold time
+- **Status:** Accepted · 2026-10-03 02:15
+- **Context:** the npm `latest` tags at scaffold time were Prisma 8.0.0-rc, NestJS 12 (ESM-only) and TypeScript 7.0 (native). Peer ranges: typescript-eslint supports TS < 6.1; nestjs-zod supports Nest ≤ 11; @casl/prisma supports Prisma ≤ 7.
+- **Decision:** Prisma **7.10.0**, NestJS **11.2.x**, TypeScript **6.0.3**, Next **16.3.x** / React **19.3**, Zod **4.6**, Vitest **5**, tsup **8.5**, CASL ability **7.0** / prisma **2.0**.
+- **Alternatives:** chasing the latest majors (peer conflicts; ESM-only Nest breaks the CJS plan; CASL doesn't support the Prisma RC).
+- **Consequences:** matches the docs (Nest 11, Prisma 7). TS 6 deprecates `baseUrl`, so tsup's dts step needs `ignoreDeprecations: "6.0"` (see Gotchas).

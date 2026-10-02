@@ -1,0 +1,43 @@
+{
+  "name": "@fernleaf/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Contracts, permission codes, CASL rules and pure business rules shared by frontend and backend",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@casl/ability": "7.0.1",
+    "@date-fns/tz": "1.5.0",
+    "date-fns": "4.4.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}

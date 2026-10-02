@@ -16,7 +16,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 
 - [x] **T-101** Workspace scaffold: root `package.json` (`packageManager: pnpm@10`, `engines.node: 22`, scripts `dev`/`build`/`lint`/`typecheck`/`test` via `pnpm -r`), `pnpm-workspace.yaml` listing `frontend`, `backend`, `shared`, `.nvmrc`, `.editorconfig`.
   *Accept:* `pnpm install && pnpm -r build` succeeds on an empty skeleton (shared builds first).
-- [ ] **T-102** `shared` (`@fernleaf/shared`): tsup → `dist/{cjs,esm}` + d.ts; Vitest; zod, date-fns, @date-fns/tz, @casl/ability; folders `permissions/ authz/ contracts/ domain/ errors.ts`.
+- [x] **T-102** `shared` (`@fernleaf/shared`): tsup → `dist/{cjs,esm}` + d.ts; Vitest; zod, date-fns, @date-fns/tz, @casl/ability; folders `permissions/ authz/ contracts/ domain/ errors.ts`.
   *Accept:* a sample domain test passes; both apps can import it.
 - [ ] **T-103** `backend` (`@fernleaf/backend`): Nest 11, global prefix `/api`, Zod env config, `GET /api/health` (no DB) + `/api/health/ready`, helmet, cookie-parser, global exception filter → error envelope, Zod validation pipe (nestjs-zod).
   *Accept:* `curl /api/health` → `{ ok: true }`; an invalid body → 400 envelope.
@@ -44,5 +44,8 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - Vercel build of the shared package (use `pnpm --filter @fernleaf/frontend... build` or `transpilePackages`)
 
 ## Log
+
+- 2026-10-03 02:12: T-101 done (87abdf9). Version pins decided (ADR-024).
+- 2026-10-03 02:16: T-102 done. shared builds CJS + ESM + d.ts; money helpers with BR-PRC-03/BR-MNY-01 tests (11 passing). Hit the TS 6 baseUrl deprecation in the tsup dts build (Gotchas).
 
 ## Outcome
