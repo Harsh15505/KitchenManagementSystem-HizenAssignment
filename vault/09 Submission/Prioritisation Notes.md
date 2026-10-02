@@ -1,0 +1,38 @@
+---
+type: log
+updated: 2026-10-03 01:45 IST
+---
+
+# ⚖️ Prioritisation Notes (living, feeds the README)
+
+Write an entry **at the moment** something is cut, simplified or deferred, or when an interpretation is made during implementation. The README's "what we built, what we skipped and why, what's next" is assembled from this note plus the [[Requirements Matrix]].
+
+## Principles (fixed at planning time)
+
+1. Every [Must] in the brief is done properly before any [Should].
+2. Correctness (rules, money, time, permissions) beats breadth of UI.
+3. Deploy early; keep the live app working at every checkpoint.
+4. Cuts follow the predefined cut lines A → B → C ([[Timeline and Checkpoints]]) and are written down here.
+
+## Built
+
+| Area | What | Notes |
+|---|---|---|
+| _tbd_ | | |
+
+## Skipped / simplified
+
+| When (IST) | Item | Priority | Why | What we'd do with more time |
+|---|---|---|---|---|
+| 2026-10-03 (plan) | Exports, accounting, payments, notifications… | Out of scope | Excluded by the brief | — |
+| 2026-10-03 (plan) | Roles editor UI (FR-ACC-06) | Could | Roles are data already; seed is enough to add one | Admin page with permission checkboxes |
+| 2026-10-03 (plan) | Invoice void/reissue | Could | Adjustments cover corrections; fewer states | Void + reissue flow with a reason |
+| 2026-10-03 (plan) | Admin line edits after confirmation | Could | Would desync kitchen units and invoiced amounts | Re-plan units + adjustment if already invoiced |
+
+## Next steps with more time
+
+- Real-time boards (SSE) instead of polling
+- Object storage for photos; dish image upload
+- Notifications module (outbox) replacing simulated emails
+- E2E tests (Playwright) for the reviewer paths
+- Multi-kitchen support (data model extension in `docs/DATABASE_MODELS.md` §10)
