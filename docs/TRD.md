@@ -37,7 +37,7 @@
 | Package manager / repo | **pnpm 10 workspaces**: `frontend/`, `backend/`, `shared/` in one repo (no Turborepo) | One install and one lockfile. Both apps import `@fernleaf/shared`. `pnpm -r <script>` runs across packages in dependency order (shared first). A task runner would only add caching we don't need at this size |
 | Language | **TypeScript (strict)** | Shared types end to end. `noUncheckedIndexedAccess` on |
 | Frontend | **Next.js 16 (App Router)** + React 19 | Mandated. App Router layouts suit a role-based shell. **`proxy.ts`** replaces `middleware.ts` in v16 |
-| UI kit | **shadcn/ui + Tailwind CSS 4** + lucide icons + sonner toasts | We own the component code, it's accessible (Radix primitives), and it's fast to build admin UIs with |
+| UI kit | **shadcn/ui + Tailwind CSS 4** + lucide icons + sonner toasts | We own the component code, it's accessible (Base UI primitives: shadcn's current `base-nova` default, ADR-025), and it's fast to build admin UIs with |
 | Data grid | **TanStack Table 8** | Server-side pagination, sorting and filtering on the order list and tier grid |
 | Server state | **TanStack Query 5** | Caching, polling for the boards, optimistic updates with rollback on 409 |
 | Forms | **React Hook Form 7 + Zod 4** (`@hookform/resolvers` ≥ 5) | Uses the **same Zod schemas** as the API. Server errors map onto fields |

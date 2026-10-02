@@ -22,7 +22,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
   *Accept:* `curl /api/health` → `{ ok: true }`; an invalid body → 400 envelope.
 - [x] **T-104** Prisma 7: `prisma.config.ts` (dotenv), generator `prisma-client` + `output` + `moduleFormat = "cjs"`, `@prisma/adapter-pg`, PrismaService. Schema draft v1 from `docs/DATABASE_MODELS.md` §4 → `prisma validate` → first migration on the Neon `dev` branch; CHECK-constraint migration (§5).
   *Accept:* migration applied; `/api/health/ready` → DB ok.
-- [ ] **T-105** `frontend` (`@fernleaf/frontend`): Next 16 App Router, Tailwind 4, `shadcn init`, TanStack Query provider, `lib/api-client.ts`, `next.config.ts` rewrites `/api/:path*` → `${API_ORIGIN}/api/:path*`, `proxy.ts` (cookie-presence redirect), base layout.
+- [x] **T-105** `frontend` (`@fernleaf/frontend`): Next 16 App Router, Tailwind 4, `shadcn init`, TanStack Query provider, `lib/api-client.ts`, `next.config.ts` rewrites `/api/:path*` → `${API_ORIGIN}/api/:path*`, `proxy.ts` (cookie-presence redirect), base layout.
   *Accept:* the web app calls `/api/health` through the rewrite locally.
 - [ ] **T-106** ESLint 9 flat config + typescript-eslint + Prettier across the workspace; `pnpm lint` and `pnpm typecheck` clean.
 - [ ] **T-107** GitHub Actions `ci.yml`: install → lint → typecheck → test (shared domain tests in a TZ matrix: UTC, America/Los_Angeles, Asia/Kolkata) → build.
@@ -49,5 +49,6 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - 2026-10-03 02:16: T-102 done. shared builds CJS + ESM + d.ts; money helpers with BR-PRC-03/BR-MNY-01 tests (11 passing). Hit the TS 6 baseUrl deprecation in the tsup dts build (Gotchas).
 - 2026-10-03 02:25: T-103 done. Nest 11 API: `/api` prefix, Zod env validation, helmet, cookie-parser, global ZodValidationPipe and ApiExceptionFilter (one error envelope; codes and statuses from `shared/src/errors.ts`), DB-free `/api/health`. 4 supertest tests pass; built server verified with curl. Replaced unplugin-swc (native addon broken on Windows) with a TS-transpile Vitest plugin.
 - 2026-10-03 02:40: T-104 done. Prisma 7.10 schema copied verbatim from DATABASE_MODELS §4 (46 models, 10 enums) validated first try; migrations `init` + `check_constraints` (30 CHECKs) applied to Neon; verified Postgres rejects a second settings row and a negative dish cost; no drift. PrismaService (pg adapter, pool 5, lazy connect) + `GET /api/health/ready` (DB round-trip 68 ms warm, 936 ms cold).
+- 2026-10-03 02:55: T-105 done. Next 16.3.8 + Tailwind 4 + shadcn (Base UI, ADR-025) + TanStack Query; `/api` rewrite to NestJS; `src/proxy.ts` redirects to `/login` without the `fl_session` cookie (keeps `?next=`); `api()` client parses the shared error envelope into `ApiError`; login placeholder shows live API/DB status. Verified locally end to end: `/` → 307 /login, `/api/health/ready` through the rewrite → db up.
 
 ## Outcome

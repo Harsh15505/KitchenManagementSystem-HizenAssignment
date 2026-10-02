@@ -12,9 +12,9 @@ The full rationale is in `docs/TRD.md` §2 and [[Decision Log]]. **Fill in the "
 | Runtime | Node.js | 22 LTS | 22.13.1 (local) | `.nvmrc`, `engines` |
 | Package manager | pnpm workspaces (no Turborepo) | 10 | pnpm 10.33.0 (local) | `packageManager` field; `corepack enable` on Render; folders `frontend/`, `backend/`, `shared/` |
 | Language | TypeScript | current stable (strict) | 6.0.3 | `noUncheckedIndexedAccess` |
-| Frontend | next / react | 16.x / 19.x | 16.3.8 / 19.3.0 (planned) | `proxy.ts`, App Router, rewrites |
-| UI | tailwindcss / shadcn | 4.x / latest CLI | _tbd_ | components in `frontend/src/components/ui` |
-| Client data | @tanstack/react-query / react-table | 5 / 8 | _tbd_ | |
+| Frontend | next / react | 16.x / 19.x | 16.3.8 / 19.2.8 (create-next-app pin) | `proxy.ts`, App Router, rewrites |
+| UI | tailwindcss / shadcn | 4.x / latest CLI | tailwind 4 · shadcn style `base-nova` (Base UI) | components in `frontend/src/components/ui` |
+| Client data | @tanstack/react-query / react-table | 5 / 8 | query 5.104.1 (table added later) | |
 | Forms | react-hook-form / @hookform/resolvers | 7 / ≥ 5 | _tbd_ | Zod 4 support |
 | Backend | @nestjs/* | 11.x | 11.2.7 | Express 5 adapter |
 | Validation | zod / nestjs-zod | 4.x / 5.x | 4.6.5 / 5.5.0 | shared schemas |

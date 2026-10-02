@@ -162,3 +162,9 @@ Template: `_templates/Decision Template.md`.
 - **Decision:** Prisma **7.10.0**, NestJS **11.2.x**, TypeScript **6.0.3**, Next **16.3.x** / React **19.3**, Zod **4.6**, Vitest **5**, tsup **8.5**, CASL ability **7.0** / prisma **2.0**.
 - **Alternatives:** chasing the latest majors (peer conflicts; ESM-only Nest breaks the CJS plan; CASL doesn't support the Prisma RC).
 - **Consequences:** matches the docs (Nest 11, Prisma 7). TS 6 deprecates `baseUrl`, so tsup's dts step needs `ignoreDeprecations: "6.0"` (see Gotchas).
+
+### ADR-025: shadcn/ui on Base UI primitives (base-nova style)
+- **Status:** Accepted · 2026-10-03 02:55
+- **Context:** `shadcn init --defaults` now generates the `base-nova` style, built on Base UI headless primitives. The TRD had assumed Radix.
+- **Decision:** keep the current default (Base UI). Both are accessible headless libraries; staying on the CLI default avoids fighting the generator for every component.
+- **Consequences:** TRD §2 updated. Component APIs follow the Base UI flavour of shadcn.
