@@ -5,6 +5,8 @@ updated: 2026-10-03 01:45 IST
 
 # 📒 Runbook
 
+> **Verified so far:** `pnpm install`, `pnpm build/lint/typecheck/test/format:check`, `db:migrate`, `db:seed` (2026-10-03).
+>
 > **Status: planned commands.** Confirm and correct them during P1 (T-101…T-105). Remove the "planned" marker when verified.
 
 ## Local setup (planned)
