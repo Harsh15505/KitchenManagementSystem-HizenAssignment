@@ -26,10 +26,24 @@ export default tseslint.config(
       ],
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       // ADR-004/ADR-023: authorisation comes from permission codes, never role names.
+      // Only *comparisons* against role names are banned (=== 'admin', case 'driver':, .includes('kitchen')).
+      // Plain strings such as a route segment @Controller('kitchen') are fine.
       'no-restricted-syntax': [
         'error',
         {
-          selector: 'Literal[value=/^(admin|kitchen|dispatch|driver)$/]',
+          selector:
+            'BinaryExpression[operator=/^[!=]==?$/] > Literal[value=/^(admin|kitchen|dispatch|driver)$/]',
+          message:
+            'Do not branch on role names. Check a permission/CASL ability instead (ADR-023).',
+        },
+        {
+          selector: 'SwitchCase > Literal.test[value=/^(admin|kitchen|dispatch|driver)$/]',
+          message:
+            'Do not branch on role names. Check a permission/CASL ability instead (ADR-023).',
+        },
+        {
+          selector:
+            "CallExpression[callee.property.name='includes'] > Literal[value=/^(admin|kitchen|dispatch|driver)$/]",
           message:
             'Do not branch on role names. Check a permission/CASL ability instead (ADR-023).',
         },
@@ -43,8 +57,8 @@ export default tseslint.config(
     rules: { '@typescript-eslint/consistent-type-imports': 'off' },
   },
   {
-    // Seeds legitimately name the default roles they create.
-    files: ['**/prisma/seed/**', '**/*.seed.ts'],
+    // Seeds create the default roles by key; tests look them up by key.
+    files: ['**/prisma/seed/**', '**/*.seed.ts', '**/*.test.ts'],
     rules: { 'no-restricted-syntax': 'off' },
   },
 );

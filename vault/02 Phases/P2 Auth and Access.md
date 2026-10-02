@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P2
-status: not-started
+status: in-progress
 estimate: 3h
 target: CP1 Sat 3 Oct 13:00 IST
 ---
@@ -14,7 +14,7 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 
 ## Tasks
 
-- [ ] **T-201** Permission catalogue + default role mapping in `@fernleaf/shared/permissions`, plus **CASL rules** `buildRules(user)` in `@fernleaf/shared/authz` (TRD §5.5) with unit tests of each seeded role's abilities; ESLint rule against role-name literals outside seeds.
+- [x] **T-201** Permission catalogue + default role mapping in `@fernleaf/shared/permissions`, plus **CASL rules** `buildRules(user)` in `@fernleaf/shared/authz` (TRD §5.5) with unit tests of each seeded role's abilities; ESLint rule against role-name literals outside seeds.
 - [ ] **T-202** Seed (idempotent): roles with permissions; the **4 test accounts with `Test@1234`** + 2 extra drivers + 1 extra cook; settings singleton (kitchen 7 days, cut-off 2 days at 16:00); the default tier (placeholder until P3).
 - [ ] **T-203** Auth module: `POST /auth/login` (throttled, generic errors), `POST /auth/logout`, `GET /auth/me`; JWT in the `fl_session` cookie (HttpOnly, Secure, SameSite=Lax, no Domain); `tokenVersion`; Origin check on mutations.
 - [ ] **T-204** Global `AuthGuard` + CASL `AbilityFactory` (`createPrismaAbility` through the `@casl/prisma/runtime` wrapper for Prisma 7) + `PoliciesGuard` / `@CheckPolicies` + `@Public` + a boot-time check that every route is decorated; `@CurrentUser`; `MoneyRedactionInterceptor` (strip `*Cents` when `ability.cannot('read', 'Money')`).
@@ -32,5 +32,7 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 - [ ] Settings editable in the UI (no DB edits)
 
 ## Log
+
+- 2026-10-03 03:30: T-201 done. `shared/src/permissions/catalogue.ts` (39 codes), `default-roles.seed.ts` (4 roles per TRD §5.5), `shared/src/authz/rules.ts` (`buildRules`/`defineAbilityFor`; exhaustive `Record<PermissionCode, Grant>`; typed `DropSubject` so conditions are type-checked; drop actions `assignDriver`/`markReady`/`sendOut`/`deliver`). 7 tests (role matrix, driver row rule BR-DSP-07, unknown codes ignored). ESLint role guard narrowed to comparisons only (`===`, `case`, `.includes`). TRD §5.5 snippet synced.
 
 ## Outcome

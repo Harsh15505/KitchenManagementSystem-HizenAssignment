@@ -248,11 +248,16 @@ HTTP ─▶ Controller ─▶ Service (use case, transaction) ─▶ Domain func
 
 ```ts
 export type Action = 'manage' | 'read' | 'create' | 'update' | 'cancel' | 'reject' | 'override'
-  | 'run' | 'work' | 'forceComplete' | 'assignDriver' | 'dispatch' | 'deliver' | 'invoice' | 'markPaid';
-export type Subject = 'Order' | 'PrepUnit' | 'Drop' | 'Invoice' | 'Dish' | 'Option' | 'PriceTier' | 'Menu'
-  | 'Company' | 'Employee' | 'Staff' | 'Settings' | 'ReferenceData' | 'Cutoff' | 'Money' | 'DemoData'
-  | 'AdminDashboard' | 'KitchenDashboard' | 'DispatchDashboard' | 'DriverDashboard' | 'all';
+  | 'run' | 'work' | 'forceComplete' | 'assignDriver' | 'markReady' | 'sendOut' | 'deliver';
+export type SubjectName = 'Order' | 'PrepUnit' | 'Drop' | 'Invoice' | 'Catalogue' | 'Menu' | 'Pricing'
+  | 'Company' | 'Employee' | 'Staff' | 'Role' | 'Settings' | 'ReferenceData' | 'Cutoff' | 'Money'
+  | 'KitchenBoard' | 'DispatchBoard' | 'DemoData' | 'AdminDashboard' | 'KitchenDashboard' | 'DispatchDashboard'
+  | 'DriverDashboard' | 'all';
+// Subjects with conditions declare their fields, so conditions are type-checked:
+export type DropSubject = ForcedSubject<'Drop'> & { driverId: string | null };
 
+// The real file maps every code through an exhaustive Record<PermissionCode, Grant>, so a new
+// code without a grant fails to compile. Shown here as straight-line code for readability:
 export function buildRules(user: { id: string; permissions: readonly PermissionCode[] }) {
   const { can, rules } = new AbilityBuilder<MongoAbility<[Action, Subject]>>(createMongoAbility);
   const has = (p: PermissionCode) => user.permissions.includes(p);
@@ -260,7 +265,7 @@ export function buildRules(user: { id: string; permissions: readonly PermissionC
   if (has('orders.create'))    can('create', 'Order');
   if (has('money.read'))       can('read', 'Money');
   if (has('kitchen.work'))     can('work', 'PrepUnit');
-  if (has('dispatch.manage'))  can(['assignDriver', 'dispatch', 'deliver'], 'Drop');
+  if (has('dispatch.manage'))  can(['assignDriver', 'markReady', 'sendOut', 'deliver'], 'Drop');
   if (has('delivery.perform')) can(['read', 'deliver'], 'Drop', { driverId: user.id }); // row rule
   // … one line per permission code (the full mapping lives in this one file)
   return rules;
