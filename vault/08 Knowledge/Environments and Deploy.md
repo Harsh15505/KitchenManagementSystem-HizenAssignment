@@ -39,7 +39,7 @@ GitHub · Vercel · Render · Neon · UptimeRobot. All free tiers. **Keep only o
 ## Deploy procedure (TRD §13.2)
 
 1. Neon: create the project and branches; set compute 0.25 CU fixed; copy the connection strings.
-2. Render: new web service from the repo; build: `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @fernleaf/backend... build && pnpm --filter @fernleaf/backend exec prisma migrate deploy`; start: `pnpm --filter @fernleaf/backend start:prod`; health check path `/api/health`; region Singapore.
+2. Render: **New → Blueprint** → this repo (reads `render.yaml`). Then enter DATABASE_URL / DIRECT_DATABASE_URL (Neon, `sslmode=verify-full`) and WEB_ORIGIN in the dashboard. Equivalent manual settings: build: `corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @fernleaf/backend... build && pnpm --filter @fernleaf/backend exec prisma migrate deploy`; start: `pnpm --filter @fernleaf/backend start:prod`; health check path `/api/health`; region Singapore.
 3. Vercel: import the repo; root `frontend`; build `cd .. && pnpm --filter @fernleaf/frontend... build`; set `API_ORIGIN`.
 4. Seed production once: `DIRECT_DATABASE_URL=<main> pnpm --filter @fernleaf/backend db:seed`.
 5. UptimeRobot monitor → API `/api/health` every 5 min.

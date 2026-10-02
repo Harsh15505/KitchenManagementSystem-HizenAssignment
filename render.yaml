@@ -1,0 +1,31 @@
+# Render Blueprint for the NestJS API (TRD §13.2). New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: fernleaf-api
+    runtime: node
+    plan: free
+    region: singapore # same AWS region as the Neon database
+    branch: main
+    # --prod=false: NODE_ENV=production would otherwise skip devDependencies, and the build
+    # needs the Prisma and Nest CLIs. `backend...` builds backend plus its dependency `shared`.
+    buildCommand: >-
+      corepack enable &&
+      pnpm install --frozen-lockfile --prod=false &&
+      pnpm --filter @fernleaf/backend... build &&
+      pnpm --filter @fernleaf/backend db:deploy
+    startCommand: pnpm --filter @fernleaf/backend start:prod
+    healthCheckPath: /api/health # liveness only, never touches the database
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: UTC # on purpose: kitchen-time logic must not depend on the host TZ
+      - key: DATABASE_URL
+        sync: false # Neon direct connection string, entered in the dashboard
+      - key: DIRECT_DATABASE_URL
+        sync: false # same value; used by prisma migrate deploy
+      - key: WEB_ORIGIN
+        sync: false # the Vercel URL, once the frontend is deployed

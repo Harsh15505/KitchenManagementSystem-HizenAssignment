@@ -54,6 +54,7 @@ Read these before touching the related area. **Add a new entry every time someth
 ## Monorepo / tooling
 
 - `@fernleaf/shared` must build before the apps: `pnpm -r build` runs in dependency order, and `pnpm --filter <pkg>... build` builds a package plus its dependencies. Optionally `transpilePackages` in Next.
+- Render sets `NODE_ENV=production`, so `pnpm install` skips devDependencies, but the build needs the Prisma and Nest CLIs. Use `pnpm install --prod=false` in the build command (render.yaml).
 - Render needs `corepack enable` for pnpm; set `packageManager` in the root `package.json`.
 - Windows: `.gitattributes` forces LF. Vault file names contain spaces, so quote paths in shells.
 - Zod 4: `@hookform/resolvers` ≥ 5, `nestjs-zod` ≥ 5.
