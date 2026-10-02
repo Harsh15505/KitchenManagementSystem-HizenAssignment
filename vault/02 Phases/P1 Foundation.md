@@ -24,7 +24,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
   *Accept:* migration applied; `/api/health/ready` → DB ok.
 - [x] **T-105** `frontend` (`@fernleaf/frontend`): Next 16 App Router, Tailwind 4, `shadcn init`, TanStack Query provider, `lib/api-client.ts`, `next.config.ts` rewrites `/api/:path*` → `${API_ORIGIN}/api/:path*`, `proxy.ts` (cookie-presence redirect), base layout.
   *Accept:* the web app calls `/api/health` through the rewrite locally.
-- [ ] **T-106** ESLint 9 flat config + typescript-eslint + Prettier across the workspace; `pnpm lint` and `pnpm typecheck` clean.
+- [x] **T-106** ESLint 9 flat config + typescript-eslint + Prettier across the workspace; `pnpm lint` and `pnpm typecheck` clean.
 - [ ] **T-107** GitHub Actions `ci.yml`: install → lint → typecheck → test (shared domain tests in a TZ matrix: UTC, America/Los_Angeles, Asia/Kolkata) → build.
 - [ ] **T-108** Provision **Neon** (project `fernleaf-kitchen-ops`, Singapore, PG17, 0.25 CU fixed, branches `dev`/`test`), **Render** (Singapore, free, build/start commands per TRD §13.2, health path `/api/health`, env), **Vercel** (root `frontend`, `API_ORIGIN`). Deploy the skeleton.
   *Accept:* the live web URL shows the health status fetched through `/api`. URLs recorded in [[Environments and Deploy]].
@@ -50,5 +50,6 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - 2026-10-03 02:25: T-103 done. Nest 11 API: `/api` prefix, Zod env validation, helmet, cookie-parser, global ZodValidationPipe and ApiExceptionFilter (one error envelope; codes and statuses from `shared/src/errors.ts`), DB-free `/api/health`. 4 supertest tests pass; built server verified with curl. Replaced unplugin-swc (native addon broken on Windows) with a TS-transpile Vitest plugin.
 - 2026-10-03 02:40: T-104 done. Prisma 7.10 schema copied verbatim from DATABASE_MODELS §4 (46 models, 10 enums) validated first try; migrations `init` + `check_constraints` (30 CHECKs) applied to Neon; verified Postgres rejects a second settings row and a negative dish cost; no drift. PrismaService (pg adapter, pool 5, lazy connect) + `GET /api/health/ready` (DB round-trip 68 ms warm, 936 ms cold).
 - 2026-10-03 02:55: T-105 done. Next 16.3.8 + Tailwind 4 + shadcn (Base UI, ADR-025) + TanStack Query; `/api` rewrite to NestJS; `src/proxy.ts` redirects to `/login` without the `fl_session` cookie (keeps `?next=`); `api()` client parses the shared error envelope into `ApiError`; login placeholder shows live API/DB status. Verified locally end to end: `/` → 307 /login, `/api/health/ready` through the rewrite → db up.
+- 2026-10-03 03:05: T-106 done. Root ESLint 9 flat config (typescript-eslint) for shared + backend; frontend keeps eslint-config-next. Role-name literal guard (ADR-023) verified to fire. `consistent-type-imports` is off for backend because `import type` would erase NestJS DI tokens. Prettier applied repo-wide; `pnpm lint`, `pnpm format:check`, `pnpm typecheck` clean.
 
 ## Outcome

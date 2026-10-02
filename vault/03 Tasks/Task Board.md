@@ -6,7 +6,6 @@ updated: 2026-10-03 01:51 IST
 
 ## 🗂 Backlog
 
-- [ ] **T-106** ESLint + Prettier + typecheck clean · P1
 - [ ] **T-107** GitHub Actions CI (TZ matrix) · P1
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
@@ -102,6 +101,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-106** ESLint + Prettier, lint/typecheck clean · P1
 - [x] **T-105** frontend scaffold (rewrites, proxy.ts, shadcn) · P1
 - [x] **T-104** Prisma 7 + Neon + schema v1 + CHECKs · P1
 - [x] **T-103** backend scaffold (health, env, error envelope) · P1

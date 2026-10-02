@@ -6,3 +6,4 @@ backend/src/generated
 vault
 docs
 *.md
+frontend/next-env.d.ts

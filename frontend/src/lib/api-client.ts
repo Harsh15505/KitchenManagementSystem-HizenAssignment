@@ -30,7 +30,8 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     throw new ApiError('INTERNAL', 'Cannot reach the server. Check your connection.', 0);
   }
 
-  const body: unknown = response.status === 204 ? undefined : await response.json().catch(() => undefined);
+  const body: unknown =
+    response.status === 204 ? undefined : await response.json().catch(() => undefined);
 
   if (!response.ok) {
     if (isApiErrorBody(body)) {

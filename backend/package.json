@@ -12,7 +12,8 @@
     "test": "vitest run",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "lint": "eslint src test"
   },
   "dependencies": {
     "@fernleaf/shared": "workspace:*",

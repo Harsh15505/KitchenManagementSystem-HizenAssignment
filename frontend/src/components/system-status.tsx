@@ -39,5 +39,7 @@ export function SystemStatus() {
 
 function StatusBadge({ label, loading, ok }: { label: string; loading: boolean; ok: boolean }) {
   if (loading) return <Badge variant="outline">{label}: checking…</Badge>;
-  return <Badge variant={ok ? 'secondary' : 'destructive'}>{`${label}: ${ok ? 'up' : 'down'}`}</Badge>;
+  return (
+    <Badge variant={ok ? 'secondary' : 'destructive'}>{`${label}: ${ok ? 'up' : 'down'}`}</Badge>
+  );
 }
