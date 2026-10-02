@@ -18,7 +18,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
   *Accept:* `pnpm install && pnpm -r build` succeeds on an empty skeleton (shared builds first).
 - [x] **T-102** `shared` (`@fernleaf/shared`): tsup → `dist/{cjs,esm}` + d.ts; Vitest; zod, date-fns, @date-fns/tz, @casl/ability; folders `permissions/ authz/ contracts/ domain/ errors.ts`.
   *Accept:* a sample domain test passes; both apps can import it.
-- [ ] **T-103** `backend` (`@fernleaf/backend`): Nest 11, global prefix `/api`, Zod env config, `GET /api/health` (no DB) + `/api/health/ready`, helmet, cookie-parser, global exception filter → error envelope, Zod validation pipe (nestjs-zod).
+- [x] **T-103** `backend` (`@fernleaf/backend`): Nest 11, global prefix `/api`, Zod env config, `GET /api/health` (no DB) + `/api/health/ready`, helmet, cookie-parser, global exception filter → error envelope, Zod validation pipe (nestjs-zod).
   *Accept:* `curl /api/health` → `{ ok: true }`; an invalid body → 400 envelope.
 - [ ] **T-104** Prisma 7: `prisma.config.ts` (dotenv), generator `prisma-client` + `output` + `moduleFormat = "cjs"`, `@prisma/adapter-pg`, PrismaService. Schema draft v1 from `docs/DATABASE_MODELS.md` §4 → `prisma validate` → first migration on the Neon `dev` branch; CHECK-constraint migration (§5).
   *Accept:* migration applied; `/api/health/ready` → DB ok.
@@ -47,5 +47,6 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 
 - 2026-10-03 02:12: T-101 done (87abdf9). Version pins decided (ADR-024).
 - 2026-10-03 02:16: T-102 done. shared builds CJS + ESM + d.ts; money helpers with BR-PRC-03/BR-MNY-01 tests (11 passing). Hit the TS 6 baseUrl deprecation in the tsup dts build (Gotchas).
+- 2026-10-03 02:25: T-103 done. Nest 11 API: `/api` prefix, Zod env validation, helmet, cookie-parser, global ZodValidationPipe and ApiExceptionFilter (one error envelope; codes and statuses from `shared/src/errors.ts`), DB-free `/api/health`. 4 supertest tests pass; built server verified with curl. Replaced unplugin-swc (native addon broken on Windows) with a TS-transpile Vitest plugin.
 
 ## Outcome

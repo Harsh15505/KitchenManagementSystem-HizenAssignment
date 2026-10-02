@@ -28,7 +28,7 @@ Read these before touching the related area. **Add a new entry every time someth
 ## NestJS 11
 
 - Express 5 changed wildcard routes (`*splat`).
-- Vitest needs `unplugin-swc` for decorator metadata.
+- Vitest needs decorator metadata for Nest DI. **We do not use `unplugin-swc`**: the SWC native addon failed to load on the Windows dev box (cache-folder DACL check, 2026-10-03, T-103). `backend/vitest.config.ts` instead transpiles test sources with `typescript.transpileModule` (`emitDecoratorMetadata`). It is pure JS, so it works the same in Linux CI.
 - Every route must carry `@CheckPolicies` or `@Public` (the boot check fails otherwise, by design).
 
 ## Time
