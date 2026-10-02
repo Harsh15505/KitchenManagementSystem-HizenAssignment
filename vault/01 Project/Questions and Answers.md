@@ -21,6 +21,6 @@ Every question asked of the owner, with the answer and when it was given. Answer
 
 | # | Question | Needed by |
 |---|---|---|
-| O-01 | Go-ahead to `git init` and make the first commit (T-005) | Before P1 |
-| O-02 | GitHub repo name and account (public) | T-005 / T-108 |
+| ~~O-01~~ | ~~git init + first commit~~ — done by owner (bf84a7f) | — |
+| ~~O-02~~ | ~~Repo name~~ — https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | — |
 | O-03 | Accounts ready: Vercel, Render, Neon, UptimeRobot (free) | T-108 (CP1) |

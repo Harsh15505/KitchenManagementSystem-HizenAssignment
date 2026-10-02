@@ -89,8 +89,6 @@ updated: 2026-10-03 01:51 IST
 
 ## ▶ Next Up
 
-- [ ] **T-005** git init + first commit (needs owner OK) · P0
-- [ ] **T-101** Workspace scaffold (pnpm: frontend/backend/shared) · P1
 - [ ] **T-102** shared skeleton · P1
 - [ ] **T-103** backend scaffold (health, envelope) · P1
 - [ ] **T-104** Prisma 7 + Neon dev + schema v1 · P1
@@ -108,8 +106,10 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-101** Workspace scaffold (pnpm: frontend/backend/shared) · P1
 - [x] **T-001** Analyse brief & requirements · P0
 - [x] **T-002** Owner decisions (hosting, repo, UI, vault, TZ/currency) · P0
 - [x] **T-003** Docs: PRD, TRD, DATABASE_MODELS, ARCHITECTURE · P0
 - [x] **T-004** Vault + agent protocol + AGENTS.md/CLAUDE.md · P0
+- [x] **T-005** git init + first commit + push (bf84a7f) · P0
 - [x] **T-006** Repo layout + RBAC approach with owner (ADR-022, ADR-023) · P0

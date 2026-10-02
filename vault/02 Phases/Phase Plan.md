@@ -9,7 +9,7 @@ The build is split into phases that each end in a **working, deployable incremen
 
 | Phase | Goal | Est. | Target done (IST) | Depends on | Status |
 |---|---|---|---|---|---|
-| [[P0 Planning]] | Specs, vault, decisions, first commit | 1.5 h | Sat 02:00 | — | 🟨 (T-005 pending) |
+| [[P0 Planning]] | Specs, vault, decisions, first commit | 1.5 h | Sat 02:00 | — | ✅ |
 | [[P1 Foundation]] | Workspace (`frontend/`, `backend/`, `shared/`), Prisma + Neon, CI, **skeleton deployed** | 4 h | Sat 13:00 (CP1) | P0 | ⬜ |
 | [[P2 Auth and Access]] | Login, CASL RBAC from permission codes, staff, settings, reference data, clock | 3 h | Sat 13:00 (CP1) | P1 | ⬜ |
 | [[P3 Catalogue Pricing Menu]] | Dishes/options/groups, tiers + derivation + grid, menu + preview | 6 h | Sat 21:00 (CP2) | P2 | ⬜ |

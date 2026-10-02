@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P0
-status: in-progress
+status: done
 estimate: 1.5h
 window: Sat 3 Oct 00:25–02:00 IST
 ---
@@ -16,7 +16,7 @@ window: Sat 3 Oct 00:25–02:00 IST
 - [x] **T-002** Confirm with owner: hosting, repo shape, UI kit, vault in git, TZ/currency → [[Questions and Answers]]
 - [x] **T-003** Write `docs/PRD.md`, `docs/TRD.md`, `docs/DATABASE_MODELS.md`, `docs/ARCHITECTURE.md`
 - [x] **T-004** Create the vault (status, protocol, phases, tasks, decisions, knowledge, templates) + `AGENTS.md`/`CLAUDE.md` + `.gitignore`/`.gitattributes`
-- [ ] **T-005** `git init`, first commit `docs: add planning baseline (PRD, TRD, data model, architecture, vault)`; create the public GitHub repo, push. **Waiting for the owner's go-ahead.**
+- [x] **T-005** `git init`, first commit `docs: add planning baseline (PRD, TRD, data model, architecture, vault)`; create the public GitHub repo, push. **Waiting for the owner's go-ahead.**
 - [x] **T-006** Revisit the repo layout and RBAC with the owner: `frontend/` + `backend/` + `shared/` with pnpm workspaces, no Turborepo (ADR-022); CASL abilities built from permission codes (ADR-023). Docs and vault updated
 
 ## Exit criteria
@@ -39,4 +39,4 @@ window: Sat 3 Oct 00:25–02:00 IST
 
 ## Outcome
 
-_(Fill in when T-005 is done.)_
+Done. Planning baseline committed and pushed by the owner as `bf84a7f` to https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment. Next: P1.

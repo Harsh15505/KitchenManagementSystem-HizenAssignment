@@ -9,4 +9,4 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 
 | # | Date (IST) | Hash | Message | Tasks | Phase |
 |---|---|---|---|---|---|
-| — | — | — | _Repository not initialised yet (T-005 pending owner go-ahead)_ | | |
+| 1 | 2026-10-03 | bf84a7f | vault formation complete (planning baseline: docs + vault, pushed by owner) | T-001…T-006 | P0 |

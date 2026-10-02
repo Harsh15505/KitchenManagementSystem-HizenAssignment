@@ -1,0 +1,14 @@
+packages:
+  - shared
+  - backend
+  - frontend
+
+# pnpm 10 blocks dependency install scripts unless allowed here
+onlyBuiltDependencies:
+  - "@nestjs/core"
+  - "@prisma/engines"
+  - "@swc/core"
+  - esbuild
+  - prisma
+  - sharp
+  - unrs-resolver

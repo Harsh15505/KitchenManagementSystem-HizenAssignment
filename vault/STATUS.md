@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 01:51 IST
-phase: P0 → P1
-active_task: T-005
+updated: 2026-10-03 02:07 IST
+phase: P1
+active_task: T-101
 ---
 
 # 📍 STATUS: live snapshot
@@ -11,7 +11,7 @@ active_task: T-005
 
 ## TL;DR
 
-Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABASE_MODELS.md`, `docs/ARCHITECTURE.md`) and this vault exist. **No code yet, and the repo isn't initialised with git yet.** Next: initialise git and make the first commit (needs the owner's go-ahead), then start **P1 Foundation**.
+Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABASE_MODELS.md`, `docs/ARCHITECTURE.md`) and this vault exist. The baseline is committed and pushed (`bf84a7f`). **No code yet.** Next: **P1 Foundation**, starting with the workspace scaffold.
 
 ## ⏳ Deadline
 
@@ -19,12 +19,12 @@ Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABAS
 
 ## Current phase
 
-- **P0 Planning**: ✅ done (except T-005) → [[P0 Planning]]
-- **Next phase: P1 Foundation** → [[P1 Foundation]]
+- **P0 Planning**: ✅ done → [[P0 Planning]]
+- **Current phase: P1 Foundation** → [[P1 Foundation]]
 
 ## 🔨 Active task
 
-- **T-005** `git init` + first commit "docs: planning baseline (PRD, TRD, data model, architecture, vault)". ⏳ **Waiting for the owner's go-ahead** (agents commit only when asked).
+- **T-101** Workspace scaffold: waiting for the owner's go-ahead to start coding.
 
 ## ✅ Done so far
 
@@ -32,22 +32,21 @@ Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABAS
 - T-002 Decisions confirmed with owner (see [[Questions and Answers]])
 - T-003 Spec docs written
 - T-004 Vault, agent protocol, AGENTS.md / CLAUDE.md created
+- T-005 First commit `bf84a7f` pushed by the owner
 - T-006 Repo layout and RBAC revisited with the owner: `frontend/` + `backend/` + `shared/` (ADR-022); CASL abilities from permission codes (ADR-023)
 
 ## ⏭ Next up (in order)
 
-1. T-005 git init + first commit (after owner OK). Create the public GitHub repo (name to be chosen by owner)
-2. T-101 Workspace scaffold (pnpm workspaces: `frontend/`, `backend/`, `shared/`)
-3. T-102 `shared` skeleton (tsup, vitest, zod)
-4. T-103 `backend` NestJS scaffold (health, config, error envelope)
-5. T-104 Prisma 7 + Neon dev branch + schema draft v1 validation
-6. T-105 `frontend` Next.js 16 + shadcn + rewrites + proxy.ts
-7. T-108 Provision Neon/Render/Vercel and deploy the skeleton **early**
+1. T-101 Workspace scaffold (pnpm workspaces: `frontend/`, `backend/`, `shared/`)
+2. T-102 `shared` skeleton (tsup, vitest, zod)
+3. T-103 `backend` NestJS scaffold (health, config, error envelope)
+4. T-104 Prisma 7 + Neon dev branch + schema draft v1 validation
+5. T-105 `frontend` Next.js 16 + shadcn + rewrites + proxy.ts
+6. T-108 Provision Neon/Render/Vercel and deploy the skeleton **early**
 
 ## ⛔ Blockers / waiting on owner
 
-- Go-ahead for git init and the first commit (T-005)
-- Owner needs accounts ready: **GitHub**, **Vercel**, **Render**, **Neon**, **UptimeRobot** (free tiers). The GitHub connector in the agent environment failed to connect; use the `git` / `gh` CLI or create the repo in the browser.
+- Owner needs accounts ready: **Vercel**, **Render**, **Neon**, **UptimeRobot** (free tiers). The Neon `dev` connection string is needed for T-104.
 
 ## 🌐 Environments
 
@@ -56,7 +55,7 @@ Planning is complete. The spec docs (`docs/PRD.md`, `docs/TRD.md`, `docs/DATABAS
 | Web (Vercel) | _tbd_ | not provisioned |
 | API (Render) | _tbd_ | not provisioned |
 | DB (Neon) | _tbd_ (project `fernleaf-kitchen-ops`, Singapore) | not provisioned |
-| Repo (GitHub) | _tbd_ | not created |
+| Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ pushed |
 
 ## 🧾 Key decisions so far
 
@@ -64,7 +63,7 @@ ADR-001…ADR-023 in [[Decision Log]]. Most important: one repo with `frontend/`
 
 ## 🧷 Last commit
 
-_None yet (repo not initialised)._
+`bf84a7f` vault formation complete (owner, 2026-10-03)
 
 ## 🤝 Handoff notes for the next agent
 

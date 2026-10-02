@@ -11,7 +11,7 @@ updated: 2026-10-03 01:45 IST
 
 | What | URL | Notes |
 |---|---|---|
-| GitHub repo (public) | _tbd_ | name to be chosen by owner (O-02) |
+| GitHub repo (public) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | branch `main` |
 | Web (Vercel) | _tbd_ | project root `frontend` |
 | API (Render) | _tbd_ | free web service, Singapore, health `/api/health` |
 | Neon project | _tbd_ | `fernleaf-kitchen-ops`, Singapore, PG17 |

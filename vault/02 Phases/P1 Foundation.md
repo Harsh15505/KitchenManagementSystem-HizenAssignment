@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P1
-status: not-started
+status: in-progress
 estimate: 4h
 target: CP1 Sat 3 Oct 13:00 IST (with P2)
 ---
@@ -14,7 +14,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 
 ## Tasks
 
-- [ ] **T-101** Workspace scaffold: root `package.json` (`packageManager: pnpm@10`, `engines.node: 22`, scripts `dev`/`build`/`lint`/`typecheck`/`test` via `pnpm -r`), `pnpm-workspace.yaml` listing `frontend`, `backend`, `shared`, `.nvmrc`, `.editorconfig`.
+- [x] **T-101** Workspace scaffold: root `package.json` (`packageManager: pnpm@10`, `engines.node: 22`, scripts `dev`/`build`/`lint`/`typecheck`/`test` via `pnpm -r`), `pnpm-workspace.yaml` listing `frontend`, `backend`, `shared`, `.nvmrc`, `.editorconfig`.
   *Accept:* `pnpm install && pnpm -r build` succeeds on an empty skeleton (shared builds first).
 - [ ] **T-102** `shared` (`@fernleaf/shared`): tsup → `dist/{cjs,esm}` + d.ts; Vitest; zod, date-fns, @date-fns/tz, @casl/ability; folders `permissions/ authz/ contracts/ domain/ errors.ts`.
   *Accept:* a sample domain test passes; both apps can import it.
