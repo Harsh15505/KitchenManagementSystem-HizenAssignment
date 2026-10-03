@@ -23,6 +23,7 @@ export class JobsService implements OnApplicationBootstrap, OnApplicationShutdow
   private timer: NodeJS.Timeout | null = null;
   private lastCheck = 0;
   private running: Promise<void> | null = null;
+  private readonly tasks = new Map<string, () => Promise<void>>();
 
   constructor(
     private readonly cutoff: CutoffService,
@@ -46,6 +47,11 @@ export class JobsService implements OnApplicationBootstrap, OnApplicationShutdow
     await this.tick('CATCH_UP');
   }
 
+  /** Extra work to run on the same schedule (the demo window and autopilot register here). */
+  addTask(name: string, task: () => Promise<void>): void {
+    this.tasks.set(name, task);
+  }
+
   /** Re-arm after settings change (the cut-off time or kitchen days may have moved). */
   reschedule(): void {
     void this.tick('CATCH_UP');
@@ -66,6 +72,13 @@ export class JobsService implements OnApplicationBootstrap, OnApplicationShutdow
         select: { autoCutoffEnabled: true },
       });
       if (settings?.autoCutoffEnabled) await this.cutoff.catchUp(trigger);
+      for (const [name, task] of this.tasks) {
+        try {
+          await task();
+        } catch (error) {
+          this.logger.error(`Job "${name}" failed: ${(error as Error).message}`);
+        }
+      }
       const next = await this.cutoff.nextCutoff();
       if (this.timer) clearTimeout(this.timer);
       this.timer = null;

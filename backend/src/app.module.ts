@@ -10,6 +10,7 @@ import { MenuModule } from './menu/menu.module';
 import { CompaniesModule } from './companies/companies.module';
 import { CutoffCatchUpMiddleware } from './orders/orders.controller';
 import { OrdersModule } from './orders/orders.module';
+import { DemoModule } from './demo/demo.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -32,6 +33,7 @@ import { StaffModule } from './staff/staff.module';
     MenuModule,
     CompaniesModule,
     OrdersModule,
+    DemoModule,
   ],
   controllers: [HealthController],
   providers: [

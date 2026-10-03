@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import {
   effectiveTierId,
   type MenuInput,
+  type MenuInputCategory,
   type MenuInputDish,
   type MenuInputOption,
+  type PricingContext,
 } from '@fernleaf/shared';
 import { DomainError } from '../common/domain-error';
 import { PricingService } from '../pricing/pricing.service';
@@ -23,9 +25,38 @@ export interface EmployeeMenuContext {
   tier: { id: string; name: string; isCompanyTier: boolean };
 }
 
+/** The parts of the menu input that don't depend on the employee: load once, reuse many times. */
+export interface MenuCatalogue {
+  categories: MenuInputCategory[];
+  dishes: Map<string, MenuInputDish>;
+  options: Map<string, MenuInputOption>;
+  pricing: PricingContext;
+  defaultTierId: string;
+  tierNames: Map<string, string>;
+}
+
+const employeeSelect = {
+  id: true,
+  name: true,
+  email: true,
+  isActive: true,
+  company: {
+    select: {
+      id: true,
+      name: true,
+      isActive: true,
+      priceTierId: true,
+      hiddenCategories: { select: { categoryId: true } },
+      hiddenMenuItems: { select: { menuItemId: true } },
+    },
+  },
+  allergies: { select: { allergenId: true } },
+  dietaryPreferences: { select: { dietaryTagId: true } },
+} as const;
+
 /**
- * Loads everything `resolveEmployeeMenu` needs for one employee (BR-MEN-04). The menu preview
- * and order validation both go through here, so they can't disagree.
+ * Loads everything `resolveEmployeeMenu` needs for one employee (BR-MEN-04). The menu preview,
+ * order validation and the demo generator all go through here, so they can't disagree.
  */
 @Injectable()
 export class MenuInputService {
@@ -34,30 +65,48 @@ export class MenuInputService {
     private readonly pricing: PricingService,
   ) {}
 
-  async forEmployee(employeeId: string): Promise<EmployeeMenuContext> {
-    const employee = await this.prisma.employee.findUnique({
-      where: { id: employeeId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        isActive: true,
-        company: {
-          select: {
-            id: true,
-            name: true,
-            isActive: true,
-            priceTierId: true,
-            hiddenCategories: { select: { categoryId: true } },
-            hiddenMenuItems: { select: { menuItemId: true } },
-          },
-        },
-        allergies: { select: { allergenId: true } },
-        dietaryPreferences: { select: { dietaryTagId: true } },
-      },
-    });
+  async forEmployee(employeeId: string, catalogue?: MenuCatalogue): Promise<EmployeeMenuContext> {
+    const [employee, cat] = await Promise.all([
+      this.prisma.employee.findUnique({ where: { id: employeeId }, select: employeeSelect }),
+      catalogue ?? this.loadCatalogue(),
+    ]);
     if (!employee) throw new DomainError('NOT_FOUND', 'Employee not found.');
 
+    const tierId = effectiveTierId(employee.company, cat.defaultTierId);
+    const { hiddenCategories, hiddenMenuItems, ...company } = employee.company;
+    const allergenIds = employee.allergies.map((a) => a.allergenId);
+    const dietaryTagIds = employee.dietaryPreferences.map((p) => p.dietaryTagId);
+    return {
+      input: {
+        categories: cat.categories,
+        dishes: cat.dishes,
+        options: cat.options,
+        hidden: {
+          categoryIds: new Set(hiddenCategories.map((h) => h.categoryId)),
+          menuItemIds: new Set(hiddenMenuItems.map((h) => h.menuItemId)),
+        },
+        tierId,
+        pricing: cat.pricing,
+        employee: { allergenIds: new Set(allergenIds), dietaryTagIds: new Set(dietaryTagIds) },
+      },
+      employee: {
+        id: employee.id,
+        name: employee.name,
+        email: employee.email,
+        isActive: employee.isActive,
+        company,
+        allergenIds,
+        dietaryTagIds,
+      },
+      tier: {
+        id: tierId,
+        name: cat.tierNames.get(tierId) ?? 'Unknown tier',
+        isCompanyTier: company.priceTierId !== null,
+      },
+    };
+  }
+
+  async loadCatalogue(): Promise<MenuCatalogue> {
     const [pricing, categories, dishes, options] = await Promise.all([
       this.pricing.loadContext(),
       this.prisma.menuCategory.findMany({
@@ -110,14 +159,11 @@ export class MenuInputService {
         },
       }),
     ]);
-
-    const tierId = effectiveTierId(employee.company, pricing.defaultTierId);
-    const { hiddenCategories, hiddenMenuItems, ...company } = employee.company;
-    const allergenIds = employee.allergies.map((a) => a.allergenId);
-    const dietaryTagIds = employee.dietaryPreferences.map((p) => p.dietaryTagId);
-
-    const input: MenuInput = {
+    return {
       categories,
+      pricing: pricing.ctx,
+      defaultTierId: pricing.defaultTierId,
+      tierNames: pricing.tierNames,
       dishes: new Map(
         dishes.map((d): [string, MenuInputDish] => [
           d.id,
@@ -161,31 +207,6 @@ export class MenuInputService {
           },
         ]),
       ),
-      hidden: {
-        categoryIds: new Set(hiddenCategories.map((h) => h.categoryId)),
-        menuItemIds: new Set(hiddenMenuItems.map((h) => h.menuItemId)),
-      },
-      tierId,
-      pricing: pricing.ctx,
-      employee: { allergenIds: new Set(allergenIds), dietaryTagIds: new Set(dietaryTagIds) },
-    };
-
-    return {
-      input,
-      employee: {
-        id: employee.id,
-        name: employee.name,
-        email: employee.email,
-        isActive: employee.isActive,
-        company,
-        allergenIds,
-        dietaryTagIds,
-      },
-      tier: {
-        id: tierId,
-        name: pricing.tierNames.get(tierId) ?? 'Unknown tier',
-        isCompanyTier: company.priceTierId !== null,
-      },
     };
   }
 }

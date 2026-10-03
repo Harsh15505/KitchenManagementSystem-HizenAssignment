@@ -50,6 +50,7 @@ const MATRIX: ReadonlyArray<{
   { method: 'post', path: '/api/orders/quote', allowed: ['admin'] },
   { method: 'get', path: '/api/cutoff', allowed: ['admin'] },
   { method: 'post', path: '/api/cutoff/run', allowed: ['admin'] },
+  { method: 'post', path: '/api/demo/regenerate', allowed: ['admin'] },
   { method: 'get', path: '/api/companies', allowed: ['admin', 'dispatch'] },
   { method: 'get', path: '/api/companies/driver-options', allowed: ['admin', 'dispatch'] },
   { method: 'post', path: '/api/companies', allowed: ['admin'] },
