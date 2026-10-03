@@ -9,6 +9,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { seedAccess } from './access';
 import { seedPlatform } from './platform';
+import { seedReference } from './reference';
 
 async function main(): Promise<void> {
   const url = process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
@@ -19,6 +20,7 @@ async function main(): Promise<void> {
     const started = Date.now();
     await seedPlatform(prisma);
     await seedAccess(prisma);
+    await seedReference(prisma);
     console.log(`Seed complete in ${Date.now() - started} ms`);
   } finally {
     await prisma.$disconnect();

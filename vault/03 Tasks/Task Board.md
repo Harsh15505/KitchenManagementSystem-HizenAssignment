@@ -8,8 +8,6 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-207** Settings (+ cut-off preview *Should*) · P2
-- [ ] **T-208** Reference data CRUD · P2
 - [ ] **T-210** Permission matrix integration test · P2
 - [ ] **T-301** Catalogue schema · P3
 - [ ] **T-302** Dishes API + UI · P3
@@ -93,6 +91,8 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-208** Reference data CRUD · P2
+- [x] **T-207** Settings + holidays + public domains · P2
 - [x] **T-206** Staff management · P2
 - [x] **T-205** Frontend shell: login, CASL ability, nav, dashboard sections · P2
 - [x] **T-204** CASL AccessGuard (fail-closed) + money redaction · P2

@@ -18,10 +18,10 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-ACC-04 | Roles = data; permission-driven UI | Must | P2 | T-201 T-204 T-205 | ✅ | `shared/src/permissions/`, `shared/src/authz/rules.ts` | `rules.test.ts` |
 | FR-ACC-05 | Money fields only with `money.read` | Should | P2 | T-204 | ✅ | `money-redaction.interceptor.ts` | `auth.test.ts` BR-ACC-03 |
 | FR-ACC-06 | Roles editor UI | Could | — | backlog | ⬜ | | |
-| FR-SET-01 | Kitchen days, holidays, cut-off time/days in UI | Must | P2 | T-207 | ⬜ | | |
-| FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ⬜ | | |
-| FR-SET-03 | Reference lists CRUD | Must | P2 | T-208 | ⬜ | | |
-| FR-SET-04 | Cut-off preview | Should | P2 | T-207 | ⬜ | | |
+| FR-SET-01 | Kitchen days, holidays, cut-off time/days in UI | Must | P2 | T-207 | ✅ | `backend/src/settings`, `frontend/src/app/(app)/settings` | API probe + browser |
+| FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ✅ | same | same |
+| FR-SET-03 | Reference lists CRUD | Must | P2 | T-208 | ✅ | `backend/src/reference`, `/settings/reference` | API probe + browser |
+| FR-SET-04 | Cut-off preview | Should | P5 | T-502 | ⬜ (needs the cut-off calculator) | | |
 | FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ⬜ | | |
 | FR-CAT-02 | Deactivate, never delete dishes | Must | P3 | T-302 | ⬜ | | |
 | FR-CAT-03 | Reusable options | Must | P3 | T-303 | ⬜ | | |

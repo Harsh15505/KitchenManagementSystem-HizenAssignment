@@ -8,10 +8,20 @@ import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
+import { ReferenceModule } from './reference/reference.module';
+import { SettingsModule } from './settings/settings.module';
 import { StaffModule } from './staff/staff.module';
 
 @Module({
-  imports: [PrismaModule, ClockModule, AuthzModule, AuthModule, StaffModule],
+  imports: [
+    PrismaModule,
+    ClockModule,
+    AuthzModule,
+    AuthModule,
+    StaffModule,
+    SettingsModule,
+    ReferenceModule,
+  ],
   controllers: [HealthController],
   providers: [
     { provide: APP_PIPE, useClass: ZodValidationPipe },

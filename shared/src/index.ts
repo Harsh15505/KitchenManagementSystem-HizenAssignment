@@ -7,3 +7,5 @@ export * from './authz/rules';
 export * from './domain/time';
 export * from './contracts/pagination';
 export * from './contracts/staff';
+export * from './contracts/settings';
+export * from './contracts/reference';
