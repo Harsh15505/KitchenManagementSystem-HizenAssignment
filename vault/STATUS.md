@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-03 12:20 IST
+updated: 2026-10-03 14:30 IST
 phase: deploy (P0-P9 + README done; T-108 waiting on owner)
 active_task: T-108
 ---
@@ -51,8 +51,8 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 |---|---|---|
 | Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ CI green |
 | DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (roles, 7 staff, reference lists, 27 dishes, 17 options, 4 tiers, 8 menu categories, 5 companies, 60 employees) |
-| API (Render) | _tbd_ | ⏳ blueprint ready (`render.yaml`) |
-| Web (Vercel) | _tbd_ | ⏳ after the API |
+| API (Render) | https://fernleaf-api-l0yq.onrender.com | ✅ live (health + DB ready green) |
+| Web (Vercel) | https://ktichen-management-hizen.vercel.app | ✅ live; Render `WEB_ORIGIN` set to it (origin check verified) |
 
 ## ✅ Verified locally (2026-10-03 06:30)
 

@@ -6,8 +6,8 @@ Built for the Heizen engineering assignment with the mandatory stack: **Next.js*
 
 | | |
 |---|---|
-| **Live app** | _added when deployed_ (Vercel) |
-| **API health** | _added when deployed_ (Render) `/api/health` |
+| **Live app** | https://ktichen-management-hizen.vercel.app (Vercel) |
+| **API health** | https://fernleaf-api-l0yq.onrender.com/api/health (Render, Singapore) |
 | **Repository** | this repo |
 
 ### Test accounts (password `Test@1234` for all four)
