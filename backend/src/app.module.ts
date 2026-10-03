@@ -12,6 +12,7 @@ import { CutoffCatchUpMiddleware } from './orders/orders.controller';
 import { OrdersModule } from './orders/orders.module';
 import { DemoModule } from './demo/demo.module';
 import { KitchenModule } from './kitchen/kitchen.module';
+import { DispatchModule } from './dispatch/dispatch.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -36,6 +37,7 @@ import { StaffModule } from './staff/staff.module';
     OrdersModule,
     DemoModule,
     KitchenModule,
+    DispatchModule,
   ],
   controllers: [HealthController],
   providers: [

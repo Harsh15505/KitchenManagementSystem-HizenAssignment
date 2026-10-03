@@ -22,3 +22,4 @@ export * from './domain/cutoff';
 export * from './domain/combinations';
 export * from './contracts/orders';
 export * from './contracts/kitchen';
+export * from './contracts/dispatch';

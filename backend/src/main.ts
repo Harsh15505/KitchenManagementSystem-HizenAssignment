@@ -17,6 +17,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.use(cookieParser());
+  // Proof-of-delivery photos arrive as base64 JSON (compressed in the browser, ≤ 5 MB raw).
+  app.useBodyParser('json', { limit: '8mb' });
   // Browsers reach us through the Next.js /api rewrite (same origin), so CORS stays off.
   app.enableShutdownHooks();
 
