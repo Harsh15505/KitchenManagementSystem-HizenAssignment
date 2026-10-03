@@ -1,5 +1,13 @@
 import type { Action, AppAbility, SubjectName } from '@fernleaf/shared';
-import { LayoutDashboard, ListChecks, type LucideIcon, Settings, Users } from 'lucide-react';
+import {
+  Carrot,
+  LayoutDashboard,
+  ListChecks,
+  type LucideIcon,
+  Settings,
+  Users,
+  UtensilsCrossed,
+} from 'lucide-react';
 
 /**
  * Navigation is derived from abilities, never from role names (FR-ACC-04). Items are added as
@@ -25,6 +33,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
       ['read', 'DriverDashboard'],
     ],
   },
+  {
+    href: '/catalogue/dishes',
+    label: 'Dishes',
+    icon: UtensilsCrossed,
+    anyOf: [['read', 'Catalogue']],
+  },
+  { href: '/catalogue/options', label: 'Options', icon: Carrot, anyOf: [['read', 'Catalogue']] },
   { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
   {
     href: '/settings/reference',
