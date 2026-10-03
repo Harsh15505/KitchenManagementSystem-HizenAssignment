@@ -18,9 +18,10 @@ process.env.JWT_SECRET ??= 'test-secret-that-is-long-enough-for-hs256-signing';
  */
 type Role = 'admin' | 'kitchen' | 'dispatch' | 'driver';
 const ROLES: readonly Role[] = ['admin', 'kitchen', 'dispatch', 'driver'];
+const TIER_ID = '01a0ff3c-0000-7000-8000-000000000001';
 
 const MATRIX: ReadonlyArray<{
-  method: 'get' | 'post' | 'patch';
+  method: 'get' | 'post' | 'patch' | 'put';
   path: string;
   allowed: readonly Role[];
 }> = [
@@ -34,6 +35,12 @@ const MATRIX: ReadonlyArray<{
   { method: 'get', path: '/api/settings/kitchen-holidays', allowed: ['admin'] },
   { method: 'get', path: '/api/reference/allergens', allowed: ['admin', 'kitchen', 'dispatch'] },
   { method: 'post', path: '/api/reference/allergens', allowed: ['admin'] },
+  { method: 'get', path: '/api/dishes', allowed: ['admin', 'kitchen'] },
+  { method: 'post', path: '/api/dishes', allowed: ['admin'] },
+  { method: 'get', path: '/api/options', allowed: ['admin', 'kitchen'] },
+  { method: 'get', path: '/api/price-tiers', allowed: ['admin'] },
+  { method: 'post', path: '/api/price-tiers', allowed: ['admin'] },
+  { method: 'put', path: `/api/price-tiers/${TIER_ID}/prices`, allowed: ['admin'] },
 ];
 
 const users = new Map<
