@@ -2,7 +2,7 @@
 type: status
 updated: 2026-10-03 05:50 IST
 phase: P2 (P1 code done; T-108 deploy waiting on owner)
-active_task: T-210
+active_task: T-301
 ---
 
 # 📍 STATUS: live snapshot
@@ -21,11 +21,11 @@ The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rule
 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
-- **P2**: 🟨 T-201…T-209 done; T-210 left → [[P2 Auth and Access]]
+- **P2**: ✅ locally (all tasks); live check after T-108 → [[P2 Auth and Access]]
 
 ## 🔨 Active task
 
-- **T-210** Permission matrix integration test (last P2 task)
+- **P3 starts**: T-301 catalogue schema check, T-302 dishes
 
 ## ⏭ Next up (in order)
 

@@ -8,7 +8,6 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-210** Permission matrix integration test · P2
 - [ ] **T-301** Catalogue schema · P3
 - [ ] **T-302** Dishes API + UI · P3
 - [ ] **T-303** Options API + UI (+ portion prices *Should*) · P3
@@ -91,6 +90,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-210** Permission matrix integration test · P2
 - [x] **T-208** Reference data CRUD · P2
 - [x] **T-207** Settings + holidays + public domains · P2
 - [x] **T-206** Staff management · P2

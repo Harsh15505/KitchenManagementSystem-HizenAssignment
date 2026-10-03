@@ -14,7 +14,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 |---|---|---|---|---|---|---|---|
 | FR-ACC-01 | Login/logout, cookie session; 4 test accounts | Must | P2 | T-202 T-203 T-205 | ✅ (local; live after T-108) | `backend/src/auth`, `frontend/src/app/login` | `auth.test.ts` |
 | FR-ACC-02 | Staff management (admin) | Must | P2 | T-206 | ✅ | `backend/src/staff`, `frontend/src/app/(app)/settings/staff` | `staff.test.ts` |
-| FR-ACC-03 | Server-enforced permissions + data scoping | Must | P2 | T-204 T-210 | 🟨 | `backend/src/authz/access.guard.ts` | `backend/test/auth.test.ts` |
+| FR-ACC-03 | Server-enforced permissions + data scoping | Must | P2 | T-204 T-210 | ✅ (driver row scoping lands in T-704) | `backend/src/authz/access.guard.ts` | `backend/test/auth.test.ts` |
 | FR-ACC-04 | Roles = data; permission-driven UI | Must | P2 | T-201 T-204 T-205 | ✅ | `shared/src/permissions/`, `shared/src/authz/rules.ts` | `rules.test.ts` |
 | FR-ACC-05 | Money fields only with `money.read` | Should | P2 | T-204 | ✅ | `money-redaction.interceptor.ts` | `auth.test.ts` BR-ACC-03 |
 | FR-ACC-06 | Roles editor UI | Could | — | backlog | ⬜ | | |

@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P2
-status: in-progress
+status: done (live check pending T-108)
 estimate: 3h
 target: CP1 Sat 3 Oct 13:00 IST
 ---
@@ -23,7 +23,7 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 - [x] **T-207** Settings API + UI: platform values, kitchen working days, kitchen holidays, public-domain blocklist, toggles; *(Should)* cut-off preview.
 - [x] **T-208** Reference data API + UI: allergens, dietary tags, kitchen stations, portion sizes, packaging types (deactivate if in use).
 - [x] **T-209** `ClockService` + `shared/domain/time.ts` (CalendarDate, `toInstant`, `toKitchenDate`, `addDays`, `isoWeekday`, `toDbDate`/`fromDbDate`) + TZ-matrix tests; `GET /meta/clock`.
-- [ ] **T-210** Integration test: permission matrix (each seeded role × representative routes → 200/403); the driver can't list orders; the kitchen gets no `*Cents` fields.
+- [x] **T-210** Integration test: permission matrix (each seeded role × representative routes → 200/403); the driver can't list orders; the kitchen gets no `*Cents` fields.
 
 ## Exit criteria
 
@@ -40,5 +40,11 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 - 2026-10-03 05:45: T-205 done. Frontend sign-in (RHF + shared `loginSchema`, field errors from the API, safe `?next=`, one-click reviewer accounts), `AuthProvider` with the CASL v7 `AbilityProvider` (ability built with the same `buildRules` as the backend), shell with ability-filtered nav, kitchen clock (server time, IST), sign-out, and a dashboard composed of the sections the ability allows. Verified in the browser: redirect → login → dashboard for kitchen/admin/driver; driver at phone width. Found and fixed: (1) admin was granted `dashboard.driver` and saw an always-empty "My deliveries", so the admin role now excludes driver views (TRD §5.5 updated, re-seeded, applied live without re-login); (2) shadcn wrote a self-referencing `--font-sans` (serif fallback), now pointing at Geist.
 - 2026-10-03 06:00: T-206 done. Staff API (`GET /staff` paginated + search, `GET /roles`, `POST /staff`, `PATCH /staff/:id`, `POST /staff/:id/reset-password`) with token-version bumps on role change, deactivation and password reset, a self-lockout guard (no self-deactivate or self role change), and friendly duplicate-email field errors; the exception filter now maps Prisma P2002/P2025. 5 service tests. UI `/settings/staff`: table, search, pagination, create form (shared schema), inline role select, activate toggle, password reset; own row disabled. Verified on Neon (probe account created then deleted) and in the browser (admin works, kitchen sees the 403 page and no nav entry). Shared `paginationQuerySchema` / `Paginated<T>` added for all lists.
 - 2026-10-03 06:10: T-207 + T-208 done. Settings API (GET/PATCH with the window check against stored values; kitchen holidays add/list/delete with duplicate and impossible-date checks; public-domain blocklist) and a generic reference-list API for the 5 lists (no DELETE by design; case-insensitive duplicate names; unknown list → 404). Seed adds the reference lists and 18 public domains. UI: `/settings` (weekday toggles, HH:mm times, timings, toggles, holidays, domains) and `/settings/reference` (tabs, inline rename, activate/deactivate; read-only for kitchen/dispatch). Verified: API probe (17 checks) and a browser save round-trip (Sunday off → saved → restored). The cut-off preview (FR-SET-04, Should) is deferred until the cut-off calculator lands in T-502.
+- 2026-10-03 06:15: T-210 done. `backend/test/permission-matrix.test.ts` boots the real AppModule (fake Prisma) and checks 10 routes × 4 roles (+ anonymous 401). It also proves the boot check passes on the full app. Backend now has 62 tests.
 
 ## Outcome
+
+P2 complete locally on 2026-10-03 06:15 (CP1 target 13:00).
+- Built: permission catalogue + CASL rules from codes; idempotent seed (4 reviewer accounts); cookie JWT auth with throttled login; one global AccessGuard (revocation via tokenVersion) with a fail-closed boot check; money redaction; Origin check; frontend sign-in, ability-driven shell and dashboard sections; staff management; settings, kitchen holidays and public domains; reference lists; time helpers + ClockService.
+- Deferred: FR-SET-04 cut-off preview (needs T-502).
+- Outstanding exit criterion: "4 accounts sign in on the live app" waits on T-108 (Render).

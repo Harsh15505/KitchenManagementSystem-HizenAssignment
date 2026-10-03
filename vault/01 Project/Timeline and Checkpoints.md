@@ -44,3 +44,5 @@ Every cut is logged in [[Prioritisation Notes]] (it becomes the README's "skippe
 |---|---|
 | 2026-10-03 00:06 | Problem statement received |
 | 2026-10-03 00:25–01:45 | S01 planning: analysis, owner decisions, docs, vault |
+| 2026-10-03 02:00–03:15 | P1 code done (T-101…T-107), CI green; Render blueprint ready |
+| 2026-10-03 03:15–06:15 | P2 done locally (auth, CASL, staff, settings, reference); **7 h ahead of CP1**, deploy pending owner |
