@@ -36,7 +36,7 @@ pnpm dev                                     # frontend :3000, backend :4000
 | `pnpm --filter @fernleaf/backend exec prisma migrate dev --create-only` | Hand-edit SQL (CHECK constraints) |
 | `pnpm --filter @fernleaf/backend db:migrate` | `prisma migrate dev` (create + apply) |
 | `pnpm --filter @fernleaf/backend db:deploy` | `prisma migrate deploy` (production, Render build) |
-| `pnpm --filter @fernleaf/backend db:seed` | Idempotent static seed |
+| `pnpm --filter @fernleaf/backend db:seed` | Idempotent static seed: roles, staff, settings, reference lists, catalogue (27 dishes, 17 options), 4 tiers, menu. Never overwrites admin edits. ~65 s against Neon (sequential round trips) |
 | `pnpm --filter @fernleaf/backend exec prisma studio` | Inspect the DB |
 | `pnpm perf:kitchen` | 400-order kitchen board perf script (T-605) |
 | `pnpm vault:commits` | Regenerate [[Commit Log]] from git (T-110) |

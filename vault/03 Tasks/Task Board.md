@@ -9,7 +9,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-312** Menu preview as employee · P3
-- [ ] **T-313** Seed catalogue, tiers, menu · P3
 - [ ] **T-401** Companies & employees schema · P4
 - [ ] **T-402** Companies API + UI (create TX with owner) · P4
 - [ ] **T-403** Domains, addresses, calendar (+ warning *Should*) · P4
@@ -79,6 +78,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-313** Seed catalogue, tiers, menu · P3
 - [x] **T-310** Menu management API + UI · P3
 - [x] **T-308** Tier grid (missing prices, bulk edit) · P3
 - [x] **T-307** Tiers API + UI · P3

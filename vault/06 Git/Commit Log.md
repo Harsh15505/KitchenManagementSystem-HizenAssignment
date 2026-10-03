@@ -37,3 +37,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 26 | 2026-10-03 06:37 | 659658e | feat(backend): price tiers, default switch and tier grid API | T-307, T-308 | P3 |
 | 27 | 2026-10-03 06:37 | 108fd8a | feat(frontend): price tier list and tier price grid | T-307, T-308 | P3 |
 | 28 | 2026-10-03 06:37 | 4f19d92 | docs: tiers and grid done, ADR-026 plain-table tier grid | T-307, T-308 | P3 |
+| 29 | 2026-10-03 06:44 | 8f982d7 | feat(shared): menu category contracts and slugify | T-310 | P3 |
+| 30 | 2026-10-03 06:44 | 137f809 | feat(backend): menu categories and items API | T-310, BUG-005 | P3 |
+| 31 | 2026-10-03 06:44 | 356f858 | feat(frontend): menu management screen | T-310 | P3 |
+| 32 | 2026-10-03 06:44 | 999ac67 | docs(vault): menu management done, BUG-005, timestamp fixes | T-310 | P3 |

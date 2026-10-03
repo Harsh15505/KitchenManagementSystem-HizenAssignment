@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-03 06:40 IST
+updated: 2026-10-03 06:50 IST
 phase: P3 (T-108 deploy waiting on owner)
 active_task: T-312
 ---
@@ -21,15 +21,15 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
 - **P2**: ✅ locally (T-201…T-210) → [[P2 Auth and Access]]
-- **P3**: 🟨 done: T-301/305/309 schema, T-302/303/304 catalogue, T-306 pricing rules, T-307/308 tiers + grid, T-311 menu rules. T-310 menu. Left: T-312, T-313 → [[P3 Catalogue Pricing Menu]]
+- **P3**: 🟨 done: T-301/305/309 schema, T-302/303/304 catalogue, T-306 pricing rules, T-307/308 tiers + grid, T-311 menu rules. T-310 menu, T-313 seed. Left: T-312 (needs P4 employees) → [[P3 Catalogue Pricing Menu]]
 
 ## 🔨 Active task
 
-- **T-312** menu preview: needs companies and employees (P4) to pick from. Plan: do **T-313** seed first (catalogue, tiers, menu), then the P4 basics, then T-312 against real employees.
+- **T-312** menu preview: needs companies and employees (P4) to pick from. Plan: P4 companies + employees first, then T-312 against real employees.
 
 ## ⏭ Next up (in order)
 
-1. T-313 catalogue/tier/menu seed · P4 companies + employees · T-312 menu preview
+1. P4 companies + employees (+ their seed) · T-312 menu preview
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
 3. P4 companies and employees
 
@@ -43,7 +43,7 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 | Env | URL | Status |
 |---|---|---|
 | Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ CI green |
-| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (roles, 7 staff, reference lists). Catalogue empty until T-313 |
+| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (roles, 7 staff, reference lists, 27 dishes, 17 options, 4 tiers, 8 menu categories) |
 | API (Render) | _tbd_ | ⏳ blueprint ready (`render.yaml`) |
 | Web (Vercel) | _tbd_ | ⏳ after the API |
 
