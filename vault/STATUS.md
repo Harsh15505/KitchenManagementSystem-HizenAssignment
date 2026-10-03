@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 14:30 IST
+updated: 2026-10-03 17:40 IST
 phase: deployed and smoke-tested (P0-P11 done)
-active_task: none (optional Shoulds)
+active_task: UI polish (T-UI) largely done; optional Shoulds
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: none (optional Shoulds)
 
 ## TL;DR
 
-P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Deployed**: web https://ktichen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. The README is written. UptimeRobot keep-alive is on (T-109) and the owner signed in with all 4 accounts on the live site: dashboards and role-limited navigation verified (T-1005). Remaining: optional Shoulds and polish.
+P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Deployed**: web https://ktichen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. The README is written. UptimeRobot keep-alive is on (T-109) and the owner signed in with all 4 accounts on the live site: dashboards and role-limited navigation verified (T-1005). **UI redesign (ADR-028)**: warm Fernleaf brand, dark mode, motion system (rise/stagger/grow, count-up, reduced-motion safe), rebuilt dashboards for all 4 roles with charts, polished kitchen/dispatch/driver boards, order lifecycle stepper (commits 3034119…3a77ded). Remaining: optional Shoulds and smaller-screen polish of forms.
 
 ## ⏳ Deadline
 
@@ -28,8 +28,9 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 - **P7**: ✅ (T-701…T-706) → [[P7 Dispatch and Driver]]
 - **P8**: ✅ (T-801…T-805) → [[P8 Billing]]
 - **P9**: ✅ (T-901…T-905) → [[P9 Dashboards]]
-- **P10**: 🟨 demo window, autopilot, invoices, Settings card done; deploy + live smoke test pending → [[P10 Demo Data and Deploy]]
-- **P11**: 🟨 README written; live links to add after deploy
+- **P10**: ✅ demo window, autopilot, invoices, deploy, live smoke test → [[P10 Demo Data and Deploy]]
+- **P11**: ✅ README with live links
+- **Polish (T-UI)**: ✅ brand theme, dark mode, dashboards and boards rebuilt with motion (ADR-028)
 
 ## 🔨 Active task
 
@@ -37,7 +38,7 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 
 ## ⏭ Next up (in order)
 
-1. Deploy (T-108/T-109/T-1005/T-1006) · README live links · optional Shoulds (CSV import, holiday warning)
+1. Owner checks the redesigned UI on the live site (Vercel auto-deploys from main) · optional Shoulds (CSV import, holiday warning) · form screens polish
 
 ## ⛔ Blockers / waiting on owner
 
@@ -63,7 +64,7 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-026 in [[Decision Log]]. Latest: ADR-025 shadcn on Base UI, ADR-026 tier grid as a plain table.
+ADR-001…ADR-028 in [[Decision Log]]. Latest: ADR-027 signature sorted by ids, ADR-028 warm brand theme + dark mode.
 
 ## 🧷 Last commit
 

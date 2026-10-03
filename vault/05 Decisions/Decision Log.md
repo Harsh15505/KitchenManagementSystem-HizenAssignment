@@ -186,4 +186,5 @@ Template: `_templates/Decision Template.md`.
 - **Context:** The first UI used shadcn's neutral defaults and read as unfinished.
 - **Decision:** Theme through the shadcn CSS tokens only (fern green primary, warm cream background, saffron accents, soft card shadow; forest-green dark palette). Fraunces for headings, Geist for text. Dark green grouped sidebar. Dark mode via `next-themes` (`class` attribute, default light, remembered per browser). Status badges gain success/warning/info variants.
 - **Consequences:** Every screen inherits the look without per-page edits; hard-coded colours keep `dark:` variants. Next.js dev badge overlaps the logo in development only.
+- **Follow-up (17:35):** Motion utilities in `globals.css` (`animate-rise`, `stagger`, `animate-grow-x/y`, `animate-soft-pulse`, `lift`), all disabled under `prefers-reduced-motion`; `CountUp` for headline numbers; `.page-title` serif title with a saffron underline. Charts are hand-built divs/CSS (no chart library) to keep the bundle small and the theme tokens in charge.
 

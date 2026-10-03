@@ -75,3 +75,17 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 64 | 2026-10-03 12:12 | 7d28a4a | feat: demo data status and regenerate in Settings; re-arm cut-off timer | T-1004 | P10 |
 | 65 | 2026-10-03 12:18 | 3e4fc2e | docs: README with setup, architecture, data model and dashboard definitions | T-1101 | P11 |
 
+| 66 | 2026-10-03 11:39 | 7ee01fd | docs(vault): session S02 handoff, P10 progress, STATUS for deploy | — | P10 |
+| 67 | 2026-10-03 12:24 | bffda6e | docs(vault): correct stale Requirements Matrix rows | — | P11 |
+| 68 | 2026-10-03 12:32 | c7d7fff | fix(frontend): wrap the account menu label in a menu group | BUG-006 | P11 |
+| 69 | 2026-10-03 12:48 | 0175a3e | fix(frontend): build the shared package before next build | T-1102 | P11 |
+| 70 | 2026-10-03 12:56 | 1274dec | docs: live links for the deployed web app and API | T-1102 | P11 |
+| 71 | 2026-10-03 12:56 | 166de88 | docs(vault): STATUS after deploy | T-1102 | P11 |
+| 72 | 2026-10-03 15:36 | da6be4f | fix(frontend): own panel for "do not cook" on the kitchen dashboard | T-902 | P11 |
+| 73 | 2026-10-03 15:36 | 1ef28dc | docs(vault): deployed, keep-alive on, owner smoke test passed | T-1102 | P11 |
+| 74 | 2026-10-03 15:57 | 268744d | fix(frontend): build shared only when missing, to stop the CI build race | T-1102 | P11 |
+| 75 | 2026-10-03 16:23 | 3034119 | feat(frontend): warm Fernleaf brand theme with dark mode | T-UI (ADR-028) | Polish |
+| 76 | 2026-10-03 16:23 | a90a3fc | docs(vault): ADR-028 brand theme and dark mode; gotchas | T-UI | Polish |
+| 77 | 2026-10-03 17:22 | 9d9525c | feat(frontend): rebuilt dashboards with charts, count-up and motion | T-UI | Polish |
+| 78 | 2026-10-03 17:27 | 3f92e86 | feat(frontend): polished kitchen, dispatch and driver boards | T-UI | Polish |
+| 79 | 2026-10-03 17:33 | 3a77ded | feat(frontend): order lifecycle stepper, timeline rail, billing metrics | T-UI | Polish |
