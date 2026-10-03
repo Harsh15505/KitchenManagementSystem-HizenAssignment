@@ -9,6 +9,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { seedAccess } from './access';
 import { seedCatalogue } from './catalogue';
+import { seedCompanies } from './companies';
 import { seedPlatform } from './platform';
 import { seedReference } from './reference';
 
@@ -23,6 +24,7 @@ async function main(): Promise<void> {
     await seedAccess(prisma);
     await seedReference(prisma);
     await seedCatalogue(prisma);
+    await seedCompanies(prisma);
     console.log(`Seed complete in ${Date.now() - started} ms`);
   } finally {
     await prisma.$disconnect();
