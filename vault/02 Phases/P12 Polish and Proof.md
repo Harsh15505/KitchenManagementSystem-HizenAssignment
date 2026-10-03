@@ -23,7 +23,7 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch → [[P6 Kitchen Board]]. *Accept:* p50/p95 for `GET /kitchen/board` logged in the P6 note and README §11.
 - [ ] **T-1206** Concurrency + integrity script on the same throwaway branch: two simultaneous "done" clicks, two simultaneous invoices for one company, cut-off run twice, company integrity (owner + default address). *Accept:* `pnpm --filter @fernleaf/backend probe:concurrency` prints pass/fail per check; README §11 updated.
 - [ ] **T-1207** README final pass + screenshots (light and dark).
-- [ ] **T-406** *(Should, only if ahead by Sun 15:00)* CSV import → [[P4 Companies and Employees]].
+- [x] **T-406** *(Should)* CSV import → [[P4 Companies and Employees]]. Built Saturday evening (owner: push everything today).
 
 ## Exit criteria
 
@@ -44,5 +44,8 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - 2026-10-03 18:55: T-409 done (company + kitchen holidays). Tests 322 (113 shared, 209 backend).
 
 - 2026-10-03 19:02: T-1205 done. Inputs and selects everywhere: card background, 36 px height, hover border; card titles semibold serif. Order builder: numbered steps that tick when complete (shared `StepTitle`), dish and combination cards, chip-style multi-select, dashed "add a dish" area, a checklist while incomplete, error with icon, animated total. New company: numbered steps with descriptions. Company form section headings with dividers. Label spacing 6 px. Verified: builder to a live quote (Lumen, Paneer Tikka Rice Bowl $5.20, nothing saved), new company page renders, typecheck/lint/build clean. Found BUG-012 (theme reveal unhandled rejection on hidden tabs), fixed.
+
+- 19:35: T-605 and T-1206 scripts written (`backend/scripts/perf-harness.ts`, `perf-kitchen-board.ts`, `probe-concurrency.ts`; `pnpm … perf:kitchen` / `probe:concurrency`). The harness starts the built API on :4100 against `backend/.env.perf` and refuses the live endpoint (verified: missing file → clear message). Waiting on O-05 to run them.
+- 2026-10-03 19:57: T-406 done. Tests 328 (118 shared, 210 backend); frontend build clean.
 
 ## Outcome

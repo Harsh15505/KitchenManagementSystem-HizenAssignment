@@ -14,7 +14,7 @@ updated: 2026-10-03 18:47 IST
 | GitHub repo (public) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | branch `main` |
 | Web (Vercel, owner's account) | https://kitchen-management-hizen.vercel.app | project root `frontend`; renamed 2026-10-03 18:30 from `ktichen-…` (typo). Old domain → 403 on writes |
 | API (Render) | https://fernleaf-api-l0yq.onrender.com | free web service, Singapore, health `/api/health`, readiness `/api/health/ready` |
-| Neon project | `withered-breeze-63566218`, branch `br-quiet-boat-azse3ol5`, endpoint `ep-autumn-forest-azgcpotr.c-3.ap-southeast-1.aws.neon.tech` (db `neondb`) | Singapore. **One branch for local dev and production** (ADR-029; read from `current_setting('neon.branch_id')` 2026-10-03 18:45). Migrations `init` + `check_constraints`. Bulk scripts → a throwaway branch (`backend/.env.perf`) |
+| Neon project | `withered-breeze-63566218`, branch **`dev`** (`br-quiet-boat-azse3ol5`, child of the empty default `production` branch), endpoint `ep-autumn-forest-azgcpotr.c-3.ap-southeast-1.aws.neon.tech` (db `neondb`) | Singapore. **One branch for local dev and production** (ADR-029; read from `current_setting('neon.branch_id')` 2026-10-03 18:45). Migrations `init` + `check_constraints`. Bulk scripts → a throwaway branch (`backend/.env.perf`) |
 | UptimeRobot monitor | owner's account | 5-min HTTP check on API `/api/health` (on since 2026-10-03 13:58) |
 
 ## Accounts (owner)

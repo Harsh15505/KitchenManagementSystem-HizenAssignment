@@ -6,15 +6,14 @@ updated: 2026-10-03 18:47 IST
 
 ## 🗂 Backlog
 
-- [ ] **T-406** CSV import (*Should*, only if ahead by Sun 15:00) · P4
 - [ ] **T-1104** Keep alive 2 weeks; check Neon/Render usage on days 3 and 7 · P11
 - [ ] **FR-ACC-06** Roles editor UI (*Could*, won't do: roles are data; README §9)
 - [ ] ~~**T-110** `pnpm vault:commits` script~~ (won't do: Commit Log kept by hand) · P1
 
 ## ▶ Next Up
 
-- [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch (Sun AM; needs O-05) · P6/P12
-- [ ] **T-1206** Concurrency + integrity probe script (Sun AM; needs O-05) · P12
+- [ ] **T-605** 400-order kitchen board perf: script ready, run when O-05 is done · P6/P12
+- [ ] **T-1206** Concurrency + integrity probe: script ready, run when O-05 is done · P12
 - [ ] **T-1207** README final pass + screenshots · P12
 - [ ] **T-1006** Live smoke checklist (owner, Sun 20:00 after freeze) · P10
 - [ ] **T-1102** Quality gate final run, history review, tag `v1.0.0` · P11
@@ -32,6 +31,7 @@ updated: 2026-10-03 18:47 IST
 
 ## ✅ Done
 
+- [x] **T-406** Employee CSV import (*Should*) · P4/P12
 - [x] **T-1205** Form screens design pass · P12
 - [x] **T-409** Holiday conflict warning (*Should*) · P4/P12
 - [x] **T-1204** Theme switch circular reveal · P12

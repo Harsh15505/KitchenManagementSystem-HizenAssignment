@@ -13,8 +13,10 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "lint": "eslint src test prisma/seed",
-    "db:seed": "prisma db seed"
+    "lint": "eslint src test prisma/seed scripts",
+    "db:seed": "prisma db seed",
+    "perf:kitchen": "tsx scripts/perf-kitchen-board.ts",
+    "probe:concurrency": "tsx scripts/probe-concurrency.ts"
   },
   "dependencies": {
     "@fernleaf/shared": "workspace:*",

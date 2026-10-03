@@ -91,6 +91,7 @@ Read these before touching the related area. **Add a new entry every time someth
 ## Environments and agent tooling (2026-10-03, S03)
 
 - **Local dev writes to the production database** (one Neon branch, ADR-029). Every local click shows up on the live app; delete probe data; run bulk scripts (perf, races) only on a throwaway branch via `backend/.env.perf`.
+- **The live data lives on the Neon `dev` branch**, not `production` (empty). An hourglass icon on a branch means it has an expiry date and will be deleted automatically. Neon free plan: 100 CU-h per project per month; when used up, the compute is suspended until next month (data kept). Stop local dev servers when idle: they keep the compute awake.
 - **`WEB_ORIGIN` holds exactly one origin.** After renaming the Vercel domain, update Render; the old domain then gets 403 on every write (login included), so share only the current URL (https://kitchen-management-hizen.vercel.app).
 - **View Transitions are skipped on hidden tabs** (`InvalidStateError`, the switch still happens). Check the theme reveal with the window visible.
 - **Python on Windows** writes CRLF in text mode: open files with `newline=''` or run Prettier afterwards. Long Python edits inside a Bash heredoc can fail to parse on nested quotes: write the script to the scratchpad and run it.

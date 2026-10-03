@@ -94,3 +94,4 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 82 | 2026-10-03 18:02 | 2760d11 | docs(vault): theme switch animation noted | T-1204 | P12 |
 | 83 | 2026-10-03 18:47 | 4730b23 | docs(vault): full catch-up after deploy and redesign; plan P12 | T-1102, T-1207 | P12 |
 | 84 | 2026-10-03 18:55 | 2972ad6 | feat: warn about open orders when adding a company or kitchen holiday | T-409 | P12 |
+| 85 | 2026-10-03 19:02 | a77195c | feat(frontend): form screens pass: order builder steps, inputs, new company | T-1205, BUG-012 | P12 |

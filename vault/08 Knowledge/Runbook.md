@@ -32,7 +32,7 @@ If port 3000 is taken (the owner runs another project there), use the Claude pre
 | `pnpm --filter @fernleaf/frontend build` | Frontend only; builds shared first only if `shared/dist` is missing (`scripts/ensure-shared.mjs`) |
 | `pnpm lint` / `pnpm typecheck` | Must be clean before every commit |
 | `pnpm format` / `pnpm format:check` | Prettier (CI runs the check) |
-| `pnpm test` | All tests (shared 112 + backend 207 as of 18:40) |
+| `pnpm test` | All tests (shared 118 + backend 210 as of 19:56) |
 | `pnpm --filter @fernleaf/shared test` | Domain rule tests only |
 | `TZ=America/Los_Angeles pnpm --filter @fernleaf/shared test` | Prove TZ independence |
 | `pnpm --filter @fernleaf/backend db:migrate` | `prisma migrate dev` (create + apply; careful: production branch) |
@@ -40,8 +40,8 @@ If port 3000 is taken (the owner runs another project there), use the Claude pre
 | `pnpm --filter @fernleaf/backend db:deploy` | `prisma migrate deploy` (also runs in the Render build) |
 | `pnpm --filter @fernleaf/backend db:seed` | Idempotent static seed: roles, staff, settings, reference lists, catalogue (27 dishes, 17 options), 4 tiers, menu, 5 companies, 60 employees. Never overwrites admin edits. ~65 s against Neon |
 | `pnpm --filter @fernleaf/backend db:studio` | Inspect the DB |
-| `pnpm --filter @fernleaf/backend perf:kitchen` *(planned, T-605)* | 400-order kitchen board timing on the throwaway branch (`backend/.env.perf`) |
-| `pnpm --filter @fernleaf/backend probe:concurrency` *(planned, T-1206)* | Race + integrity checks on the throwaway branch |
+| `pnpm --filter @fernleaf/backend perf:kitchen` | T-605: 400-order day + board timings on the throwaway branch (`backend/.env.perf`; build the backend first) |
+| `pnpm --filter @fernleaf/backend probe:concurrency` | T-1206: races (start, done, invoice, cut-off) + total reconciliation on the throwaway branch |
 
 ## Operations
 
