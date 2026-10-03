@@ -75,12 +75,12 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-BIL-03 | Order on ≤ 1 invoice | Must | P8 | T-801 T-803 | ✅ | unique `InvoiceLine.orderId`/`adjustmentId`; P2002 → ALREADY_INVOICED | Neon: concurrent create → 201 + 409 |
 | FR-BIL-04 | Post-invoice change policy | Must | P8 | T-804 | ✅ | immutable invoices; cancel/reject of invoiced orders → credit in the same TX | `billing.test.ts` BR-BIL-06, Neon probe |
 | FR-BIL-05 | Short delivery credit | Must | P8 | T-804 T-805 | ✅ | `POST /orders/:id/shortage`, shortage form | `billing.test.ts` BR-BIL-07, Neon probe |
-| FR-DSH-01 | Land on permission-composed dashboard | Must | P2/P9 | T-205 T-901..T-904 | ⬜ | | |
-| FR-DSH-02 | Admin dashboard | Must | P9 | T-901 | ⬜ | | |
-| FR-DSH-03 | Kitchen dashboard | Must | P9 | T-902 | ⬜ | | |
-| FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ⬜ | | |
-| FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ⬜ | | |
-| FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ⬜ | | |
+| FR-DSH-01 | Land on permission-composed dashboard | Must | P2/P9 | T-205 T-901..T-904 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-02 | Admin dashboard | Must | P9 | T-901 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-03 | Kitchen dashboard | Must | P9 | T-902 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
 | FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | ✅ | `demo.service.ts` (orders window + weekly invoices) | Neon: ~700 orders, 7 weekly invoices |
 | FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ✅ (window extends on startup, timer and requests) | `DemoService.tick` via `JobsService` | |
 | FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ✅ | `DemoService.autopilot` | Neon: today's drops advance |

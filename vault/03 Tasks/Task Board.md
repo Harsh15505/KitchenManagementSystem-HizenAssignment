@@ -10,11 +10,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
 - [ ] **T-605** 400-order perf check · P6
-- [ ] **T-901** Admin dashboard · P9
-- [ ] **T-902** Kitchen dashboard · P9
-- [ ] **T-903** Dispatch dashboard · P9
-- [ ] **T-904** Driver dashboard · P9
-- [ ] **T-905** Dashboard figure verification · P9
 - [ ] **T-1001** Static seed complete · P10
 - [ ] **T-1002** Rolling demo window · P10
 - [ ] **T-1003** Demo autopilot (*Should*) · P10
@@ -42,6 +37,11 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-905** Dashboard figure verification · P9
+- [x] **T-904** Driver dashboard · P9
+- [x] **T-903** Dispatch dashboard · P9
+- [x] **T-902** Kitchen dashboard · P9
+- [x] **T-901** Admin dashboard · P9
 - [x] **T-805** Billing UI · P8
 - [x] **T-804** Credits for invoiced cancels + shortages · P8
 - [x] **T-803** Invoices API + concurrency test · P8

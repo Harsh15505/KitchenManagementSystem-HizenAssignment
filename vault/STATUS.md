@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 11:47 IST
-phase: P9 next (P0-P8 done locally; T-108 deploy waiting on owner)
-active_task: T-901
+updated: 2026-10-03 12:07 IST
+phase: P10/P11 next (P0-P9 done locally; T-108 deploy waiting on owner)
+active_task: T-1001
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-901
 
 ## TL;DR
 
-P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view and billing. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: P9 dashboards.
+P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: deploy (needs the owner's Render service), polish, README.
 
 ## ⏳ Deadline
 
@@ -27,14 +27,15 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 - **P6**: ✅ (T-601…T-604; T-605 perf partly) → [[P6 Kitchen Board]]
 - **P7**: ✅ (T-701…T-706) → [[P7 Dispatch and Driver]]
 - **P8**: ✅ (T-801…T-805) → [[P8 Billing]]
+- **P9**: ✅ (T-901…T-905) → [[P9 Dashboards]]
 
 ## 🔨 Active task
 
-- **P9** dashboards: role dashboards per PRD §8 (admin, kitchen, dispatch, driver) with the defined metrics; `/dashboard` already routes by ability.
+- **P10** deploy + polish: Render service from `render.yaml` (owner), Vercel project, UptimeRobot; demo regenerate button in Settings; re-arm the cut-off timer when settings change; then **P11** README (setup, architecture, data model diagram, decisions, dashboard definitions from PRD §8, prioritisation, ambiguities).
 
 ## ⏭ Next up (in order)
 
-1. P9 dashboards · P10 deploy + polish (demo regenerate button, settings re-arm) · P11 README
+1. P10 deploy + polish · P11 README
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
 
 ## ⛔ Blockers / waiting on owner
@@ -53,7 +54,7 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 
 ## ✅ Verified locally (2026-10-03 06:30)
 
-- `pnpm lint / typecheck / test` clean; 315 tests (112 shared, 203 backend).
+- `pnpm lint / typecheck / test` clean; 319 tests (112 shared, 207 backend).
 - Pricing (06:40): Neon probe of tiers, cycles, grid, bulk set/exclude/clear, default switch, guarded delete; browser check of `/pricing` and the grid.
 - Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
 - Browser (kitchen): catalogue read-only, no money columns.
