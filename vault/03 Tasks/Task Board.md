@@ -10,11 +10,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
 - [ ] **T-605** 400-order perf check · P6
-- [ ] **T-801** Billing schema · P8
-- [ ] **T-802** Billing domain + tests BR-BIL · P8
-- [ ] **T-803** Invoices API + concurrency test · P8
-- [ ] **T-804** Credits for invoiced cancels + shortages · P8
-- [ ] **T-805** Billing UI · P8
 - [ ] **T-901** Admin dashboard · P9
 - [ ] **T-902** Kitchen dashboard · P9
 - [ ] **T-903** Dispatch dashboard · P9
@@ -47,6 +42,11 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-805** Billing UI · P8
+- [x] **T-804** Credits for invoiced cancels + shortages · P8
+- [x] **T-803** Invoices API + concurrency test · P8
+- [x] **T-802** Billing domain + tests BR-BIL · P8
+- [x] **T-801** Billing schema · P8
 - [x] **T-706** Delivery photo storage · P7
 - [x] **T-705** Driver mobile UI · P7
 - [x] **T-704** Driver API + scoping tests · P7

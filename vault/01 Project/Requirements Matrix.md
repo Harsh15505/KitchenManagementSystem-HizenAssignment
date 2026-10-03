@@ -55,7 +55,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-ORD-06 | Order list (search, filters, pagination) | Must | P5 | T-511 | ✅ | `orders-query.service.ts`, `/orders` (URL state) | browser check |
 | FR-ORD-07 | Order detail + timeline | Must | P5 | T-512 | ✅ | `/orders/[id]` | browser check |
 | FR-ORD-08 | Admin delivery override | Must | P5/P7 | T-512 T-701 | ✅ | `PATCH /orders/:id/delivery` (re-plan, drop move) | Neon probe |
-| FR-ORD-09 | Admin cancel/reject | Must | P5/P8 | T-508 T-804 | 🟨 (done; billing effect in T-804) | `cancel`/`reject` | Neon probe |
+| FR-ORD-09 | Admin cancel/reject | Must | P5/P8 | T-508 T-804 | ✅ | `cancel`/`reject` (+ credit when invoiced) | Neon probe |
 | FR-ORD-10 | Allergy warning + acknowledgement | Should | P5 | T-505 T-507 | ✅ (kitchen flag in P6) | `ALLERGEN_ACK_REQUIRED`, builder checkbox | `combinations.test.ts` warnings |
 | FR-KIT-01 | Board: prep units by station | Must | P6 | T-601 T-604 | ✅ | `kitchen.service.ts` board, `/kitchen` | browser check |
 | FR-KIT-02 | Start/done rules, races | Must | P6 | T-602 | ✅ | conditional updates under an order row lock | `kitchen.test.ts` BR-KIT-02/05, Neon race 200/409 |
@@ -70,18 +70,18 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-DSP-03 | Driver per drop (default) | Must | P7 | T-701 T-702 T-703 | ✅ | `PUT /dispatch/drops/:id/driver`, default driver at creation | Neon probe |
 | FR-DSP-04 | Driver view (phone, note, photo) | Must | P7 | T-704 T-705 T-706 | ✅ | `/driver` (own drops, today), mark-delivered sheet with note + photo | `dispatch.test.ts` BR-DSP-07, Neon probe, phone-width check |
 | FR-DSP-05 | On-time recorded | Must | P7 | T-704 | ✅ | `deliveredOnTime` stored at delivery | `dispatch.test.ts` BR-DSP-05 |
-| FR-BIL-01 | Confirmed orders billable | Must | P8 | T-802 T-803 | ⬜ | | |
-| FR-BIL-02 | Uninvoiced → invoice → paid | Must | P8 | T-803 T-805 | ⬜ | | |
-| FR-BIL-03 | Order on ≤ 1 invoice | Must | P8 | T-801 T-803 | ⬜ | | |
-| FR-BIL-04 | Post-invoice change policy | Must | P8 | T-804 | ⬜ | | |
-| FR-BIL-05 | Short delivery credit | Must | P8 | T-804 T-805 | ⬜ | | |
+| FR-BIL-01 | Confirmed orders billable | Must | P8 | T-802 T-803 | ✅ | `isBillable`, `billing.service.ts` uninvoiced | `billing.test.ts` BR-BIL-01 |
+| FR-BIL-02 | Uninvoiced → invoice → paid | Must | P8 | T-803 T-805 | ✅ | summary, invoice builder, list, detail, mark paid | Neon probe, browser check |
+| FR-BIL-03 | Order on ≤ 1 invoice | Must | P8 | T-801 T-803 | ✅ | unique `InvoiceLine.orderId`/`adjustmentId`; P2002 → ALREADY_INVOICED | Neon: concurrent create → 201 + 409 |
+| FR-BIL-04 | Post-invoice change policy | Must | P8 | T-804 | ✅ | immutable invoices; cancel/reject of invoiced orders → credit in the same TX | `billing.test.ts` BR-BIL-06, Neon probe |
+| FR-BIL-05 | Short delivery credit | Must | P8 | T-804 T-805 | ✅ | `POST /orders/:id/shortage`, shortage form | `billing.test.ts` BR-BIL-07, Neon probe |
 | FR-DSH-01 | Land on permission-composed dashboard | Must | P2/P9 | T-205 T-901..T-904 | ⬜ | | |
 | FR-DSH-02 | Admin dashboard | Must | P9 | T-901 | ⬜ | | |
 | FR-DSH-03 | Kitchen dashboard | Must | P9 | T-902 | ⬜ | | |
 | FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ⬜ | | |
 | FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ⬜ | | |
 | FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ⬜ | | |
-| FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | 🟨 (orders window done; invoices with P8) | `demo/demo.service.ts` | Neon: 702 orders, every status |
+| FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | ✅ | `demo.service.ts` (orders window + weekly invoices) | Neon: ~700 orders, 7 weekly invoices |
 | FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ✅ (window extends on startup, timer and requests) | `DemoService.tick` via `JobsService` | |
 | FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ✅ | `DemoService.autopilot` | Neon: today's drops advance |
 | FR-DAT-04 | Regenerate demo data | Should | P10 | T-1004 | 🟨 (API done; button in P10) | `POST /demo/regenerate` | |

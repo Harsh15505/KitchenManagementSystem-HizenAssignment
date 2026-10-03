@@ -65,4 +65,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 54 | 2026-10-03 11:06 | a918c84 | docs(vault): P6 kitchen board done | T-601…T-604 | P6 |
 | 55 | 2026-10-03 11:20 | 17cc877 | feat(backend): dispatch board, driver drops and proof of delivery | T-701, T-702, T-704, T-706 | P7 |
 | 56 | 2026-10-03 11:20 | 4d24ca5 | feat(frontend): dispatch board and the driver's phone view | T-703, T-705 | P7 |
+| 57 | 2026-10-03 11:22 | 594c589 | docs(vault): P7 dispatch and driver done; tidy STATUS | T-701…T-706 | P7 |
+| 58 | 2026-10-03 11:45 | 672b4ce | feat(billing): invoices, credits for later changes and demo invoices | T-801…T-804 | P8 |
+| 59 | 2026-10-03 11:45 | b883799 | feat(frontend): billing summary, invoice builder, invoices and shortages | T-805 | P8 |
 
