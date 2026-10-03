@@ -11,51 +11,71 @@ export const catalogueListQuerySchema = paginationQuerySchema.extend({
 });
 export type CatalogueListQuery = z.infer<typeof catalogueListQuerySchema>;
 
-/** FR-CAT-01: everything a dish carries. */
-export const dishInputSchema = z.object({
+/**
+ * FR-CAT-01: everything a dish carries. The shape has no defaults: updates are built from it, and
+ * Zod 4 still applies `.default()` inside `.partial()`, which would wipe omitted fields (BUG-003).
+ */
+const dishShape = {
   sku: z
     .string()
     .trim()
     .toUpperCase()
     .regex(/^[A-Z0-9][A-Z0-9-]{1,30}$/, 'Use letters, digits and dashes, e.g. FL-BWL-001'),
   name: z.string().trim().min(2, 'Enter a name').max(80),
-  description: z.string().trim().max(500).default(''),
-  imageUrl: z.url('Enter a full image URL').max(500).nullable().default(null),
+  description: z.string().trim().max(500),
+  imageUrl: z.url('Enter a full image URL').max(500).nullable(),
   temperature: z.enum(['HOT', 'COLD']),
   costPriceCents: cents,
-  kitchenStationId: z.uuid().nullable().default(null),
-  minOrderQty: z.number().int().min(1).max(500).nullable().default(null),
-  allergenIds: ids.default([]),
-  dietaryTagIds: ids.default([]),
+  kitchenStationId: z.uuid().nullable(),
+  minOrderQty: z.number().int().min(1).max(500).nullable(),
+  allergenIds: ids,
+  dietaryTagIds: ids,
+};
+
+export const dishInputSchema = z.object({
+  ...dishShape,
+  description: dishShape.description.default(''),
+  imageUrl: dishShape.imageUrl.default(null),
+  kitchenStationId: dishShape.kitchenStationId.default(null),
+  minOrderQty: dishShape.minOrderQty.default(null),
+  allergenIds: dishShape.allergenIds.default([]),
+  dietaryTagIds: dishShape.dietaryTagIds.default([]),
 });
 export type DishInput = z.infer<typeof dishInputSchema>;
 
-export const updateDishSchema = dishInputSchema
-  .extend({ isActive: z.boolean() })
+export const updateDishSchema = z
+  .object({ ...dishShape, isActive: z.boolean() })
   .partial()
   .refine((v) => Object.keys(v).length > 0, 'Nothing to update');
 export type UpdateDishInput = z.infer<typeof updateDishSchema>;
 
-/** FR-CAT-03 + FR-CAT-05: a reusable option and the sizes it supports. */
-export const optionInputSchema = z.object({
+/** FR-CAT-03 + FR-CAT-05: a reusable option and the sizes it supports. No defaults (BUG-003). */
+const optionShape = {
   name: z.string().trim().min(1, 'Enter a name').max(60),
-  description: z.string().trim().max(200).default(''),
+  description: z.string().trim().max(200),
   costPriceCents: cents,
-  allergenIds: ids.default([]),
-  dietaryTagIds: ids.default([]),
+  allergenIds: ids,
+  dietaryTagIds: ids,
   portionExtras: z
     .array(z.object({ portionSizeId: z.uuid(), extraChargeCents: cents }))
     .max(10)
-    .default([])
     .refine(
       (rows) => new Set(rows.map((r) => r.portionSizeId)).size === rows.length,
       'Each size once',
     ),
+};
+
+export const optionInputSchema = z.object({
+  ...optionShape,
+  description: optionShape.description.default(''),
+  allergenIds: optionShape.allergenIds.default([]),
+  dietaryTagIds: optionShape.dietaryTagIds.default([]),
+  portionExtras: optionShape.portionExtras.default([]),
 });
 export type OptionInput = z.infer<typeof optionInputSchema>;
 
-export const updateOptionSchema = optionInputSchema
-  .extend({ isActive: z.boolean() })
+export const updateOptionSchema = z
+  .object({ ...optionShape, isActive: z.boolean() })
   .partial()
   .refine((v) => Object.keys(v).length > 0, 'Nothing to update');
 export type UpdateOptionInput = z.infer<typeof updateOptionSchema>;
