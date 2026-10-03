@@ -30,12 +30,12 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CAT-06 | Flag incomplete setup | Must | P3 | T-302 | ⬜ | | |
 | FR-MEN-01 | Ordered/activatable categories & items | Must | P3 | T-309 T-310 | ⬜ | | |
 | FR-MEN-02 | Hide per company | Must | P4 | T-404 | ⬜ | | |
-| FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | ⬜ | | |
-| FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | ⬜ | | |
+| FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | 🟨 (rule + tests done) | | |
+| FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | 🟨 (resolver: `shared/src/domain/menu.ts`) | | |
 | FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ⬜ | | |
 | FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ⬜ | | |
 | FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ⬜ | | |
-| FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | 🟨 (resolver done) | | |
+| FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | ✅ (pricing + menu resolvers, tests) | | |
 | FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | 🟨 (resolver: `shared/src/domain/pricing.ts`, `pricing.test.ts`) | | |
 | FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ⬜ | | |
 | FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ⬜ | | |

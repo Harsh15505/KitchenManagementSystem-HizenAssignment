@@ -24,7 +24,7 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 - [ ] **T-308** Tier grid API + UI: dishes/options with explicit/derived/effective/source, "missing only", inline edit, set/exclude/clear, bulk save, missing counts.
 - [x] **T-309** Menu schema: MenuCategory (slug, secret), MenuItem, CompanyHiddenCategory, CompanyHiddenMenuItem.
 - [ ] **T-310** Menu management API + UI: categories and items CRUD, ordering (up/down), activate, secret flag.
-- [ ] **T-311** `shared/domain/menu.ts` `resolveEmployeeMenu` + **tests BR-MEN-01…04** (hidden beats secret, unpriced dish absent, unpriced option not offered, empty required group hides the dish).
+- [x] **T-311** `shared/domain/menu.ts` `resolveEmployeeMenu` + **tests BR-MEN-01…04** (hidden beats secret, unpriced dish absent, unpriced option not offered, empty required group hides the dish).
 - [ ] **T-312** Menu preview API + UI: pick company → employee; listed menu with prices on their tier; allergen/diet badges; secret slug input.
 - [ ] **T-313** Seed: reference lists, 6 stations, ~25 dishes (one without a station), ~25 options, groups (one portioned), 4 tiers (one incomplete), menu with 7 categories + secret `chefs-table` → [[Demo Data Plan]].
 
@@ -38,5 +38,6 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 
 - 2026-10-03 06:20: T-301/T-305/T-309 (catalogue, pricing and menu tables) were already created by the T-104 migration from DATABASE_MODELS §4, so they are marked done.
 - 2026-10-03 06:25: T-306 done. `shared/src/domain/pricing.ts`: `resolvePrice` (explicit > MANUAL-missing > FROM_COST / FROM_TIER with ceil5; exclusions; dish > 0, option ≥ 0; unknown tier → missing), `effectiveTierId`, `findDerivationCycle`, `pricingContext`. 15 tests named BR-PRC-01…05 incl. the brief example ($2.11 → $2.15), chains, overrides, exclusions, no per-item fallback, loops.
+- 2026-10-03 06:35: T-311 done. `shared/src/domain/menu.ts`: `resolveEmployeeMenu(input, access)` (listed / one secret slug / all) and `orderableDishes` for order validation (same function, BR-MEN-04). Rules: active category/item/dish; company hiding (category hides items, hiding beats secret); dish priced on the tier; options active + priced + supporting every size of a portioned group; a required group with no offer hides the dish; empty optional groups are dropped; allergen conflicts and diet matches per employee. 12 tests.
 
 ## Outcome

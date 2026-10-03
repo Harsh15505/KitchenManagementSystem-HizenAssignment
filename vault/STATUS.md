@@ -25,7 +25,7 @@ The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rule
 
 ## 🔨 Active task
 
-- **T-311** employee menu resolution (pure); then T-302 dishes API + UI
+- **T-302** dishes API + UI (then T-303/304 options and groups, T-307/308 tiers and grid, T-310 menu, T-312 preview, T-313 seed)
 
 ## ⏭ Next up (in order)
 

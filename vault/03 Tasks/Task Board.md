@@ -14,7 +14,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-307** Tiers API + UI · P3
 - [ ] **T-308** Tier grid (missing prices, bulk edit) · P3
 - [ ] **T-310** Menu management API + UI · P3
-- [ ] **T-311** resolveEmployeeMenu + tests BR-MEN · P3
 - [ ] **T-312** Menu preview as employee · P3
 - [ ] **T-313** Seed catalogue, tiers, menu · P3
 - [ ] **T-401** Companies & employees schema · P4
@@ -86,6 +85,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-311** resolveEmployeeMenu + tests BR-MEN · P3
 - [x] **T-306** money + resolvePrice + tests BR-PRC · P3
 - [x] **T-309** Menu schema · P3
 - [x] **T-305** Pricing schema + default tier FK · P3
