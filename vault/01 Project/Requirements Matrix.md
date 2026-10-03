@@ -35,8 +35,8 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ⬜ | | |
 | FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ⬜ | | |
 | FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ⬜ | | |
-| FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | ⬜ | | |
-| FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | ⬜ | | |
+| FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | 🟨 (resolver done) | | |
+| FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | 🟨 (resolver: `shared/src/domain/pricing.ts`, `pricing.test.ts`) | | |
 | FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ⬜ | | |
 | FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ⬜ | | |
 | FR-CMP-01 | Company core (domains, addresses, billing, owner) | Must | P4 | T-402 T-403 | ⬜ | | |

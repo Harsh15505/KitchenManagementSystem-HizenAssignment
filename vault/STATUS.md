@@ -25,7 +25,7 @@ The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rule
 
 ## 🔨 Active task
 
-- **P3 starts**: T-301 catalogue schema check, T-302 dishes
+- **T-311** employee menu resolution (pure); then T-302 dishes API + UI
 
 ## ⏭ Next up (in order)
 

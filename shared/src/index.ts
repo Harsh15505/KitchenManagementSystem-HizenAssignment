@@ -9,3 +9,4 @@ export * from './contracts/pagination';
 export * from './contracts/staff';
 export * from './contracts/settings';
 export * from './contracts/reference';
+export * from './domain/pricing';

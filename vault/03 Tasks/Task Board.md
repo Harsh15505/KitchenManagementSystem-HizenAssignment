@@ -8,15 +8,11 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-301** Catalogue schema · P3
 - [ ] **T-302** Dishes API + UI · P3
 - [ ] **T-303** Options API + UI (+ portion prices *Should*) · P3
 - [ ] **T-304** Option-group editor (+ portions *Should*) · P3
-- [ ] **T-305** Pricing schema + default tier FK · P3
-- [ ] **T-306** money + resolvePrice + tests BR-PRC · P3
 - [ ] **T-307** Tiers API + UI · P3
 - [ ] **T-308** Tier grid (missing prices, bulk edit) · P3
-- [ ] **T-309** Menu schema · P3
 - [ ] **T-310** Menu management API + UI · P3
 - [ ] **T-311** resolveEmployeeMenu + tests BR-MEN · P3
 - [ ] **T-312** Menu preview as employee · P3
@@ -90,6 +86,10 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-306** money + resolvePrice + tests BR-PRC · P3
+- [x] **T-309** Menu schema · P3
+- [x] **T-305** Pricing schema + default tier FK · P3
+- [x] **T-301** Catalogue schema · P3
 - [x] **T-210** Permission matrix integration test · P2
 - [x] **T-208** Reference data CRUD · P2
 - [x] **T-207** Settings + holidays + public domains · P2
