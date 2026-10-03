@@ -2,7 +2,9 @@
 
 import { type BillingSummaryRow, formatInvoiceNumber, formatUsd } from '@fernleaf/shared';
 import { useQuery } from '@tanstack/react-query';
+import { ReceiptText, Wallet } from 'lucide-react';
 import Link from 'next/link';
+import { CountUp } from '@/components/count-up';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -19,6 +21,7 @@ import {
 import { api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { formatIst } from '@/lib/orders';
+import { Metric } from '../dashboard/metric';
 
 export default function BillingPage() {
   return (
@@ -58,23 +61,19 @@ function BillingSummary() {
         </Link>
       </div>
       {summary.data && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-muted-foreground">Not yet invoiced</div>
-              <div className="text-2xl font-semibold tabular-nums">
-                {formatUsd(totals.uninvoiced)}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-muted-foreground">Invoiced, awaiting payment</div>
-              <div className="text-2xl font-semibold tabular-nums">
-                {formatUsd(totals.outstanding)}
-              </div>
-            </CardContent>
-          </Card>
+        <div className="stagger grid gap-4 sm:grid-cols-2">
+          <Metric
+            label="Not yet invoiced"
+            icon={ReceiptText}
+            value={<CountUp value={totals.uninvoiced} format={(n) => formatUsd(Math.round(n))} />}
+            hint="confirmed and delivered orders waiting for an invoice"
+          />
+          <Metric
+            label="Invoiced, awaiting payment"
+            icon={Wallet}
+            value={<CountUp value={totals.outstanding} format={(n) => formatUsd(Math.round(n))} />}
+            hint="issued invoices not yet marked paid"
+          />
         </div>
       )}
       <Card>

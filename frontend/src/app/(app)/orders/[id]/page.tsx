@@ -24,6 +24,7 @@ import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
+import { cn } from '@/lib/utils';
 import {
   formatIst,
   formatKitchenDate,
@@ -156,6 +157,8 @@ function OrderView({ order }: { order: OrderDetail }) {
           )}
         </div>
       </div>
+
+      <Lifecycle order={order} />
 
       {reasonFor && (
         <Card>
@@ -338,16 +341,23 @@ function OrderView({ order }: { order: OrderDetail }) {
           <CardTitle>Timeline</CardTitle>
         </CardHeader>
         <CardContent>
-          <ol className="space-y-2 text-sm">
-            {order.events.map((e) => (
-              <li key={e.id} className="flex flex-wrap gap-x-3">
-                <span className="w-36 shrink-0 text-muted-foreground">{formatIst(e.at, true)}</span>
-                <span className="font-medium">{EVENT_LABEL[e.type] ?? e.type}</span>
-                <span className="text-muted-foreground">by {e.actorLabel}</span>
-                {describeEvent(e.data) && (
-                  <span className="w-full pl-0 text-xs text-muted-foreground md:pl-39">
-                    {describeEvent(e.data)}
+          <ol className="stagger relative space-y-4 border-l border-border pl-5 text-sm">
+            {order.events.map((e, i) => (
+              <li key={e.id} className="relative">
+                <span
+                  className={cn(
+                    'absolute top-1.5 -left-[25px] size-2.5 rounded-full ring-4 ring-card',
+                    i === order.events.length - 1 ? 'bg-sidebar-primary' : 'bg-primary/60',
+                  )}
+                />
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-medium">{EVENT_LABEL[e.type] ?? e.type}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatIst(e.at, true)} · by {e.actorLabel}
                   </span>
+                </div>
+                {describeEvent(e.data) && (
+                  <div className="text-xs text-muted-foreground">{describeEvent(e.data)}</div>
                 )}
               </li>
             ))}
@@ -355,6 +365,74 @@ function OrderView({ order }: { order: OrderDetail }) {
         </CardContent>
       </Card>
     </>
+  );
+}
+
+const STEPS = ['Draft', 'Placed', 'Confirmed', 'Cooking', 'Cooked', 'Packed', 'Out', 'Delivered'];
+const STAGE_STEP: Record<NonNullable<OrderDetail['stage']>, number> = {
+  QUEUED: 2,
+  IN_PREP: 3,
+  KITCHEN_READY: 4,
+  DISPATCH_READY: 5,
+  OUT_FOR_DELIVERY: 6,
+  DELIVERED: 7,
+};
+
+/** Where the order is in its life, from draft to delivered. Hidden once cancelled or rejected. */
+function Lifecycle({ order }: { order: OrderDetail }) {
+  if (order.status === 'CANCELLED' || order.status === 'REJECTED') return null;
+  const at =
+    order.status === 'DRAFT'
+      ? 0
+      : order.status === 'PLACED'
+        ? 1
+        : order.status === 'DELIVERED'
+          ? 7
+          : order.stage
+            ? STAGE_STEP[order.stage]
+            : 2;
+  return (
+    <div className="animate-rise overflow-x-auto rounded-xl border bg-card p-4 shadow-(--shadow-card)">
+      <ol className="flex min-w-[560px] items-start">
+        {STEPS.map((label, i) => {
+          const complete = i < at || (i === at && at === STEPS.length - 1);
+          return (
+            <li key={label} className="flex flex-1 flex-col items-center gap-1.5 last:flex-none">
+              <div className="flex w-full items-center">
+                <span
+                  className={cn(
+                    'flex size-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors',
+                    complete && 'bg-primary text-primary-foreground',
+                    i === at &&
+                      !complete &&
+                      'bg-sidebar-primary text-sidebar-primary-foreground ring-4 ring-sidebar-primary/20',
+                    i > at && 'bg-muted text-muted-foreground',
+                  )}
+                >
+                  {complete ? <Check className="size-3.5" aria-hidden /> : i + 1}
+                </span>
+                {i < STEPS.length - 1 && (
+                  <span
+                    className={cn(
+                      'mx-1 h-0.5 flex-1 rounded-full',
+                      i < at ? 'bg-primary' : 'bg-muted',
+                    )}
+                  />
+                )}
+              </div>
+              <span
+                className={cn(
+                  'w-full text-[11px]',
+                  i === at ? 'font-medium text-foreground' : 'text-muted-foreground',
+                )}
+              >
+                {label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
