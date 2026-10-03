@@ -51,6 +51,9 @@ const MATRIX: ReadonlyArray<{
   { method: 'get', path: '/api/cutoff', allowed: ['admin'] },
   { method: 'post', path: '/api/cutoff/run', allowed: ['admin'] },
   { method: 'post', path: '/api/demo/regenerate', allowed: ['admin'] },
+  { method: 'get', path: '/api/kitchen/board', allowed: ['admin', 'kitchen', 'dispatch'] },
+  { method: 'post', path: `/api/kitchen/units/${TIER_ID}/done`, allowed: ['admin', 'kitchen'] },
+  { method: 'post', path: `/api/kitchen/orders/${TIER_ID}/force-complete`, allowed: ['admin'] },
   { method: 'get', path: '/api/companies', allowed: ['admin', 'dispatch'] },
   { method: 'get', path: '/api/companies/driver-options', allowed: ['admin', 'dispatch'] },
   { method: 'post', path: '/api/companies', allowed: ['admin'] },
@@ -70,13 +73,24 @@ const users = new Map<
     role: { key: string; name: string; permissions: string[] };
   }
 >();
-const fakePrisma = {
+const knownModels = {
   user: {
     findUnique: async ({ where }: { where: { id?: string; email?: string } }) =>
       [...users.values()].find((u) => u.id === where.id || u.email === where.email) ?? null,
     update: async () => undefined,
   },
 };
+/**
+ * Any other model call fails when awaited. Like real Prisma queries these are lazy thenables, so
+ * a query built but never awaited (e.g. inside a $transaction array) doesn't reject on its own.
+ */
+const failing = () => ({
+  then: (_ok: unknown, fail: (e: Error) => void) => fail(new Error('not in the fake')),
+});
+const rejecting = new Proxy({}, { get: () => failing });
+const fakePrisma = new Proxy(knownModels, {
+  get: (target, prop: string) => (prop in target ? target[prop as keyof typeof target] : rejecting),
+});
 
 describe('Permission matrix on the real application (FR-ACC-03)', () => {
   let app: INestApplication;
