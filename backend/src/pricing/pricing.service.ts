@@ -200,6 +200,49 @@ export class PricingService {
     return { saved: input.changes.length };
   }
 
+  /** Tiers and explicit prices only: what menu resolution and order pricing need (BR-PRC-01..05). */
+  async loadContext(): Promise<{
+    ctx: PricingContext;
+    defaultTierId: string;
+    tierNames: Map<string, string>;
+  }> {
+    const [tiers, settings, dishPrices, optionPrices] = await this.prisma.$transaction([
+      this.prisma.priceTier.findMany({
+        select: { id: true, name: true, derivation: true, factorBps: true, baseTierId: true },
+      }),
+      this.prisma.platformSettings.findUnique({
+        where: { id: 1 },
+        select: { defaultPriceTierId: true },
+      }),
+      this.prisma.dishTierPrice.findMany({
+        select: { tierId: true, dishId: true, priceCents: true },
+      }),
+      this.prisma.optionTierPrice.findMany({
+        select: { tierId: true, optionId: true, priceCents: true },
+      }),
+    ]);
+    if (!settings)
+      throw new DomainError('INTERNAL', 'Platform settings are missing. Run the seed.');
+    return {
+      ctx: pricingContext(tiers, [
+        ...dishPrices.map((r) => ({
+          tierId: r.tierId,
+          kind: 'DISH' as const,
+          itemId: r.dishId,
+          priceCents: r.priceCents,
+        })),
+        ...optionPrices.map((r) => ({
+          tierId: r.tierId,
+          kind: 'OPTION' as const,
+          itemId: r.optionId,
+          priceCents: r.priceCents,
+        })),
+      ]),
+      defaultTierId: settings.defaultPriceTierId,
+      tierNames: new Map(tiers.map((t) => [t.id, t.name])),
+    };
+  }
+
   /**
    * Active dishes employees on the default tier can't see: missing a price or explicitly not sold
    * there (flagged on the menu screen).

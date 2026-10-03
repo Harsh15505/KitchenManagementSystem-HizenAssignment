@@ -44,6 +44,7 @@ const MATRIX: ReadonlyArray<{
   { method: 'get', path: '/api/menu/categories', allowed: ['admin'] },
   { method: 'post', path: '/api/menu/categories', allowed: ['admin'] },
   { method: 'put', path: '/api/menu/categories/order', allowed: ['admin'] },
+  { method: 'get', path: `/api/menu/for-employee/${TIER_ID}`, allowed: ['admin'] },
   { method: 'get', path: '/api/companies', allowed: ['admin', 'dispatch'] },
   { method: 'get', path: '/api/companies/driver-options', allowed: ['admin', 'dispatch'] },
   { method: 'post', path: '/api/companies', allowed: ['admin'] },

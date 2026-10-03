@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { MenuCategoryView } from '../domain/menu';
 
 export const menuSlug = z
   .string()
@@ -58,4 +59,20 @@ export function slugify(text: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 40);
+}
+
+/** FR-MEN-04: exactly what one employee would see, priced on their tier. */
+export interface EmployeeMenuDto {
+  employee: {
+    id: string;
+    name: string;
+    email: string;
+    company: { id: string; name: string };
+    allergenIds: string[];
+    dietaryTagIds: string[];
+  };
+  tier: { id: string; name: string; isCompanyTier: boolean };
+  categories: MenuCategoryView[];
+  /** Set when a secret slug was requested: whether it opened a category. */
+  secret: { slug: string; found: boolean } | null;
 }
