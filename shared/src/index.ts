@@ -18,3 +18,5 @@ export * from './contracts/menu';
 export * from './domain/company';
 export * from './contracts/companies';
 export * from './contracts/employees';
+export * from './domain/cutoff';
+export * from './domain/combinations';
