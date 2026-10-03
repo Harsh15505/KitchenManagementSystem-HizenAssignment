@@ -16,7 +16,8 @@ export function MoneyInput({
   disabled,
 }: {
   valueCents: number | null;
-  onChangeCents: (cents: number | null) => void;
+  /** `cents` is null when the text is empty or not a valid amount; `text` tells which. */
+  onChangeCents: (cents: number | null, text: string) => void;
   id?: string;
   invalid?: boolean;
   disabled?: boolean;
@@ -39,7 +40,10 @@ export function MoneyInput({
         aria-invalid={showError}
         onChange={(e) => {
           setText(e.target.value);
-          onChangeCents(e.target.value.trim() === '' ? null : parseUsd(e.target.value));
+          onChangeCents(
+            e.target.value.trim() === '' ? null : parseUsd(e.target.value),
+            e.target.value,
+          );
         }}
         onBlur={() => {
           if (parsed !== null) setText(centsToInput(parsed));

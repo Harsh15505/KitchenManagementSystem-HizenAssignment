@@ -5,6 +5,7 @@ import {
   ListChecks,
   type LucideIcon,
   Settings,
+  Tags,
   Users,
   UtensilsCrossed,
 } from 'lucide-react';
@@ -40,6 +41,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     anyOf: [['read', 'Catalogue']],
   },
   { href: '/catalogue/options', label: 'Options', icon: Carrot, anyOf: [['read', 'Catalogue']] },
+  { href: '/pricing', label: 'Pricing', icon: Tags, anyOf: [['read', 'Pricing']] },
   { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
   {
     href: '/settings/reference',
