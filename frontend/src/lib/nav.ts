@@ -1,6 +1,7 @@
 import type { Action, AppAbility, SubjectName } from '@fernleaf/shared';
 import {
   Carrot,
+  ChefHat,
   ClipboardList,
   LockKeyhole,
   BookOpen,
@@ -40,6 +41,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
       ['read', 'DriverDashboard'],
     ],
   },
+  { href: '/kitchen', label: 'Kitchen board', icon: ChefHat, anyOf: [['read', 'KitchenBoard']] },
   { href: '/orders', label: 'Orders', icon: ClipboardList, anyOf: [['read', 'Order']] },
   { href: '/cutoff', label: 'Cut-off', icon: LockKeyhole, anyOf: [['read', 'Cutoff']] },
   { href: '/companies', label: 'Companies', icon: Building2, anyOf: [['read', 'Company']] },
