@@ -39,14 +39,14 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | ✅ | `shared/src/domain/pricing.ts` (resolver, factor parsing), tier form, grid | `pricing.test.ts` BR-PRC-* + FR-PRC-05 |
 | FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ✅ | `GET /price-tiers/:id/grid`, `PUT …/prices`, `pricing/[tierId]` page | `pricing.test.ts` FR-PRC-06, browser check |
 | FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ⬜ | | |
-| FR-CMP-01 | Company core (domains, addresses, billing, owner) | Must | P4 | T-402 T-403 | ⬜ | | |
-| FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | ⬜ | | |
-| FR-CMP-03 | Delivery defaults | Must | P4 | T-402 | ⬜ | | |
-| FR-CMP-04 | Tier + hidden menu | Must | P4 | T-402 T-404 | ⬜ | | |
-| FR-CMP-05 | Holiday conflict warning | Should | P4 | T-403 | ⬜ | | |
-| FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ⬜ | | |
-| FR-EMP-02 | Move employee | Must | P4 | T-405 | ⬜ | | |
-| FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⬜ | | |
+| FR-CMP-01 | Company core (domains, addresses, billing, owner) | Must | P4 | T-402 T-403 | ✅ | `backend/src/companies`, `frontend/src/app/(app)/companies` | `company.test.ts`, `companies.test.ts`, Neon probe |
+| FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | 🟨 (working days + holidays stored and edited; delivery-date check in T-502) | | |
+| FR-CMP-03 | Delivery defaults | Must | P4 | T-402 | ✅ | company settings form; driver via `delivery.perform` (`drivers.ts`) | Neon probe (DRIVER_REQUIRED) |
+| FR-CMP-04 | Tier + hidden menu | Must | P4 | T-402 T-404 | ✅ | `PUT /companies/:id/menu-visibility`, menu visibility card | Neon probe, browser check |
+| FR-CMP-05 | Holiday conflict warning | Should | P4 | T-403 | ⬜ (needs orders, P5) | | |
+| FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ✅ | `employees.service.ts`, employees card, `/employees` | `company.test.ts` BR-EMP-01, browser check |
+| FR-EMP-02 | Move employee | Must | P4 | T-405 | ✅ | `POST /employees/:id/move`, make-owner | `companies.test.ts` BR-EMP-01/02 |
+| FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⏭️ deferred (see Prioritisation Notes) | | |
 | FR-ORD-01 | Cut-off calculation | Must | P5 | T-502 | ⬜ | | |
 | FR-ORD-02 | Order builder flow | Must | P5 | T-504 T-505 T-506 T-507 | ⬜ | | |
 | FR-ORD-03 | Server validation + drafts | Must | P5 | T-505 T-506 | ⬜ | | |

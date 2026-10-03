@@ -9,14 +9,7 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-312** Menu preview as employee · P3
-- [ ] **T-401** Companies & employees schema · P4
-- [ ] **T-402** Companies API + UI (create TX with owner) · P4
-- [ ] **T-403** Domains, addresses, calendar (+ warning *Should*) · P4
-- [ ] **T-404** Company menu visibility UI · P4
-- [ ] **T-405** Employees API + UI + move · P4
 - [ ] **T-406** CSV import (*Should*) · P4
-- [ ] **T-407** Seed companies & employees · P4
-- [ ] **T-408** Company/employee rule tests · P4
 - [ ] **T-501** Orders schema (+ drops base, cutoff runs) · P5
 - [ ] **T-502** Cut-off calculator + tests BR-CUT · P5
 - [ ] **T-503** Combinations domain + tests BR-CMB · P5
@@ -78,6 +71,13 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-408** Company/employee rule tests · P4
+- [x] **T-407** Seed companies & employees · P4
+- [x] **T-405** Employees API + UI + move · P4
+- [x] **T-404** Company menu visibility UI · P4
+- [x] **T-403** Domains, addresses, calendar (+ warning *Should*) · P4
+- [x] **T-402** Companies API + UI (create TX with owner) · P4
+- [x] **T-401** Companies & employees schema · P4
 - [x] **T-313** Seed catalogue, tiers, menu · P3
 - [x] **T-310** Menu management API + UI · P3
 - [x] **T-308** Tier grid (missing prices, bulk edit) · P3

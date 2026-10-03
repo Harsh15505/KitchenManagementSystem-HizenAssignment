@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 06:40 IST
+updated: 2026-10-03 07:06 IST
 ---
 
 # 🧷 Commit Log
@@ -41,3 +41,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 30 | 2026-10-03 06:44 | 137f809 | feat(backend): menu categories and items API | T-310, BUG-005 | P3 |
 | 31 | 2026-10-03 06:44 | 356f858 | feat(frontend): menu management screen | T-310 | P3 |
 | 32 | 2026-10-03 06:44 | 999ac67 | docs(vault): menu management done, BUG-005, timestamp fixes | T-310 | P3 |
+| 33 | 2026-10-03 06:50 | 1e04d8c | feat(db): seed catalogue, price tiers and menu for the demo | T-313 | P3 |
+| 34 | 2026-10-03 06:50 | 62e9ad5 | docs(vault): catalogue seed done, P3 left with the menu preview | T-313 | P3 |
+| 35 | 2026-10-03 06:55 | 33f2bae | feat(shared): company and employee rules and contracts | T-402…T-405, T-408 | P4 |
+| 36 | 2026-10-03 06:55 | dc7e1a9 | feat(backend): companies and employees API | T-402…T-405 | P4 |
