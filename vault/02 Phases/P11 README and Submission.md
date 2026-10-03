@@ -28,6 +28,6 @@ Specs: brief §6, §8 · [[README Outline]] · [[Prioritisation Notes]] · [[Sub
 
 - 2026-10-03 12:18: T-1101 done: README with setup, architecture, ERD, rules, time/money/billing policy, dashboard definitions, decisions, prioritisation, ambiguities, testing, demo data, AI note (3e4fc2e). Live links added after deploy (1274dec).
 - 2026-10-03 18:40: T-1102 partly: `pnpm lint`, `pnpm typecheck`, `pnpm test` clean (319 tests: 112 shared, 207 backend); CI green on 2760d11; repo confirmed public; no `.env` file in git (only `.env.example`). Remaining: final run after the last feature, history review, tag `v1.0.0`.
-- 2026-10-03 18:55: README live link switched to https://kitchen-management-hizen.vercel.app.
+- 2026-10-03 18:47: README live link switched to https://kitchen-management-hizen.vercel.app.
 
 ## Outcome

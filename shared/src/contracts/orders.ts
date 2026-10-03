@@ -111,6 +111,27 @@ export type OrderListQuery = z.infer<typeof orderListQuerySchema>;
 
 export const cutoffRunSchema = z.object({ deliveryDate: calendarDateString });
 
+/** GET /orders/open-on: FR-CMP-05 holiday warning. Without companyId it covers every company (kitchen holiday). */
+export const openOrdersOnQuerySchema = z.object({
+  date: calendarDateString,
+  companyId: z.uuid().optional(),
+});
+export type OpenOrdersOnQuery = z.infer<typeof openOrdersOnQuerySchema>;
+
+export interface OpenOrdersOnDto {
+  date: string;
+  /** All matching orders; `orders` holds at most the first 50. */
+  total: number;
+  orders: Array<{
+    id: string;
+    number: number;
+    status: OrderStatus;
+    deliveryTimeMinutes: number;
+    employeeName: string;
+    companyName: string;
+  }>;
+}
+
 export type FulfilmentStage =
   'QUEUED' | 'IN_PREP' | 'KITCHEN_READY' | 'DISPATCH_READY' | 'OUT_FOR_DELIVERY' | 'DELIVERED';
 

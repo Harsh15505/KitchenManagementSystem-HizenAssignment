@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { domainProblem, domainRemovalProblem, emailDomain, emailOnCompanyDomain } from './company';
+import {
+  domainProblem,
+  domainRemovalProblem,
+  emailDomain,
+  emailOnCompanyDomain,
+  isOpenOrder,
+} from './company';
 
 const PUBLIC = new Set(['gmail.com', 'outlook.com']);
 
@@ -40,5 +46,12 @@ describe('BR-EMP-01: employee email on a company domain', () => {
     expect(emailOnCompanyDomain('a@mail.lumenlabs.example', domains)).toBe(false);
     expect(emailOnCompanyDomain('a@lumenlabs.example.evil', domains)).toBe(false);
     expect(emailOnCompanyDomain('lumenlabs.example', domains)).toBe(false);
+  });
+});
+
+describe('FR-CMP-05 / A-37: orders a new holiday would affect', () => {
+  it('draft, placed and confirmed orders are open; delivered, cancelled and rejected are settled', () => {
+    expect(['DRAFT', 'PLACED', 'CONFIRMED'].map(isOpenOrder)).toEqual([true, true, true]);
+    expect(['DELIVERED', 'CANCELLED', 'REJECTED'].map(isOpenOrder)).toEqual([false, false, false]);
   });
 });

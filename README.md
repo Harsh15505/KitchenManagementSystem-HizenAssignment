@@ -293,14 +293,13 @@ The brief gives more scope than time. The rule I followed: every **Must** proper
 
 **Built (all Musts):** access and staff (with self-lockout guards and session revocation), settings and kitchen holidays, admin-managed reference lists, catalogue with option groups and portions, four price tiers with a derivation grid, menu with secret categories and per-employee preview, companies and employees with moves and ownership, the order builder with live server validation, cut-off locking and processing, the kitchen board, the dispatch board, the driver's phone view with photos, billing with credits and shortages, four role dashboards, and self-renewing demo data.
 
-**Shoulds built:** portions, allergy acknowledgement, money hidden from non-admin roles, cut-off preview, demo autopilot, demo regenerate.
+**Shoulds built:** portions, allergy acknowledgement, money hidden from non-admin roles, cut-off preview, company and kitchen holiday conflict warning, demo autopilot, demo regenerate.
 
 **Skipped, and why:**
 
 | Item | Priority | Why | With more time |
 |---|---|---|---|
 | Employee CSV import | Should | Every Must came first; seeded employees cover the demo | Template download, per-row validation with the same schema, `{row, column, message}` report |
-| Company-holiday conflict warning | Should | Needs order lookups per date; time | On holiday create, list open orders on that date |
 | Roles editor UI | Could | Roles are already data | Permission checkboxes per role |
 | Admin line edits after confirmation | Could | Would desync kitchen units and invoices | Re-plan units + adjustment if already invoiced |
 | Invoice void/reissue, exports, payments, notifications | Could / out of scope | Credits cover corrections; email is simulated in the log | Void + reissue with a reason |
@@ -330,7 +329,7 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
 
 ## 11. Testing
 
-* **319 automated tests** (Vitest): 112 for the pure rules in `shared/`, 207 in the API.
+* **322 automated tests** (Vitest): 113 for the pure rules in `shared/`, 209 in the API.
 * Business-rule tests are **named after their rule IDs**, for example `BR-CUT-01: Wednesday with N=2 locks Monday 16:00 IST`, `BR-CMB-01: the brief example, 10 bowls = 6 brown + 4 jeera`, `BR-KIT-02`, `BR-DSP-05`, `BR-BIL-07`. Bug fixes carry `BUG-###` regression tests.
 * A **permission matrix** boots the real application module and asserts, route by route, which of the four roles get through.
 * Domain tests pass under three server time zones (CI runs them under each).

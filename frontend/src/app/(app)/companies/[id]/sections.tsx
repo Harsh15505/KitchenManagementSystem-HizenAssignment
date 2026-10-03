@@ -3,6 +3,7 @@
 import { type CompanyAddressDto, type CompanyDetail, addressInputSchema } from '@fernleaf/shared';
 import { X } from 'lucide-react';
 import { useState } from 'react';
+import { HolidayConflicts, useOpenOrdersOn } from '@/components/holiday-conflicts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -79,6 +80,10 @@ export function HolidaysCard({ company }: { company: CompanyDetail }) {
   const act = useCompanyAction(company.id);
   const [date, setDate] = useState('');
   const [name, setName] = useState('');
+  // FR-CMP-05: after adding, keep the warning for that date until dismissed.
+  const [reviewDate, setReviewDate] = useState('');
+  const checkDate = date || reviewDate;
+  const conflicts = useOpenOrdersOn(checkDate, company.id);
 
   return (
     <Card>
@@ -123,6 +128,7 @@ export function HolidaysCard({ company }: { company: CompanyDetail }) {
               e.preventDefault();
               const result = await act('/holidays', 'POST', { date, name }, 'Holiday added');
               if (result.ok) {
+                setReviewDate(conflicts.data?.total ? date : '');
                 setDate('');
                 setName('');
               }
@@ -143,9 +149,17 @@ export function HolidaysCard({ company }: { company: CompanyDetail }) {
               onChange={(e) => setName(e.target.value)}
             />
             <Button type="submit" variant="outline" disabled={!date || !name.trim()}>
-              Add
+              {date && conflicts.data?.total ? 'Add anyway' : 'Add'}
             </Button>
           </form>
+        )}
+        {canManage && checkDate && (
+          <HolidayConflicts
+            data={conflicts.data}
+            companyId={company.id}
+            added={!date}
+            onDismiss={() => setReviewDate('')}
+          />
         )}
       </CardContent>
     </Card>

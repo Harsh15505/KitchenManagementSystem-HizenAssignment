@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { HolidayConflicts, useOpenOrdersOn } from '@/components/holiday-conflicts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,10 @@ export function HolidaysCard() {
   });
   const [date, setDate] = useState('');
   const [name, setName] = useState('');
+  // FR-CMP-05: a kitchen holiday affects every company; keep the warning after adding.
+  const [reviewDate, setReviewDate] = useState('');
+  const checkDate = date || reviewDate;
+  const conflicts = useOpenOrdersOn(checkDate);
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: ['kitchen-holidays'] });
   const onError = (error: unknown) =>
@@ -45,6 +50,7 @@ export function HolidaysCard() {
         body: JSON.stringify({ date, name }),
       }),
     onSuccess: () => {
+      setReviewDate(conflicts.data?.total ? date : '');
       setDate('');
       setName('');
       toast.success('Holiday added');
@@ -100,6 +106,7 @@ export function HolidaysCard() {
           >
             <Input
               type="date"
+              aria-label="Holiday date"
               className="w-40"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -113,9 +120,16 @@ export function HolidaysCard() {
               required
             />
             <Button type="submit" disabled={add.isPending}>
-              Add
+              {date && conflicts.data?.total ? 'Add anyway' : 'Add'}
             </Button>
           </form>
+        )}
+        {canEdit && checkDate && (
+          <HolidayConflicts
+            data={conflicts.data}
+            added={!date}
+            onDismiss={() => setReviewDate('')}
+          />
         )}
       </CardContent>
     </Card>

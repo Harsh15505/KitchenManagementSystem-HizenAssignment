@@ -1,7 +1,7 @@
 ---
 kanban-plugin: basic
 type: board
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 ---
 
 ## 🗂 Backlog
@@ -13,7 +13,6 @@ updated: 2026-10-03 18:55 IST
 
 ## ▶ Next Up
 
-- [ ] **T-409** Holiday conflict warning (*Should*, FR-CMP-05) · P4/P12
 - [ ] **T-1205** Form screens design pass (order builder, company, employee, catalogue editors, settings) · P12
 - [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch (Sun AM; needs O-05) · P6/P12
 - [ ] **T-1206** Concurrency + integrity probe script (Sun AM; needs O-05) · P12
@@ -34,6 +33,7 @@ updated: 2026-10-03 18:55 IST
 
 ## ✅ Done
 
+- [x] **T-409** Holiday conflict warning (*Should*) · P4/P12
 - [x] **T-1204** Theme switch circular reveal · P12
 - [x] **T-1203** Boards, order detail, billing polish · P12
 - [x] **T-1202** Dashboards rebuilt with charts and motion · P12

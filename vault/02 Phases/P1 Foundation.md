@@ -36,7 +36,7 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - [x] CI green on `main` (first run ee9472d; latest 2760d11, 2026-10-03 18:20)
 - [x] Live web → API → DB path works on the free tiers (2026-10-03 12:55; `/api/health/ready` 3–37 ms Render → Neon)
 - [x] `docs/DATABASE_MODELS.md` schema validated (first try, no fixes needed)
-- [x] [[Tech Stack]] records the resolved versions; [[Runbook]] commands confirmed (2026-10-03 18:55)
+- [x] [[Tech Stack]] records the resolved versions; [[Runbook]] commands confirmed (2026-10-03 18:47)
 
 ## Risks
 

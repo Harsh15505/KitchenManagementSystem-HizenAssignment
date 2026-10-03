@@ -17,6 +17,7 @@ import {
   createOrderSchema,
   cutoffRunSchema,
   deliveryOverrideSchema,
+  openOrdersOnQuerySchema,
   orderListQuerySchema,
   orderReasonSchema,
   orderVersionSchema,
@@ -42,6 +43,7 @@ class VersionDto extends createZodDto(orderVersionSchema) {}
 class ReasonDto extends createZodDto(orderReasonSchema) {}
 class OverrideDto extends createZodDto(deliveryOverrideSchema) {}
 class CutoffRunDto extends createZodDto(cutoffRunSchema) {}
+class OpenOnQueryDto extends createZodDto(openOrdersOnQuerySchema) {}
 
 const canRead = CheckPolicies((a) => a.can('read', 'Order'));
 const canCreate = CheckPolicies((a) => a.can('create', 'Order'));
@@ -76,6 +78,13 @@ export class OrdersController {
   @canCreate
   quote(@Body() body: QuoteDto, @CurrentUser() user: CurrentUserInfo) {
     return this.orders.quote(body, user);
+  }
+
+  /** FR-CMP-05: open orders on a date, for the holiday warning. Declared before `:id`. */
+  @Get('open-on')
+  @canRead
+  openOn(@Query() q: OpenOnQueryDto) {
+    return this.query.openOn(q);
   }
 
   @Get(':id')

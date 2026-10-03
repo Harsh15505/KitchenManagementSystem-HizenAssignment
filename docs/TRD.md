@@ -453,6 +453,7 @@ Base path `/api`. JSON unless noted. `🔓` = public. Money fields (`*Cents`) ar
 | Method & path | Permission | Notes |
 |---|---|---|
 | `GET /orders?q&dateFrom&dateTo&status&companyId&invoiced&page&sort` | `orders.read` | Server pagination |
+| `GET /orders/open-on?date&companyId` | `orders.read` | FR-CMP-05 holiday warning: open (Draft/Placed/Confirmed) orders on a date, one company or all; first 50 + total. Read-only |
 | `GET /orders/:id` | `orders.read` | Lines, choices, money, delivery, plans/actuals, drop, invoice, adjustments, timeline |
 | `GET /orders/context?employeeId&date` | `orders.create` | Deliverable dates (next 21 days) with cut-off instants, allowed addresses/times/packaging per flags, defaults |
 | `POST /orders/quote` | `orders.create` / `orders.edit` | Validates and prices without persisting: normalised lines, `fieldErrors`, warnings (allergens, min qty) |

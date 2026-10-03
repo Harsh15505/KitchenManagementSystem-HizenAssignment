@@ -1,11 +1,11 @@
 ---
 type: reference
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 ---
 
 # 📒 Runbook
 
-> **Verified 2026-10-03 18:55** against the `scripts` in each `package.json`. Commands marked *(planned)* don't exist yet.
+> **Verified 2026-10-03 18:47** against the `scripts` in each `package.json`. Commands marked *(planned)* don't exist yet.
 
 ## Local setup
 

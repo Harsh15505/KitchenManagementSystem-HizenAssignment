@@ -50,3 +50,13 @@ export function domainRemovalProblem(
   const d = domain.toLowerCase();
   return employeeEmails.some((email) => emailDomain(email) === d) ? 'IN_USE' : null;
 }
+
+/**
+ * FR-CMP-05 / A-37: orders a new company or kitchen holiday would affect. Delivered, cancelled and
+ * rejected orders are settled, so they are not listed. The warning never changes an order.
+ */
+export const OPEN_ORDER_STATUSES = ['DRAFT', 'PLACED', 'CONFIRMED'] as const;
+
+export function isOpenOrder(status: string): boolean {
+  return (OPEN_ORDER_STATUSES as readonly string[]).includes(status);
+}

@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
-active_task: T-409 holiday conflict warning (next), then T-1205 form screens
+active_task: T-1205 form screens design pass
 ---
 # 📍 STATUS: live snapshot
 
@@ -20,15 +20,15 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 - **P0–P10**: ✅ (see [[Phase Plan]] for actual finish times; T-605 and T-1006 open, see below)
 - **P11**: 🟨 README ✅, quality gate run 18:40 (lint/typecheck/319 tests clean, CI green); tag `v1.0.0` + Google Form pending → [[P11 README and Submission]]
-- **P12**: 🟨 T-1201…T-1204 ✅ (theme, dashboards, boards, theme reveal) → [[P12 Polish and Proof]]
+- **P12**: 🟨 T-1201…T-1204 ✅ (theme, dashboards, boards, theme reveal), T-409 ✅ (holiday warning) → [[P12 Polish and Proof]]
 
 ## 🔨 Active task
 
-- **T-409** Holiday conflict warning (FR-CMP-05): when an admin adds a company holiday, show the open orders on that date.
+- **T-1205** Form screens design pass: order builder, company/employee forms, catalogue editors, settings.
 
 ## ⏭ Next up (in order)
 
-1. T-409 holiday warning (Sat evening)
+1. ~~T-409 holiday warning~~ ✅ 18:55
 2. T-1205 form screens design pass: order builder, company/employee forms, catalogue editors, settings (Sat evening)
 3. T-605 perf + T-1206 concurrency/integrity script on a throwaway Neon branch (Sun morning; needs **O-05**)
 4. T-1207 README final pass + screenshots (Sun afternoon); T-406 CSV import only if ahead by 15:00
@@ -51,7 +51,7 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## ✅ Verified (2026-10-03 18:40)
 
-- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 319 tests (112 shared, 207 backend). Frontend build clean (17:33).
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 322 tests (113 shared, 209 backend) after T-409 (18:52). Frontend build clean (17:33).
 - Live: origin check (new domain 204, old 403), `/api/health` through Vercel 200. Owner: 4 logins, role-limited nav, dashboards with data (13:58).
 - Browser (local, 17:20–17:35): all 4 dashboards, kitchen/dispatch boards, order detail, billing; light + dark; phone width without horizontal scroll.
 
@@ -61,7 +61,7 @@ ADR-001…ADR-029 in [[Decision Log]]. Latest: ADR-028 warm brand theme + dark m
 
 ## 🧷 Last commit
 
-`2760d11` docs(vault): theme switch animation noted. Working tree: vault catch-up + README live link (this change). See [[Commit Log]].
+`4730b23` docs(vault): full catch-up; then the T-409 commit. See [[Commit Log]].
 
 ## 🤝 Handoff notes for the next agent
 

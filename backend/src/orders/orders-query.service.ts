@@ -3,6 +3,9 @@ import {
   calendarDate,
   type FulfilmentStage,
   fromDbDate,
+  OPEN_ORDER_STATUSES,
+  type OpenOrdersOnDto,
+  type OpenOrdersOnQuery,
   type OrderDetail,
   type OrderListItem,
   type OrderListQuery,
@@ -104,6 +107,46 @@ export class OrdersQueryService {
       total,
       query,
     );
+  }
+
+  /**
+   * FR-CMP-05 / A-37: open orders on a date a new holiday would hit, for one company or (kitchen
+   * holiday) every company. Read-only: nothing is cancelled automatically.
+   */
+  async openOn(query: OpenOrdersOnQuery): Promise<OpenOrdersOnDto> {
+    const where: Prisma.OrderWhereInput = {
+      deliveryDate: toDbDate(calendarDate(query.date)),
+      status: { in: [...OPEN_ORDER_STATUSES] },
+      ...(query.companyId ? { companyId: query.companyId } : {}),
+    };
+    const [rows, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        orderBy: [{ deliveryTimeMinutes: 'asc' }, { number: 'asc' }],
+        take: 50,
+        select: {
+          id: true,
+          number: true,
+          status: true,
+          deliveryTimeMinutes: true,
+          employee: { select: { name: true } },
+          company: { select: { name: true } },
+        },
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+    return {
+      date: query.date,
+      total,
+      orders: rows.map((r) => ({
+        id: r.id,
+        number: r.number,
+        status: r.status,
+        deliveryTimeMinutes: r.deliveryTimeMinutes,
+        employeeName: r.employee.name,
+        companyName: r.company.name,
+      })),
+    };
   }
 
   async get(id: string, actor: CurrentUserInfo): Promise<OrderDetail> {

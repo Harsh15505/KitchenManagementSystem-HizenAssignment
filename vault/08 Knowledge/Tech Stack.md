@@ -1,11 +1,11 @@
 ---
 type: reference
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 ---
 
 # 🧰 Tech Stack
 
-The full rationale is in `docs/TRD.md` §2 and [[Decision Log]]. Resolved versions checked against the `package.json` files on 2026-10-03 18:55.
+The full rationale is in `docs/TRD.md` §2 and [[Decision Log]]. Resolved versions checked against the `package.json` files on 2026-10-03 18:47.
 
 | Layer | Package | Target | Resolved version | Notes |
 |---|---|---|---|---|

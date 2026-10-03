@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 ---
 
 # ✅ Requirements Matrix (traceability)
@@ -43,7 +43,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | ✅ | company working days + holidays; `undeliverableReason` in orders | `cutoff.test.ts` BR-CAL-01, Neon probe |
 | FR-CMP-03 | Delivery defaults | Must | P4 | T-402 | ✅ | company settings form; driver via `delivery.perform` (`drivers.ts`) | Neon probe (DRIVER_REQUIRED) |
 | FR-CMP-04 | Tier + hidden menu | Must | P4 | T-402 T-404 | ✅ | `PUT /companies/:id/menu-visibility`, menu visibility card | Neon probe, browser check |
-| FR-CMP-05 | Holiday conflict warning | Should | P12 | T-409 | ⬜ (scheduled Sat evening) | | |
+| FR-CMP-05 | Holiday conflict warning | Should | P12 | T-409 | ✅ (company + kitchen holidays) | `OrdersQueryService.openOn`, `GET /orders/open-on`, `components/holiday-conflicts.tsx` | `company.test.ts` A-37, `holiday-warning.test.ts` |
 | FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ✅ | `employees.service.ts`, employees card, `/employees` | `company.test.ts` BR-EMP-01, browser check |
 | FR-EMP-02 | Move employee | Must | P4 | T-405 | ✅ | `POST /employees/:id/move`, make-owner | `companies.test.ts` BR-EMP-01/02 |
 | FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⏭️ deferred (see Prioritisation Notes) | | |
@@ -96,7 +96,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
 | NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | 🟨 (server pagination ✅; board measured at 48 orders only, 400-order run T-605 on Sun) |
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
-| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (319 tests: 112 shared, 207 backend) |
+| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (322 tests: 113 shared, 209 backend) |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |
 | NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ✅ (httpOnly cookie, fail-closed guard, permission matrix, Origin check verified live 18:35, login throttle) |
 | NFR-10 | Usability; driver on phone | T-705; smoke checklist | ✅ (phone-first driver view; redesign ADR-028; final check in T-1006) |

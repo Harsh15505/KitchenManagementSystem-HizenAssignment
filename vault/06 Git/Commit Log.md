@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 18:55 IST
+updated: 2026-10-03 18:47 IST
 ---
 
 # 🧷 Commit Log
@@ -91,3 +91,5 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 79 | 2026-10-03 17:33 | 3a77ded | feat(frontend): order lifecycle stepper, timeline rail, billing metrics | T-UI | Polish |
 | 80 | 2026-10-03 17:33 | 8dad0b2 | docs(vault): UI redesign done; commit log backfilled; STATUS | T-UI | Polish |
 | 81 | 2026-10-03 18:01 | 9c6e749 | feat(frontend): circular reveal animation when switching theme | T-UI | Polish |
+| 82 | 2026-10-03 18:02 | 2760d11 | docs(vault): theme switch animation noted | T-1204 | P12 |
+| 83 | 2026-10-03 18:47 | 4730b23 | docs(vault): full catch-up after deploy and redesign; plan P12 | T-1102, T-1207 | P12 |
