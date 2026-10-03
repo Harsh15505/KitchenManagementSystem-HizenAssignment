@@ -239,7 +239,7 @@ HTTP ─▶ Controller ─▶ Service (use case, transaction) ─▶ Domain func
 
 | Role | Permissions |
 |---|---|
-| `admin` | every code **except** `delivery.perform` (admins aren't drivers; they act on drops through `dispatch.manage`) |
+| `admin` | every code **except** `delivery.perform` and `dashboard.driver` (admins aren't drivers: they act on drops through `dispatch.manage`, and a personal "my deliveries" view would always be empty) |
 | `kitchen` | `dashboard.kitchen`, `kitchen.read`, `kitchen.work`, `catalogue.read`, `reference.read`, `orders.read` |
 | `dispatch` | `dashboard.dispatch`, `dispatch.read`, `dispatch.manage`, `kitchen.read`, `orders.read`, `companies.read`, `reference.read` |
 | `driver` | `dashboard.driver`, `delivery.perform` |

@@ -16,7 +16,10 @@ export const DEFAULT_ROLES: readonly RoleSeed[] = [
     key: 'admin',
     name: 'Admin',
     description: 'Everything. Admins act on drops through dispatch permissions, not as drivers.',
-    permissions: ALL_PERMISSION_CODES.filter((code) => code !== 'delivery.perform'),
+    // Personal driver views are for drivers: an admin's "my deliveries" would always be empty.
+    permissions: ALL_PERMISSION_CODES.filter(
+      (code) => code !== 'delivery.perform' && code !== 'dashboard.driver',
+    ),
   },
   {
     key: 'kitchen',

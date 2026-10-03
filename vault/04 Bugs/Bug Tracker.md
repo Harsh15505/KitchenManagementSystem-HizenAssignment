@@ -20,6 +20,7 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 
 | ID | Title | Sev | Status | Area | Found (IST, by) | Fixed in | Regression test |
 |---|---|---|---|---|---|---|---|
-| — | _No bugs yet_ | | | | | | |
+| BUG-001 | Admin saw an always-empty "My deliveries today" (admin role granted `dashboard.driver`) | S4 | fixed | shared/authz | 2026-10-03 05:42, Claude (browser check) | T-205 commit | `rules.test.ts` admin cannot read DriverDashboard |
+| BUG-002 | Whole UI rendered in a serif fallback font: shadcn init wrote `--font-sans: var(--font-sans)` (a cycle) | S4 | fixed | frontend | 2026-10-03 05:38, Claude (browser check) | T-205 commit | manual (computed font = Geist) |
 
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

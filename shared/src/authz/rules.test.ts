@@ -33,6 +33,7 @@ describe('BR-ACC-01: abilities come only from permission codes', () => {
 
 describe('default roles (TRD §5.5)', () => {
   it('admin can do everything except act as a driver', () => {
+    expect(ADMIN?.can('read', 'DriverDashboard')).toBe(false);
     expect(ADMIN?.can('create', 'Order')).toBe(true);
     expect(ADMIN?.can('read', 'Money')).toBe(true);
     expect(ADMIN?.can('run', 'Cutoff')).toBe(true);
