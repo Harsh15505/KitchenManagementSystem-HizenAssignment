@@ -14,10 +14,12 @@ import {
   type Paginated,
 } from '@fernleaf/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, Lock, Plus, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Check, Lock, Plus, ReceiptText, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { CountUp } from '@/components/count-up';
+import { StepTitle } from '@/components/step-title';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +29,7 @@ import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { nameLookup, useReferenceList } from '@/lib/reference';
+import { cn } from '@/lib/utils';
 
 /** One combination in the builder: per group, the chosen options and (portioned groups) the size. */
 interface ComboState {
@@ -251,6 +254,11 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
       next ? ls.map((l, j) => (j === i ? next : l)) : ls.filter((_, j) => j !== i),
     );
   const money = (c: number | undefined) => (canSeeMoney && c !== undefined ? formatUsd(c) : '');
+  const checklist: Array<[string, boolean]> = [
+    ['Employee', Boolean(employeeId)],
+    ['Delivery date', Boolean(date)],
+    ['At least one dish', lines.length > 0],
+  ];
   const timeOptions = ctx
     ? Array.from(
         {
@@ -267,10 +275,12 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Who and when</CardTitle>
+            <StepTitle n={1} done={Boolean(employeeId && date)}>
+              Who and when
+            </StepTitle>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="ob-company">Company</Label>
               {order ? (
                 <p className="text-sm">{order.company.name}</p>
@@ -295,7 +305,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                 </NativeSelect>
               )}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="ob-employee">Employee</Label>
               {order ? (
                 <p className="text-sm">{order.employee.name}</p>
@@ -322,7 +332,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                 </NativeSelect>
               )}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="ob-date">Delivery date</Label>
               <NativeSelect
                 id="ob-date"
@@ -350,7 +360,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
               </NativeSelect>
               {err('deliveryDate')}
               {selectedDate?.locked && (
-                <p className="flex items-center gap-1 text-xs text-amber-700">
+                <p className="flex items-center gap-1 text-xs text-amber-700 dark:text-amber-300">
                   <Lock className="size-3" aria-hidden /> Cut-off passed: this will be a confirmed
                   late order.
                 </p>
@@ -372,10 +382,12 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
         {ctx && (
           <Card>
             <CardHeader>
-              <CardTitle>Delivery</CardTitle>
+              <StepTitle n={2} done={Boolean(employeeId && date)}>
+                Delivery
+              </StepTitle>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ob-time">Time (IST)</Label>
                 <NativeSelect
                   id="ob-time"
@@ -400,7 +412,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                 )}
                 {err('deliveryTimeMinutes')}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ob-address">Address</Label>
                 <NativeSelect
                   id="ob-address"
@@ -418,7 +430,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                 </NativeSelect>
                 {err('addressId')}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ob-pack">Packaging</Label>
                 <NativeSelect
                   id="ob-pack"
@@ -435,7 +447,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                 </NativeSelect>
                 {err('packagingTypeId')}
               </div>
-              <div className="space-y-1 md:col-span-3">
+              <div className="space-y-1.5 md:col-span-3">
                 <Label htmlFor="ob-notes">Notes for the kitchen (optional)</Label>
                 <Input id="ob-notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
               </div>
@@ -446,7 +458,9 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
         {ctx && (
           <Card>
             <CardHeader>
-              <CardTitle>Dishes</CardTitle>
+              <StepTitle n={3} done={lines.length > 0 && Boolean(quote)}>
+                Dishes
+              </StepTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {err('lines')}
@@ -456,10 +470,13 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                   ? line.frozen.reduce((s, c) => s + c.quantity, 0)
                   : line.combos.reduce((s, c) => s + c.quantity, 0);
                 return (
-                  <div key={line.dishId} className="space-y-3 rounded-lg border p-3">
+                  <div
+                    key={line.dishId}
+                    className="animate-rise space-y-3 rounded-xl border bg-background/50 p-4"
+                  >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="font-medium">
+                        <div className="font-heading text-base font-semibold">
                           {dish?.name ?? line.frozenName}{' '}
                           <span className="text-muted-foreground">× {total}</span>
                         </div>
@@ -498,7 +515,10 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                     )}
                     {dish &&
                       line.combos.map((combo, j) => (
-                        <div key={combo.key} className="space-y-2 rounded-md bg-muted/40 p-2">
+                        <div
+                          key={combo.key}
+                          className="space-y-2 rounded-lg border-l-2 border-primary/40 bg-muted/50 p-3"
+                        >
                           <div className="flex flex-wrap items-end gap-3">
                             <div className="w-20 space-y-1">
                               <Label className="text-xs">Qty</Label>
@@ -530,7 +550,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                                   ),
                                 });
                               return (
-                                <div key={g.id} className="space-y-1">
+                                <div key={g.id} className="space-y-1.5">
                                   <Label className="text-xs">
                                     {g.name}
                                     {g.isRequired ? '' : ' (optional)'}
@@ -577,7 +597,12 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                                                     : [...pick.optionIds, o.optionId],
                                                 })
                                               }
-                                              className={`rounded-full border px-2 py-0.5 text-xs ${on ? 'bg-primary text-primary-foreground' : 'bg-background'}`}
+                                              className={cn(
+                                                'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
+                                                on
+                                                  ? 'border-primary bg-primary text-primary-foreground'
+                                                  : 'bg-card hover:bg-muted',
+                                              )}
                                             >
                                               {o.name}
                                             </button>
@@ -644,31 +669,37 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                   </div>
                 );
               })}
-              <NativeSelect
-                aria-label="Add a dish"
-                value=""
-                onChange={(e) => {
-                  const dish = dishes.get(e.target.value);
-                  if (dish)
-                    setLines((ls) => [
-                      ...ls,
-                      { dishId: dish.dishId, combos: [newCombo(dish, dish.minOrderQty ?? 1)] },
-                    ]);
-                }}
-              >
-                <NativeSelectOption value="">+ Add a dish…</NativeSelectOption>
-                {ctx.menu.map((c) =>
-                  c.items
-                    .filter((d) => !lines.some((l) => l.dishId === d.dishId))
-                    .map((d) => (
-                      <NativeSelectOption key={`${c.id}-${d.dishId}`} value={d.dishId}>
-                        {c.name} · {d.name}
-                        {canSeeMoney ? ` · ${formatUsd(d.priceCents)}` : ''}
-                        {d.allergenConflicts.length > 0 ? ' ⚠' : ''}
-                      </NativeSelectOption>
-                    )),
-                )}
-              </NativeSelect>
+              <div className="flex items-center gap-2 rounded-xl border border-dashed border-primary/40 bg-primary/[0.03] p-3">
+                <Plus className="size-4 shrink-0 text-primary" aria-hidden />
+                <NativeSelect
+                  aria-label="Add a dish"
+                  className="w-full flex-1"
+                  value=""
+                  onChange={(e) => {
+                    const dish = dishes.get(e.target.value);
+                    if (dish)
+                      setLines((ls) => [
+                        ...ls,
+                        { dishId: dish.dishId, combos: [newCombo(dish, dish.minOrderQty ?? 1)] },
+                      ]);
+                  }}
+                >
+                  <NativeSelectOption value="">
+                    {lines.length === 0 ? 'Add the first dish…' : 'Add another dish…'}
+                  </NativeSelectOption>
+                  {ctx.menu.map((c) =>
+                    c.items
+                      .filter((d) => !lines.some((l) => l.dishId === d.dishId))
+                      .map((d) => (
+                        <NativeSelectOption key={`${c.id}-${d.dishId}`} value={d.dishId}>
+                          {c.name} · {d.name}
+                          {canSeeMoney ? ` · ${formatUsd(d.priceCents)}` : ''}
+                          {d.allergenConflicts.length > 0 ? ' ⚠' : ''}
+                        </NativeSelectOption>
+                      )),
+                  )}
+                </NativeSelect>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -677,20 +708,41 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <Card>
           <CardHeader>
-            <CardTitle>Summary</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <ReceiptText className="size-4 text-sidebar-primary" aria-hidden /> Summary
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             {!body && (
-              <p className="text-muted-foreground">
-                Choose an employee, a date and at least one dish.
-              </p>
+              <ul className="space-y-1.5">
+                {checklist.map(([label, ok]) => (
+                  <li
+                    key={label}
+                    className={cn(
+                      'flex items-center gap-2',
+                      ok ? 'text-foreground' : 'text-muted-foreground',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'flex size-4 items-center justify-center rounded-full border transition-colors',
+                        ok && 'border-primary bg-primary text-primary-foreground',
+                      )}
+                    >
+                      {ok && <Check className="size-3" aria-hidden />}
+                    </span>
+                    {label}
+                  </li>
+                ))}
+              </ul>
             )}
             {errorMessage && (
               <p
                 role="alert"
-                className="rounded-md border border-destructive/50 p-2 text-destructive"
+                className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-2.5 text-destructive"
               >
-                {errorMessage}
+                <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <span>{errorMessage}</span>
               </p>
             )}
             {quote && (
@@ -724,9 +776,17 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                     ))}
                   </div>
                 ))}
-                <div className="flex justify-between border-t pt-2 text-base font-semibold">
-                  <span>Total</span>
-                  <span className="tabular-nums">{money(quote.totalCents)}</span>
+                <div className="flex items-baseline justify-between border-t pt-3">
+                  <span className="font-semibold">Total</span>
+                  {canSeeMoney && (
+                    <span className="font-heading text-2xl font-semibold">
+                      <CountUp
+                        value={quote.totalCents}
+                        format={(n) => formatUsd(Math.round(n))}
+                        durationMs={400}
+                      />
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {quote.delivery.address.label} · {minutesToHHmm(quote.delivery.timeMinutes)} ·{' '}
@@ -746,7 +806,7 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                   })}
                 </p>
                 {quote.warnings.length > 0 && (
-                  <label className="flex items-start gap-2 rounded-md border border-destructive/50 p-2 text-xs">
+                  <label className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-2.5 text-xs">
                     <input
                       type="checkbox"
                       className="mt-0.5 size-4"
@@ -778,7 +838,11 @@ export function OrderBuilder({ order }: { order?: OrderDetail }) {
                   {order ? 'Save draft' : 'Save as draft'}
                 </Button>
               )}
-              <Button disabled={!body || !quote || saving} onClick={() => void save(true)}>
+              <Button
+                className="flex-1"
+                disabled={!body || !quote || saving}
+                onClick={() => void save(true)}
+              >
                 {saving
                   ? 'Saving…'
                   : order?.status === 'PLACED'

@@ -34,13 +34,16 @@ Get the app live on the owner's accounts, fix what the live run shows, give the 
 - 18:40 Quality gate (lint/typecheck/319 tests clean; CI green; repo public).
 - 18:35–18:47 Vault catch-up: every phase note (exit criteria ticked from evidence, Outcomes written, statuses), Phase Plan actuals, Timeline log + remaining plan, Task Board, Requirements Matrix (NFRs, deliverables), Bug Tracker (BUG-007…011), Q&A (Q-08…Q-14, O-04…O-06), Decision Log (ADR-029), Gotchas, Environments, Runbook (verified commands), Tech Stack, Demo Data Plan, Glossary, Submission Checklist, README Outline, Prioritisation Notes (Built table, interpretations, skipped rows), START HERE, Git Conventions; stray empty note `P_ ….md` removed. TRD §4.1/§9 and ARCHITECTURE §4/§10 got "as built" notes; README live link updated.
 
+- 18:55 T-409 holiday conflict warning (company + kitchen holidays; `GET /orders/open-on`; tests 322).
+- 19:02 T-1205 form screens pass (global inputs, order builder steps/summary, new company steps); BUG-012 fixed.
+
 ## Decisions (ADR IDs)
 
 ADR-028 (+ two follow-ups), ADR-029.
 
 ## Bugs (BUG IDs)
 
-BUG-006…BUG-011 (all fixed).
+BUG-006…BUG-012 (all fixed).
 
 ## Commits
 
@@ -48,7 +51,7 @@ See [[Commit Log]] rows 66–81 and the vault catch-up commit after them.
 
 ## Handoff: exact next steps
 
-1. T-409 holiday conflict warning (backend: return open orders on the holiday date when a company holiday is added; UI: warning with links).
-2. T-1205 form screens design pass.
+1. ~~T-409~~ ✅ · ~~T-1205~~ ✅
+2. Owner: O-05 (throwaway Neon branch → `backend/.env.perf`), O-04, O-06.
 3. Sun morning, once the owner has done O-05: T-605 perf script + T-1206 concurrency/integrity script against `backend/.env.perf`.
 4. T-1207 README final pass; freeze at 20:00; owner smoke test; tag; form.

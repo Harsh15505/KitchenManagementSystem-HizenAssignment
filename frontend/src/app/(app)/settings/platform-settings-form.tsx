@@ -252,7 +252,7 @@ function SettingsEditor({ initial }: { initial: PlatformSettingsDto }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="space-y-1 text-sm">
+    <label className="space-y-1.5 text-sm">
       <span className="font-medium">{label}</span>
       {children}
     </label>

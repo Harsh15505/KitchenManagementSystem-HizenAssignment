@@ -33,4 +33,6 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 | BUG-010 | Kitchen dashboard listed today's "do not cook" items inside the Tomorrow panel, which read as tomorrow's work | S3 | fixed | frontend | 2026-10-03 13:58, owner (live screenshots) | da6be4f | manual |
 | BUG-011 | The serif page-title underline sat inline next to badges in flex headings (order detail, company page). Caught before commit | S4 | fixed | frontend | 2026-10-03 17:29, Claude (browser check) | 3a77ded | manual |
 
+| BUG-012 | Switching theme in a hidden tab logged "Uncaught (in promise) InvalidStateError": the skipped view transition rejects `ready`, which wasn't caught | S4 | fixed | frontend | 2026-10-03 18:58, Claude (console check) | T-1205 commit (`.catch` on `transition.ready`) | manual (no unhandled rejection; theme still switches) |
+
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

@@ -97,7 +97,7 @@ export function HolidaysCard({ company }: { company: CompanyDetail }) {
         {company.holidays.length === 0 && (
           <p className="text-sm text-muted-foreground">No holidays set.</p>
         )}
-        <ul className="space-y-1">
+        <ul className="space-y-1.5">
           {company.holidays.map((h) => (
             <li
               key={h.id}
@@ -325,7 +325,7 @@ function AddressEditor({
     >
       <div className="grid gap-3 md:grid-cols-2">
         {fields.map(([key, label]) => (
-          <div key={key} className="space-y-1">
+          <div key={key} className="space-y-1.5">
             <Label htmlFor={`ad-${key}`}>{label}</Label>
             <Input
               id={`ad-${key}`}

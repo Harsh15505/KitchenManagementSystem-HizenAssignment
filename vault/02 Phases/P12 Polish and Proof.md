@@ -19,7 +19,7 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - [x] **T-1203** Boards and detail screens: kitchen unit cards, dispatch stage stepper, driver progress, order lifecycle stepper and timeline rail, billing metric cards, consistent filter chips.
 - [x] **T-1204** Theme switch animation (View Transitions circular reveal; instant under reduced motion).
 - [x] **T-409** *(Should)* Holiday conflict warning → [[P4 Companies and Employees]].
-- [ ] **T-1205** Form screens design pass: order builder, new/edit company, employee, dish/option editors, settings. *Accept:* same card/heading/spacing language as the boards; errors still inline; works at phone width.
+- [x] **T-1205** Form screens design pass: order builder, new/edit company, employee, dish/option editors, settings. *Accept:* same card/heading/spacing language as the boards; errors still inline; works at phone width.
 - [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch → [[P6 Kitchen Board]]. *Accept:* p50/p95 for `GET /kitchen/board` logged in the P6 note and README §11.
 - [ ] **T-1206** Concurrency + integrity script on the same throwaway branch: two simultaneous "done" clicks, two simultaneous invoices for one company, cut-off run twice, company integrity (owner + default address). *Accept:* `pnpm --filter @fernleaf/backend probe:concurrency` prints pass/fail per check; README §11 updated.
 - [ ] **T-1207** README final pass + screenshots (light and dark).
@@ -42,5 +42,7 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - 2026-10-03 18:47: Phase opened from the owner-approved plan; vault caught up first (owner's instruction).
 
 - 2026-10-03 18:55: T-409 done (company + kitchen holidays). Tests 322 (113 shared, 209 backend).
+
+- 2026-10-03 19:02: T-1205 done. Inputs and selects everywhere: card background, 36 px height, hover border; card titles semibold serif. Order builder: numbered steps that tick when complete (shared `StepTitle`), dish and combination cards, chip-style multi-select, dashed "add a dish" area, a checklist while incomplete, error with icon, animated total. New company: numbered steps with descriptions. Company form section headings with dividers. Label spacing 6 px. Verified: builder to a live quote (Lumen, Paneer Tikka Rice Bowl $5.20, nothing saved), new company page renders, typecheck/lint/build clean. Found BUG-012 (theme reveal unhandled rejection on hidden tabs), fixed.
 
 ## Outcome

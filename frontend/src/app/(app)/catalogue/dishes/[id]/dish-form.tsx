@@ -131,7 +131,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
       <CardContent>
         <form onSubmit={onSubmit} noValidate>
           <fieldset disabled={!canManage || saving} className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="sku">SKU</Label>
               <Input
                 id="sku"
@@ -141,7 +141,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
               />
               {err('sku')}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
@@ -151,7 +151,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
               />
               {err('name')}
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-1.5 md:col-span-2">
               <Label htmlFor="description">Description</Label>
               <Input
                 id="description"
@@ -160,7 +160,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
               />
             </div>
             {canSeeMoney && (
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="cost">Cost price</Label>
                 <MoneyInput
                   id="cost"
@@ -173,7 +173,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
                 )}
               </div>
             )}
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="temperature">Temperature</Label>
               <NativeSelect
                 id="temperature"
@@ -185,7 +185,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
                 <NativeSelectOption value="COLD">Cold</NativeSelectOption>
               </NativeSelect>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="station">Kitchen station</Label>
               <NativeSelect
                 id="station"
@@ -203,7 +203,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
                   ))}
               </NativeSelect>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="minQty">Minimum order quantity (optional)</Label>
               <Input
                 id="minQty"
@@ -214,7 +214,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
               />
               {err('minOrderQty')}
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-1.5 md:col-span-2">
               <Label htmlFor="image">Image URL (optional)</Label>
               <Input
                 id="image"

@@ -284,15 +284,15 @@ function OptionForm({ option, onClose }: { option?: OptionDto; onClose: () => vo
       <CardContent>
         <form onSubmit={submit} noValidate className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="opt-name">Name</Label>
               <Input id="opt-name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="opt-cost">Cost price</Label>
               <MoneyInput id="opt-cost" valueCents={costCents} onChangeCents={setCostCents} />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="opt-desc">Description</Label>
               <Input
                 id="opt-desc"

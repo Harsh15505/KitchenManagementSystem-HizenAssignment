@@ -9,7 +9,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { RequireAbility } from '@/components/require-ability';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { StepTitle } from '@/components/step-title';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ApiError, api } from '@/lib/api-client';
@@ -91,7 +92,10 @@ function NewCompanyForm() {
       <form onSubmit={submit} noValidate className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>New company</CardTitle>
+            <StepTitle n={1}>Company</StepTitle>
+            <CardDescription>
+              Name, price tier, billing contact and delivery calendar.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <fieldset disabled={saving}>
@@ -102,11 +106,14 @@ function NewCompanyForm() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Email domain and owner</CardTitle>
+            <StepTitle n={2}>Email domain and owner</StepTitle>
+            <CardDescription>
+              Employees sign up with this domain. The owner is the company&apos;s main contact.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <fieldset disabled={saving} className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="co-domain">Email domain (more can be added later)</Label>
                 <Input
                   id="co-domain"
@@ -117,7 +124,7 @@ function NewCompanyForm() {
                 {err('domain')}
               </div>
               <div />
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ow-name">Owner name</Label>
                 <Input
                   id="ow-name"
@@ -126,7 +133,7 @@ function NewCompanyForm() {
                 />
                 {err('owner.name')}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ow-email">Owner email (on the domain above)</Label>
                 <Input
                   id="ow-email"
@@ -136,7 +143,7 @@ function NewCompanyForm() {
                 />
                 {err('owner.email')}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label htmlFor="ow-phone">Owner phone (optional)</Label>
                 <Input
                   id="ow-phone"
@@ -151,7 +158,8 @@ function NewCompanyForm() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Default delivery address</CardTitle>
+            <StepTitle n={3}>Default delivery address</StepTitle>
+            <CardDescription>Orders go here unless an employee may choose another.</CardDescription>
           </CardHeader>
           <CardContent>
             <fieldset disabled={saving} className="grid gap-4 md:grid-cols-2">
@@ -165,7 +173,7 @@ function NewCompanyForm() {
                   ['accessNotes', 'Access notes (optional)'],
                 ] as const
               ).map(([key, label]) => (
-                <div key={key} className="space-y-1">
+                <div key={key} className="space-y-1.5">
                   <Label htmlFor={`addr-${key}`}>{label}</Label>
                   <Input
                     id={`addr-${key}`}
@@ -179,7 +187,7 @@ function NewCompanyForm() {
           </CardContent>
         </Card>
 
-        <Button type="submit" disabled={saving}>
+        <Button type="submit" size="lg" disabled={saving}>
           {saving ? 'Creating…' : 'Create company'}
         </Button>
       </form>

@@ -308,7 +308,7 @@ function EmployeeForm({
     <form onSubmit={submit} noValidate className="space-y-4 rounded-lg border bg-muted/30 p-4">
       <fieldset disabled={saving} className="space-y-4">
         <div className="grid gap-3 md:grid-cols-3">
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="emp-name">Name</Label>
             <Input
               id="emp-name"
@@ -317,7 +317,7 @@ function EmployeeForm({
             />
             {err('name')}
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="emp-email">Email</Label>
             <Input
               id="emp-email"
@@ -327,7 +327,7 @@ function EmployeeForm({
             />
             {err('email')}
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="emp-phone">Phone (optional)</Label>
             <Input
               id="emp-phone"
@@ -419,7 +419,7 @@ function MoveForm({
     >
       <p className="text-sm font-medium">Move {employee.name}</p>
       <div className="grid gap-3 md:grid-cols-2">
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label htmlFor="mv-company">New company</Label>
           <NativeSelect
             id="mv-company"
@@ -441,7 +441,7 @@ function MoveForm({
               ))}
           </NativeSelect>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label htmlFor="mv-email">
             New email{target ? ` (${target.domains.map((d) => `@${d}`).join(' or ')})` : ''}
           </Label>

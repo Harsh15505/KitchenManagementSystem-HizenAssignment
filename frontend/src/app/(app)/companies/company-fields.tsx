@@ -139,8 +139,8 @@ export function CompanyFields({
         </Field>
       </div>
 
-      <div>
-        <h3 className="mb-2 text-sm font-semibold">Billing contact</h3>
+      <div className="border-t pt-5">
+        <h3 className="mb-3 font-heading text-base font-semibold">Billing contact</h3>
         <div className="grid gap-4 md:grid-cols-2">
           <Field id="co-bname" label="Name" error={err('billingContactName')}>
             <Input
@@ -174,8 +174,10 @@ export function CompanyFields({
         </div>
       </div>
 
-      <div>
-        <h3 className="mb-2 text-sm font-semibold">Calendar and delivery defaults</h3>
+      <div className="border-t pt-5">
+        <h3 className="mb-3 font-heading text-base font-semibold">
+          Calendar and delivery defaults
+        </h3>
         <div className="space-y-4">
           <Field label="Working days (deliveries only on these days)" error={err('workingDays')}>
             <WeekdayPicker
