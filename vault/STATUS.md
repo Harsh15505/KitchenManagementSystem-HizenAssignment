@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 12:07 IST
-phase: P10/P11 next (P0-P9 done locally; T-108 deploy waiting on owner)
-active_task: T-1001
+updated: 2026-10-03 12:20 IST
+phase: deploy (P0-P9 + README done; T-108 waiting on owner)
+active_task: T-108
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-1001
 
 ## TL;DR
 
-P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: deploy (needs the owner's Render service), polish, README.
+P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). The README is written. Next: deploy, which needs the owner's Render service (see Blockers).
 
 ## ⏳ Deadline
 
@@ -28,14 +28,16 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 - **P7**: ✅ (T-701…T-706) → [[P7 Dispatch and Driver]]
 - **P8**: ✅ (T-801…T-805) → [[P8 Billing]]
 - **P9**: ✅ (T-901…T-905) → [[P9 Dashboards]]
+- **P10**: 🟨 demo window, autopilot, invoices, Settings card done; deploy + live smoke test pending → [[P10 Demo Data and Deploy]]
+- **P11**: 🟨 README written; live links to add after deploy
 
 ## 🔨 Active task
 
-- **P10** deploy + polish: Render service from `render.yaml` (owner), Vercel project, UptimeRobot; demo regenerate button in Settings; re-arm the cut-off timer when settings change; then **P11** README (setup, architecture, data model diagram, decisions, dashboard definitions from PRD §8, prioritisation, ambiguities).
+- **T-108 deploy**: follow the handoff in [[2026-10-03 S02 - Build P1 to P11]] (Render blueprint → Vercel → UptimeRobot → live smoke test → links in README).
 
 ## ⏭ Next up (in order)
 
-1. P10 deploy + polish · P11 README
+1. Deploy (T-108/T-109/T-1005/T-1006) · README live links · optional Shoulds (CSV import, holiday warning)
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
 
 ## ⛔ Blockers / waiting on owner

@@ -71,4 +71,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 60 | 2026-10-03 11:47 | 17a8300 | docs(vault): P8 billing done | T-801…T-805 | P8 |
 | 61 | 2026-10-03 12:05 | c38284d | feat(backend): admin dashboard figures and kitchen board additions | T-901, T-902, T-905 | P9 |
 | 62 | 2026-10-03 12:05 | d0ddbda | feat(frontend): role dashboards for admin, kitchen, dispatch and driver | T-901…T-904 | P9 |
+| 63 | 2026-10-03 12:07 | 53ec8d3 | docs(vault): P9 dashboards done | T-901…T-905 | P9 |
+| 64 | 2026-10-03 12:12 | 7d28a4a | feat: demo data status and regenerate in Settings; re-arm cut-off timer | T-1004 | P10 |
+| 65 | 2026-10-03 12:18 | 3e4fc2e | docs: README with setup, architecture, data model and dashboard definitions | T-1101 | P11 |
 

@@ -14,10 +14,10 @@ Specs: PRD FR-DAT-*, A-02, A-31 · TRD §12, §13 · [[Demo Data Plan]] · [[Env
 
 ## Tasks
 
-- [ ] **T-1001** Static seed complete and idempotent: staff, roles, settings, reference, catalogue, tiers and prices, menu, companies, employees ([[Demo Data Plan]]).
-- [ ] **T-1002** Rolling window `ensureWindow(now)` + `DemoDay`; bootstrap, nightly (00:05 IST) and catch-up triggers; close past days; past invoices (paid/issued); last 7 days uninvoiced.
-- [ ] **T-1003** *(Should)* Autopilot: per-order `demoAutopilotUntil` caps (same per drop), expected-stage computation, advance through the domain services with system actor "Demo autopilot" and scheduled timestamps; human action clears the cap; Settings toggle.
-- [ ] **T-1004** *(Should)* `POST /demo/regenerate` + Settings → Demo data page (status, last generated, regenerate).
+- [x] **T-1001** Static seed complete and idempotent: staff, roles, settings, reference, catalogue, tiers and prices, menu, companies, employees ([[Demo Data Plan]]).
+- [x] **T-1002** Rolling window `ensureWindow(now)` + `DemoDay`; bootstrap, nightly (00:05 IST) and catch-up triggers; close past days; past invoices (paid/issued); last 7 days uninvoiced.
+- [x] **T-1003** *(Should)* Autopilot: per-order `demoAutopilotUntil` caps (same per drop), expected-stage computation, advance through the domain services with system actor "Demo autopilot" and scheduled timestamps; human action clears the cap; Settings toggle.
+- [x] **T-1004** *(Should)* `POST /demo/regenerate` + Settings → Demo data page (status, last generated, regenerate).
 - [ ] **T-1005** Production: run migrations, seed, verify the 4 logins, role isolation (403s), today's data in every role, driver drops today, cut-off manual run, driver flow on a real phone.
 - [ ] **T-1006** Run the live smoke checklist ([[Submission Checklist]]); record Neon CU-hours and Render hours in [[Environments and Deploy]].
 
@@ -27,5 +27,7 @@ Specs: PRD FR-DAT-*, A-02, A-31 · TRD §12, §13 · [[Demo Data Plan]] · [[Env
 - [ ] A reviewer-created order is never deleted by automation
 
 ## Log
+
+- 2026-10-03 12:15: T-1001 (static seed complete, idempotent), T-1002/T-1003 (rolling window + autopilot, built in P5 as T-513; weekly invoices added in P8) and T-1004 (`GET /demo/status`, Settings → Demo data card with Regenerate) done. Settings saves re-arm the cut-off timer. Production build passes (`pnpm -r build`). T-1005/T-1006 wait for the Render service (owner).
 
 ## Outcome
