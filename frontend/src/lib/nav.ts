@@ -7,6 +7,7 @@ import {
   Truck,
   LockKeyhole,
   BookOpen,
+  Receipt,
   Building2,
   Contact,
   Eye,
@@ -48,6 +49,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/driver', label: 'My deliveries', icon: Route, anyOf: [['read', 'DriverDashboard']] },
   { href: '/orders', label: 'Orders', icon: ClipboardList, anyOf: [['read', 'Order']] },
   { href: '/cutoff', label: 'Cut-off', icon: LockKeyhole, anyOf: [['read', 'Cutoff']] },
+  { href: '/billing', label: 'Billing', icon: Receipt, anyOf: [['read', 'Invoice']] },
   { href: '/companies', label: 'Companies', icon: Building2, anyOf: [['read', 'Company']] },
   { href: '/employees', label: 'Employees', icon: Contact, anyOf: [['read', 'Employee']] },
   {

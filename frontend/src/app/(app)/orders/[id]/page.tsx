@@ -80,6 +80,7 @@ function OrderView({ order }: { order: OrderDetail }) {
   const [reasonFor, setReasonFor] = useState<'cancel' | 'reject' | null>(null);
   const [reason, setReason] = useState('');
   const [overriding, setOverriding] = useState(false);
+  const [shorting, setShorting] = useState(false);
   const money = (c: number | undefined) => (canSeeMoney && c !== undefined ? formatUsd(c) : '');
 
   async function act(path: string, body: unknown, ok: string) {
@@ -148,6 +149,11 @@ function OrderView({ order }: { order: OrderDetail }) {
               Reject
             </Button>
           )}
+          {order.actions.recordShortage && !shorting && (
+            <Button variant="outline" onClick={() => setShorting(true)}>
+              Record shortage
+            </Button>
+          )}
         </div>
       </div>
 
@@ -182,6 +188,7 @@ function OrderView({ order }: { order: OrderDetail }) {
         </Card>
       )}
       {overriding && <OverrideForm order={order} onDone={() => setOverriding(false)} />}
+      {shorting && <ShortageForm order={order} onDone={() => setShorting(false)} />}
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
@@ -303,6 +310,28 @@ function OrderView({ order }: { order: OrderDetail }) {
           )}
         </CardContent>
       </Card>
+
+      {order.adjustments.length > 0 && canSeeMoney && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Billing adjustments</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1 text-sm">
+            {order.adjustments.map((a) => (
+              <div key={a.id} className="flex justify-between gap-2">
+                <span>
+                  {a.reason}{' '}
+                  <span className="text-muted-foreground">
+                    · {formatIst(a.createdAt, true)} ·{' '}
+                    {a.invoiced ? 'on an invoice' : 'next invoice'}
+                  </span>
+                </span>
+                <span className="tabular-nums text-green-700">{money(a.amountCents)}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -452,6 +481,98 @@ function OverrideForm({ order, onDone }: { order: OrderDetail; onDone: () => voi
         )}
         <div className="flex gap-2">
           <Button onClick={() => void save()}>Save change</Button>
+          <Button variant="ghost" onClick={onDone}>
+            Cancel
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/** FR-BIL-05: short quantities per combination become a credit on the next invoice. */
+function ShortageForm({ order, onDone }: { order: OrderDetail; onDone: () => void }) {
+  const queryClient = useQueryClient();
+  const combos = order.lines.flatMap((l) =>
+    l.combinations.map((c) => ({
+      ...c,
+      dishName: l.dishName,
+      label: c.choices.map((ch) => ch.optionName).join(', '),
+      remaining: c.quantity - c.shortQuantity,
+    })),
+  );
+  const [qty, setQty] = useState<Record<string, number>>({});
+  const [reason, setReason] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const credit = combos.reduce((s, c) => s + (qty[c.id] ?? 0) * c.unitPriceCents, 0);
+
+  async function save() {
+    try {
+      await api(`/orders/${order.id}/shortage`, {
+        method: 'POST',
+        body: JSON.stringify({
+          reason,
+          items: combos
+            .map((c) => ({ combinationId: c.id, shortQty: qty[c.id] ?? 0 }))
+            .filter((i) => i.shortQty > 0),
+        }),
+      });
+      toast.success('Shortage recorded; the credit goes on the next invoice');
+      void queryClient.invalidateQueries({ queryKey: ['order', order.id] });
+      onDone();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not record the shortage');
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Record a short delivery</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm">
+        {combos.map((c) => (
+          <div key={c.id} className="flex flex-wrap items-center justify-between gap-2">
+            <span>
+              {c.dishName}
+              {c.label ? ` (${c.label})` : ''} · ordered {c.quantity}
+              {c.shortQuantity > 0 ? `, already short ${c.shortQuantity}` : ''}
+            </span>
+            <Input
+              type="number"
+              aria-label={`Short quantity for ${c.dishName}`}
+              className="w-20"
+              min={0}
+              max={c.remaining}
+              value={qty[c.id] ?? 0}
+              onChange={(e) =>
+                setQty({
+                  ...qty,
+                  [c.id]: Math.max(0, Math.min(c.remaining, Number(e.target.value))),
+                })
+              }
+            />
+          </div>
+        ))}
+        <div className="space-y-1">
+          <Label htmlFor="short-reason">What happened?</Label>
+          <Input
+            id="short-reason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="One bowl missing from the bag"
+          />
+        </div>
+        <p>Credit: {formatUsd(-credit)}</p>
+        {error && (
+          <p role="alert" className="text-destructive">
+            {error}
+          </p>
+        )}
+        <div className="flex gap-2">
+          <Button disabled={credit === 0 || reason.trim().length < 3} onClick={() => void save()}>
+            Record shortage
+          </Button>
           <Button variant="ghost" onClick={onDone}>
             Cancel
           </Button>
