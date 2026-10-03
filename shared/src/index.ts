@@ -15,3 +15,6 @@ export * from './contracts/catalogue';
 export * from './domain/catalogue';
 export * from './contracts/pricing';
 export * from './contracts/menu';
+export * from './domain/company';
+export * from './contracts/companies';
+export * from './contracts/employees';
