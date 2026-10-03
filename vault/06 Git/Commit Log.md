@@ -45,3 +45,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 34 | 2026-10-03 06:50 | 62e9ad5 | docs(vault): catalogue seed done, P3 left with the menu preview | T-313 | P3 |
 | 35 | 2026-10-03 06:55 | 33f2bae | feat(shared): company and employee rules and contracts | T-402…T-405, T-408 | P4 |
 | 36 | 2026-10-03 06:55 | dc7e1a9 | feat(backend): companies and employees API | T-402…T-405 | P4 |
+| 37 | 2026-10-03 07:07 | 6f278ee | test(backend): owner guard, domain checks and create-company refusals | T-408 | P4 |
+| 38 | 2026-10-03 07:07 | 32d5a4f | feat(frontend): companies and employees screens | T-402…T-405 | P4 |
+| 39 | 2026-10-03 07:07 | a22e8e8 | feat(db): seed five client companies and sixty employees | T-407 | P4 |
+| 40 | 2026-10-03 07:07 | 9252fe7 | docs(vault): P4 companies and employees done, CSV import deferred | T-401…T-408 | P4 |

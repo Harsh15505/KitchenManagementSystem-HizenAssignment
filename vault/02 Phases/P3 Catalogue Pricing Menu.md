@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P3
-status: in-progress
+status: done
 estimate: 6h
 target: CP2 Sat 3 Oct 21:00 IST (with P4)
 ---
@@ -25,7 +25,7 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 - [x] **T-309** Menu schema: MenuCategory (slug, secret), MenuItem, CompanyHiddenCategory, CompanyHiddenMenuItem.
 - [x] **T-310** Menu management API + UI: categories and items CRUD, ordering (up/down), activate, secret flag.
 - [x] **T-311** `shared/domain/menu.ts` `resolveEmployeeMenu` + **tests BR-MEN-01…04** (hidden beats secret, unpriced dish absent, unpriced option not offered, empty required group hides the dish).
-- [ ] **T-312** Menu preview API + UI: pick company → employee; listed menu with prices on their tier; allergen/diet badges; secret slug input.
+- [x] **T-312** Menu preview API + UI: pick company → employee; listed menu with prices on their tier; allergen/diet badges; secret slug input.
 - [x] **T-313** Seed: reference lists, 6 stations, ~25 dishes (one without a station), ~25 options, groups (one portioned), 4 tiers (one incomplete), menu with 7 categories + secret `chefs-table` → [[Demo Data Plan]].
 
 ## Exit criteria
@@ -44,5 +44,6 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 - 2026-10-03 06:40: T-307 + T-308 done. Pricing module: tier list with rule, default flag, company count and missing dish/option counts; create/edit (derivation shape validated in `priceTierInputSchema`, cycle refused with `TIER_CYCLE` via `findDerivationCycle`); make-default (one settings update); delete refused when default, used by companies, a base for other tiers or used by orders. Grid per tier and kind: cost, base price, derived, typed entry, effective, source; search + missing only; bulk set/exclude/clear in one transaction (dish price > 0). Factors typed as `2.4` or `-10` and parsed to bps without floats (`multiplierToBps`, `percentToBps`; tests). UI: `/pricing`, `/pricing/[tierId]` with dirty-cell drafts and a preview. ADR-026: plain table, no TanStack Table, for the grid. Neon probe 20 checks + browser check green; probe rows deleted.
 - 2026-10-03 06:45: T-310 done. Menu module: categories (name, slug, description, secret, active; unique name/slug), ordered via `PUT /menu/categories/order`; items place a dish once per category, ordered, activatable, removable; delete category cascades items and company hiding. Each item flags `unpricedOnDefaultTier`. UI `/menu`: category cards with badges (secret, inactive, hidden for N companies), slug follows the name until edited, add-dish picker, up/down, active toggles. BUG-005 caught in the probe (excluded dishes weren't flagged). Probe rows deleted.
 - 2026-10-03 06:50: T-313 done. `backend/prisma/seed/catalogue.ts`: 17 options (rice options with Regular/Large extras), 27 dishes per the Demo Data Plan (portioned rice group on bowls, bread/milk/sides groups, Seasonal Fruit Cup without a station, Samosa Snack Box min 2), tiers Enterprise (Standard −10 %, lamb special excluded), Partner (+15 %), Startup (manual, 17 of 27 dishes and every option except Grilled Chicken priced), Standard overrides ($4.95, $0.99, $1.29, as typed), 7 listed categories + secret `chefs-table`. Create-if-missing only (`update: {}`), so admin edits survive re-seeding; ran twice on Neon, no duplicates. Note: the Wraps & Rolls category also holds the Samosa Snack Box.
+- 2026-10-03 07:12: T-312 done, **P3 complete**. `MenuInputService.forEmployee` loads categories, dishes with groups, options with size extras, company hiding, the effective tier and the pricing context (`PricingService.loadContext`) into one `MenuInput`; P5 order validation will reuse it (BR-MEN-04). Endpoints `GET /menu/for-employee/:id` and `…/secret/:slug` (menu.read or orders.create). UI `/menu/preview`: company → employee → optional slug; prices on their tier, allergen warnings on dishes and options, diet matches. Verified on seeded data: Lumen hides Desserts and gets Enterprise prices ($3.80 bowl); Kestrel loses Cold Coffee; Saffron (Startup) sees only priced dishes; Chef's Table opens by slug (case-insensitive) and drops the lamb on Enterprise. Also: nav highlights only the most specific item.
 
 ## Outcome

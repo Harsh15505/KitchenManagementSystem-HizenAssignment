@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 07:06 IST
-phase: P4 done (Musts); next T-312 then P5 (T-108 deploy waiting on owner)
-active_task: T-312
+updated: 2026-10-03 07:12 IST
+phase: P5 next (P3 + P4 done; T-108 deploy waiting on owner)
+active_task: T-501
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-312
 
 ## TL;DR
 
-P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options, option groups, price tiers, the tier grid and menu categories work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). P4 companies and employees (Musts) are done and seeded. Next: T-312 menu preview, then P5 orders.
+P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options, option groups, price tiers, the tier grid and menu categories work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). P4 companies and employees (Musts) are done and seeded. P3 is complete (menu preview included). Next: P5 orders and cut-off.
 
 ## ⏳ Deadline
 
@@ -21,16 +21,16 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
 - **P2**: ✅ locally (T-201…T-210) → [[P2 Auth and Access]]
-- **P3**: 🟨 everything except T-312 menu preview → [[P3 Catalogue Pricing Menu]]
+- **P3**: ✅ → [[P3 Catalogue Pricing Menu]]
 - **P4**: ✅ Musts (T-401…405, 407, 408); T-406 CSV import deferred → [[P4 Companies and Employees]] → [[P3 Catalogue Pricing Menu]]
 
 ## 🔨 Active task
 
-- **T-312** menu preview as an employee: `GET /menu/for-employee/:id` (+ `/secret/:slug`) calling `resolveEmployeeMenu`, and a `/menu/preview` page (pick company → employee).
+- **P5** orders: read [[P5 Orders and Cutoff]] first. Reuse `MenuInputService.forEmployee` + `orderableDishes` for validation (BR-MEN-04) and `resolvePrice` for capture.
 
 ## ⏭ Next up (in order)
 
-1. T-312 menu preview · P5 orders and cut-off (the biggest phase)
+1. P5 orders and cut-off (the biggest phase) · P6 kitchen · P7 dispatch/driver
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
 3. P4 companies and employees
 
@@ -50,7 +50,7 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 
 ## ✅ Verified locally (2026-10-03 06:30)
 
-- `pnpm lint / typecheck / test` clean; 201 tests (77 shared, 124 backend).
+- `pnpm lint / typecheck / test` clean; 205 tests (77 shared, 128 backend).
 - Pricing (06:40): Neon probe of tiers, cycles, grid, bulk set/exclude/clear, default switch, guarded delete; browser check of `/pricing` and the grid.
 - Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
 - Browser (kitchen): catalogue read-only, no money columns.

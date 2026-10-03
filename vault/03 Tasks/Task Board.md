@@ -8,7 +8,6 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-312** Menu preview as employee · P3
 - [ ] **T-406** CSV import (*Should*) · P4
 - [ ] **T-501** Orders schema (+ drops base, cutoff runs) · P5
 - [ ] **T-502** Cut-off calculator + tests BR-CUT · P5
@@ -71,6 +70,7 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-312** Menu preview as employee · P3
 - [x] **T-408** Company/employee rule tests · P4
 - [x] **T-407** Seed companies & employees · P4
 - [x] **T-405** Employees API + UI + move · P4

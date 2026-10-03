@@ -30,8 +30,8 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CAT-06 | Flag incomplete setup | Must | P3 | T-302 | ✅ | dish list badges (No station, Not on menu) | browser check |
 | FR-MEN-01 | Ordered/activatable categories & items | Must | P3 | T-309 T-310 | ✅ | `backend/src/menu`, `frontend/src/app/(app)/menu` | permission matrix, browser check |
 | FR-MEN-02 | Hide per company | Must | P4 | T-404 | ⬜ | | |
-| FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | 🟨 (rule + tests; secret flag + slug managed in `/menu`; slug lookup in T-312) | | |
-| FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | 🟨 (resolver: `shared/src/domain/menu.ts`) | | |
+| FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | ✅ | `GET /menu/for-employee/:id/secret/:slug`, preview slug box | `menu.test.ts` BR-MEN-02, Neon probe |
+| FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | ✅ | `MenuInputService` + `resolveEmployeeMenu`, `/menu/preview` | `menu.test.ts`, Neon probe, browser check |
 | FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ✅ | `backend/src/pricing`, `frontend/src/app/(app)/pricing` | permission matrix, Neon probe, browser check |
 | FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ✅ | required FK on settings; `POST /price-tiers/:id/make-default` single update; default can't be deleted | Neon probe |
 | FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ⬜ | | |
