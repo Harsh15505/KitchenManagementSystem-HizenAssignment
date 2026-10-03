@@ -6,11 +6,9 @@ updated: 2026-10-03 01:51 IST
 
 ## 🗂 Backlog
 
-- [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
 - [ ] **T-605** 400-order perf check · P6
-- [ ] **T-1005** Production verification · P10
 - [ ] **T-1006** Live smoke checklist + usage check · P10
 - [ ] **T-1102** Quality gate + history review · P11
 - [ ] **T-1103** Submit Google Form · P11
@@ -19,7 +17,6 @@ updated: 2026-10-03 01:51 IST
 
 ## ▶ Next Up
 
-- [ ] **T-108** Provision Neon/Render/Vercel + deploy skeleton · P1
 
 ## 🔨 In Progress
 
@@ -32,6 +29,9 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-1005** Production verification · P10
+- [x] **T-109** UptimeRobot keep-alive on /api/health · P1
+- [x] **T-108** Provision Neon/Render/Vercel + deploy skeleton · P1
 - [x] **T-1101** README · P11
 - [x] **T-1004** Regenerate demo data (*Should*) · P10
 - [x] **T-1003** Demo autopilot (*Should*) · P10

@@ -1,8 +1,8 @@
 ---
 type: status
 updated: 2026-10-03 14:30 IST
-phase: deployed; keep-alive + live smoke test left
-active_task: T-109
+phase: deployed and smoke-tested (P0-P11 done)
+active_task: none (optional Shoulds)
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-109
 
 ## TL;DR
 
-P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Deployed**: web https://ktichen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. The README is written. Next: UptimeRobot keep-alive (T-109) and the owner's signed-in smoke test (T-1005/T-1006).
+P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Deployed**: web https://ktichen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. The README is written. UptimeRobot keep-alive is on (T-109) and the owner signed in with all 4 accounts on the live site: dashboards and role-limited navigation verified (T-1005). Remaining: optional Shoulds and polish.
 
 ## ⏳ Deadline
 
@@ -33,7 +33,7 @@ P0–P7 are done locally and CI is green: auth and permissions, staff, settings,
 
 ## 🔨 Active task
 
-- **T-109** UptimeRobot: HTTP(s) monitor on https://fernleaf-api-l0yq.onrender.com/api/health every 5 minutes. **T-1005** owner signs in with the 4 accounts on the live site (the agent may not enter passwords on deployed sites).
+- Optional: CSV import (T-406), company-holiday warning, DB-backed concurrency tests; consider fixing the `ktichen` typo in the Vercel domain (then update Render `WEB_ORIGIN` + README).
 
 ## ⏭ Next up (in order)
 
