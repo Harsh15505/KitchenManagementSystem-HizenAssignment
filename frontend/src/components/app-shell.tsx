@@ -10,6 +10,7 @@ import { buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -97,7 +98,10 @@ function Frame({ children }: { children: ReactNode }) {
               <span className="text-muted-foreground">· {me.role.name}</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{me.user.email}</DropdownMenuLabel>
+              {/* Base UI requires a group label to sit inside a Menu.Group. */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{me.user.email}</DropdownMenuLabel>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => void logout()}>
                 <LogOut className="size-4" aria-hidden />

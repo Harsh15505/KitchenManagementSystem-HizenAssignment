@@ -83,4 +83,5 @@ Read these before touching the related area. **Add a new entry every time someth
 - Throwaway DB scripts: name them `*.tmp.ts` (git-ignored since 8fb1b17); one slipped into a commit once.
 - `pg_advisory_xact_lock` returns `void`, which `$queryRaw` can't deserialise: call it with `$executeRaw`.
 - Demo data: generated orders have `source = DEMO`; regenerate keeps `STAFF` orders. Kitchen and dispatch actions on a demo order must set `demoAutopilotUntil = null` (the human takes over).
-
+- shadcn on Base UI: `DropdownMenuLabel` must be wrapped in `DropdownMenuGroup` (Base UI throws "MenuGroupContext is missing"); Radix-era examples don't do this (BUG-006).
+- Don't run `pnpm build` while `pnpm dev` runs: `nest build` wipes `backend/dist` and the dev API crashes with "Cannot find module './app.module'". Restart the backend.
