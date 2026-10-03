@@ -42,7 +42,7 @@ const companyShape = {
   workingDays: workingDaysSchema,
   defaultDeliveryTimeMinutes: minutesOfDay,
   dispatchLeadMinutes: z.number().int().min(0).max(600),
-  defaultPackagingTypeId: z.uuid(),
+  defaultPackagingTypeId: z.uuid('Choose a packaging type'),
   driverInstructions: optionalText(500),
   defaultDriverId: z.uuid().nullable(),
   isActive: z.boolean(),
