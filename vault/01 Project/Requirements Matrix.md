@@ -46,7 +46,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CMP-05 | Holiday conflict warning | Should | P12 | T-409 | ✅ (company + kitchen holidays) | `OrdersQueryService.openOn`, `GET /orders/open-on`, `components/holiday-conflicts.tsx` | `company.test.ts` A-37, `holiday-warning.test.ts` |
 | FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ✅ | `employees.service.ts`, employees card, `/employees` | `company.test.ts` BR-EMP-01, browser check |
 | FR-EMP-02 | Move employee | Must | P4 | T-405 | ✅ | `POST /employees/:id/move`, make-owner | `companies.test.ts` BR-EMP-01/02 |
-| FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⏭️ deferred (see Prioritisation Notes) | | |
+| FR-EMP-03 | CSV import with row errors | Should | P12 | T-406 | ✅ | `shared/src/domain/employee-import.ts`, `EmployeesService.importCsv`, `companies/[id]/employee-import.tsx` | `employee-import.test.ts` (shared, backend) |
 | FR-ORD-01 | Cut-off calculation | Must | P5 | T-502 | ✅ | `shared/src/domain/cutoff.ts` | `cutoff.test.ts` BR-CUT-01..03 (3 TZs) |
 | FR-ORD-02 | Order builder flow | Must | P5 | T-504 T-505 T-506 T-507 | ✅ | `/orders/context`, `/orders/quote`, `orders/order-builder.tsx` | browser check |
 | FR-ORD-03 | Server validation + drafts | Must | P5 | T-505 T-506 | ✅ | `normaliseOrder` + `OrdersService.prepare` (field-path errors) | `combinations.test.ts` BR-CMB/BR-MNY-02/BR-PRC-07, Neon probe |
@@ -92,11 +92,11 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 |---|---|---|---|
 | NFR-01 | Money: integer cents; reconciling totals | T-306 T-503 T-802 tests; DB CHECKs | ✅ (`money`, `pricing`, `combinations`, `billing` tests; CHECK `total = unit × qty`; invoice total asserted) |
 | NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | ✅ (domain tests under UTC/LA/IST in CI; server TZ=UTC on Render) |
-| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | 🟨 (row locks, advisory lock, conditional updates, unique keys; races verified by Neon probes; repeatable script T-1206) |
+| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | 🟨 (row locks, advisory lock, conditional updates, unique keys; races verified by Neon probes; `probe:concurrency` script written, run pending O-05) |
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
 | NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | 🟨 (server pagination ✅; board measured at 48 orders only, 400-order run T-605 on Sun) |
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
-| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (322 tests: 113 shared, 209 backend) |
+| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (328 tests: 118 shared, 210 backend) |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |
 | NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ✅ (httpOnly cookie, fail-closed guard, permission matrix, Origin check verified live 18:35, login throttle) |
 | NFR-10 | Usability; driver on phone | T-705; smoke checklist | ✅ (phone-first driver view; redesign ADR-028; final check in T-1006) |

@@ -31,10 +31,12 @@ import {
 import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { nameLookup, useReferenceList } from '@/lib/reference';
+import { EmployeeImport } from './employee-import';
 import { companyKey } from './use-company';
 
 type Mode =
   | { kind: 'new' }
+  | { kind: 'import' }
   | { kind: 'edit'; employee: EmployeeDto }
   | { kind: 'move'; employee: EmployeeDto };
 
@@ -86,12 +88,27 @@ export function EmployeesCard({ company }: { company: CompanyDetail }) {
           </CardDescription>
         </div>
         {canManage && mode === null && (
-          <Button size="sm" onClick={() => setMode({ kind: 'new' })}>
-            Add employee
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => setMode({ kind: 'import' })}>
+              Import CSV
+            </Button>
+            <Button size="sm" onClick={() => setMode({ kind: 'new' })}>
+              Add employee
+            </Button>
+          </div>
         )}
       </CardHeader>
       <CardContent className="space-y-4">
+        {mode?.kind === 'import' && (
+          <EmployeeImport
+            company={company}
+            onImported={() => {
+              void queryClient.invalidateQueries({ queryKey: ['employees'] });
+              void queryClient.invalidateQueries({ queryKey: companyKey(company.id) });
+            }}
+            onClose={() => setMode(null)}
+          />
+        )}
         {mode?.kind === 'new' && (
           <EmployeeForm company={company} onDone={refresh} onCancel={() => setMode(null)} />
         )}

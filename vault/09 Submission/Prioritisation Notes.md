@@ -21,7 +21,7 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 | Access | Login, CASL abilities from permission codes, staff with self-lockout guards and session revocation, money redaction | P2 |
 | Setup | Settings, kitchen holidays, public domains, reference lists, cut-off preview (Should) | P2, P5 |
 | Food and prices | Dishes, options, groups with portions (Should), 4 tiers with derivation, overrides, exclusions and a missing-price grid; menu with secret slug and per-employee preview | P3 |
-| Customers | Companies (domains, addresses, holidays, defaults, menu visibility), employees with moves and ownership | P4 |
+| Customers | Companies (domains, addresses, holidays + conflict warning), employees with moves and ownership, CSV import with a per-row report | P4, P12 |
 | Orders | Builder with live server quotes, allergy acknowledgement (Should), cut-off lock + idempotent processing, admin late orders and overrides, list/detail | P5 |
 | Operations | Kitchen board, dispatch board, driver phone view with photos, on-time | P6, P7 |
 | Billing | Invoices, paid, credits for invoiced cancels and shortages | P8 |
@@ -51,7 +51,7 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 | 2026-10-03 (plan) | Exports, accounting, payments, notifications… | Out of scope | Excluded by the brief | — |
 | 2026-10-03 (plan) | Roles editor UI (FR-ACC-06) | Could | Roles are data already; seed is enough to add one | Admin page with permission checkboxes |
 | 2026-10-03 (plan) | Invoice void/reissue | Could | Adjustments cover corrections; fewer states | Void + reissue flow with a reason |
-| 2026-10-03 07:06 | Employee CSV import (FR-EMP-03, T-406) | Should | Every Must comes first (P5–P9 are still ahead); seeded employees cover the demo | Template download, per-row validation with the same `createEmployeeSchema` + domain check, report `{row, column, message}` |
+| 2026-10-03 07:06 | Employee CSV import (FR-EMP-03, T-406) | Should | Every Must comes first (P5–P9 are still ahead); seeded employees cover the demo. **Built 2026-10-03 19:57 (T-406)** | Template download, per-row validation with the same `createEmployeeSchema` + domain check, report `{row, column, message}` |
 | 2026-10-03 07:06 | Company-holiday conflict warning (FR-CMP-05) | Should | Needs orders (P5); revisit after P5. **Built 2026-10-03 18:55 (T-409)**: company and kitchen holidays warn and list open orders | On holiday create, list open orders on that date and warn |
 | 2026-10-03 (plan) | Admin line edits after confirmation | Could | Would desync kitchen units and invoiced amounts | Re-plan units + adjustment if already invoiced |
 | 2026-10-03 11:05 | 400-order kitchen board perf run (T-605) | NFR | Time; measured a 48-order day (~580 ms from India). **Scheduled Sun AM** on a throwaway branch | Synthetic 400-order day, p50/p95 |

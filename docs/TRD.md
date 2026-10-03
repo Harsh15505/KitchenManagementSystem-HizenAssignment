@@ -446,7 +446,7 @@ Base path `/api`. JSON unless noted. `🔓` = public. Money fields (`*Cents`) ar
 | `POST|DELETE /companies/:id/domains[/:domainId]` · `POST|PATCH /companies/:id/addresses[/:addressId]` · `POST /companies/:id/addresses/:addressId/make-default|archive` · `POST|DELETE /companies/:id/holidays[/:id]` | `companies.manage` | A holiday with open orders returns warnings (FR-CMP-05) |
 | `GET /employees?companyId&q&page` · `GET /employees/:id` | `employees.read` | |
 | `POST /employees` · `PATCH /employees/:id` · `POST /employees/:id/move` | `employees.manage` | |
-| `POST /companies/:id/employees/import` (multipart CSV) · `GET /employees/import-template.csv` | `employees.manage` | Report: `{ created, failed: [{ row, column, message }] }` |
+| `POST /companies/:id/employees/import` · template | `employees.manage` | Report: `{ created, failed: [{ row, column, message }] }`. **As built:** the browser reads the file and sends `{ csv }` as JSON (≤ 1 MB, ≤ 1000 rows) instead of multipart; the template is generated in the browser from `EMPLOYEE_CSV_TEMPLATE` (shared) with the company's domain filled in |
 
 ### 6.5 Orders and cut-off
 

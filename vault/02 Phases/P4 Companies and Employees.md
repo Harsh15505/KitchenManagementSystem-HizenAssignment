@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P4
-status: done (Musts + T-409); T-406 skipped
+status: done (Musts + T-406 + T-409)
 estimate: 3h
 target: CP2 Sat 3 Oct 21:00 IST
 ---
@@ -19,7 +19,7 @@ Specs: PRD FR-CMP-*, FR-EMP-*, BR-CMP-*, BR-EMP-*, A-21, A-26…A-30 · DATABASE
 - [x] **T-403** Domains (lower-case, valid host, unique, not public → `PUBLIC_EMAIL_DOMAIN` / `DOMAIN_TAKEN`), addresses (make default, archive), calendar (working days, holidays); *(Should)* holiday conflict warning with the affected orders.
 - [x] **T-404** Company menu visibility UI: tree of categories → items with hide toggles.
 - [x] **T-405** Employees API + UI: list per company and global search; create/edit (email domain ∈ company domains, flags, allergies, preferences, active); **move** to another company (new email on that company's domain; owner guard `OWNER_CANNOT_MOVE`); transfer ownership.
-- [ ] **T-406** *(Should)* CSV import: template download; per-row validation; create the valid rows; report `{row, column, message}` for the rest.
+- [x] **T-406** *(Should)* CSV import: template download; per-row validation; create the valid rows; report `{row, column, message}` for the rest.
 - [x] **T-409** *(Should, FR-CMP-05)* Holiday conflict warning: when a company holiday is added, list the open orders (Draft/Placed/Confirmed) on that date so the admin can act. *Accept:* the API returns the affected orders with the new holiday; the UI shows them as a warning with links.
 - [x] **T-407** Seed: 5 companies with mixed calendars, tiers, hidden items, holidays and drivers; ~60 employees → [[Demo Data Plan]].
 - [x] **T-408** Tests: domain rules (public, unique, case), employee domain check, owner move guard, create-company TX atomicity.
@@ -35,9 +35,11 @@ Specs: PRD FR-CMP-*, FR-EMP-*, BR-CMP-*, BR-EMP-*, A-21, A-26…A-30 · DATABASE
 
 - 2026-10-03 18:55: T-409 done. Shared `OPEN_ORDER_STATUSES`/`isOpenOrder` (A-37 test); `GET /orders/open-on?date&companyId` (`orders.read`, first 50 + total, read-only; 2 service tests); `HolidayConflicts` warning on the company and kitchen holiday cards as soon as a date is picked (button becomes "Add anyway"), kept after adding until dismissed, with links to each order and to the filtered order list. Browser check: Saffron on 10 Oct → 3 placed orders; kitchen on 3 Oct → 5 orders with company names. Nothing submitted (local = production DB).
 
+- 2026-10-03 19:57: T-406 done. `shared/src/domain/employee-import.ts`: RFC 4180 subset parser (quotes, commas, line breaks, BOM) with file row numbers, header check, yes/no flags, allergen/diet names → ids, same schema as the form, duplicate emails in the file; 5 tests. `POST /companies/:id/employees/import` (`{ csv }` JSON, ≤ 1 MB) creates valid rows one by one (domain + unique checks, P2002 race → row error); 1 service test. UI: Import CSV panel on the company's employees card, template download with the company's domain, report table. Browser check with an all-invalid file: 5 problems reported, nothing created (local = production DB). TRD API row marked as built.
+
 ## Outcome
 
 Musts done 2026-10-03 07:06 (CP2 target Sat 21:00).
 - Built: companies with domains, addresses, holidays, working days, tier, billing and delivery defaults, menu visibility; employees with the domain rule, moves and ownership; 5 companies and 60 employees seeded.
-- Cut: T-406 CSV import (Should) → [[Prioritisation Notes]]. The FR-CMP-05 holiday warning was deferred until orders existed; scheduled as **T-409**.
+- Cut: none in the end; T-406 CSV import was deferred at 07:06 and built at 19:57 in P12. The FR-CMP-05 holiday warning was deferred until orders existed; scheduled as **T-409**.
 - Follow-ups: T-409 done 2026-10-03 18:55 (see log).

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -17,6 +18,7 @@ import {
   companyListQuerySchema,
   createCompanySchema,
   createEmployeeSchema,
+  employeeImportSchema,
   employeeListQuerySchema,
   menuVisibilitySchema,
   moveEmployeeSchema,
@@ -43,6 +45,7 @@ class EmployeeListQueryDto extends createZodDto(employeeListQuerySchema) {}
 class CreateEmployeeDto extends createZodDto(createEmployeeSchema) {}
 class UpdateEmployeeDto extends createZodDto(updateEmployeeSchema) {}
 class MoveEmployeeDto extends createZodDto(moveEmployeeSchema) {}
+class EmployeeImportDto extends createZodDto(employeeImportSchema) {}
 
 const readCompanies = CheckPolicies((a) => a.can('read', 'Company'));
 const manageCompanies = CheckPolicies((a) => a.can('manage', 'Company'));
@@ -54,6 +57,7 @@ const manageEmployees = CheckPolicies((a) => a.can('manage', 'Employee'));
 export class CompaniesController {
   constructor(
     private readonly companies: CompaniesService,
+    private readonly employees: EmployeesService,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -126,6 +130,14 @@ export class CompaniesController {
     @Param('addressId', ParseUUIDPipe) addressId: string,
   ) {
     return this.companies.makeDefaultAddress(id, addressId);
+  }
+
+  /** FR-EMP-03: CSV import; valid rows are created, the rest reported by row and column. */
+  @Post(':id/employees/import')
+  @HttpCode(200)
+  @manageEmployees
+  importEmployees(@Param('id', ParseUUIDPipe) id: string, @Body() body: EmployeeImportDto) {
+    return this.employees.importCsv(id, body.csv);
   }
 
   @Post(':id/holidays')

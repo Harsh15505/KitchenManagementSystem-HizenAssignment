@@ -36,6 +36,17 @@ export const moveEmployeeSchema = z.object({
 });
 export type MoveEmployeeInput = z.infer<typeof moveEmployeeSchema>;
 
+/** FR-EMP-03: the CSV file's text (read in the browser). */
+export const employeeImportSchema = z.object({
+  csv: z.string().min(1, 'The file is empty').max(1_000_000, 'The file is larger than 1 MB'),
+});
+export type EmployeeImportInput = z.infer<typeof employeeImportSchema>;
+
+export interface EmployeeImportResult {
+  created: number;
+  failed: Array<{ row: number; column: string; message: string }>;
+}
+
 export const employeeListQuerySchema = paginationQuerySchema.extend({
   companyId: z.uuid().optional(),
   q: z.string().trim().max(100).optional(),

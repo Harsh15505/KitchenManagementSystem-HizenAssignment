@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import {
   type CreateEmployeeInput,
   type EmployeeDto,
+  type EmployeeImportResult,
   type EmployeeListQuery,
   emailOnCompanyDomain,
   type MoveEmployeeInput,
   type Paginated,
   paginated,
+  parseEmployeeCsv,
   type UpdateEmployeeInput,
 } from '@fernleaf/shared';
 import { DomainError } from '../common/domain-error';
@@ -86,6 +88,56 @@ export class EmployeesService {
       select: employeeSelect,
     });
     return toDto(row);
+  }
+
+  /**
+   * FR-EMP-03: create the valid rows of a CSV file one by one, so a bad row never blocks the rest.
+   * Each row passes the same checks as the form (shared schema, company domain, unique email).
+   */
+  async importCsv(companyId: string, csv: string): Promise<EmployeeImportResult> {
+    const company = await this.prisma.company.findUnique({
+      where: { id: companyId },
+      select: { id: true },
+    });
+    if (!company) throw new DomainError('NOT_FOUND', 'Company not found.');
+    const [allergens, tags] = await Promise.all([
+      this.prisma.allergen.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true },
+      }),
+      this.prisma.dietaryTag.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true },
+      }),
+    ]);
+    const byName = (rows: Array<{ id: string; name: string }>) =>
+      new Map(rows.map((r) => [r.name.toLowerCase(), r.id]));
+    const parsed = parseEmployeeCsv(csv, {
+      allergens: byName(allergens),
+      dietaryTags: byName(tags),
+    });
+
+    const failed = [...parsed.failed];
+    let created = 0;
+    for (const { row, input } of parsed.rows) {
+      try {
+        await this.create({ ...input, companyId });
+        created++;
+      } catch (error) {
+        // Domain and duplicate-email refusals; P2002 is the same duplicate losing a race.
+        const duplicate = (error as { code?: string }).code === 'P2002';
+        if (!(error instanceof DomainError) && !duplicate) throw error;
+        failed.push({
+          row,
+          column: 'email',
+          message: duplicate
+            ? `${input.email} is already used by another employee.`
+            : (error as Error).message,
+        });
+      }
+    }
+    failed.sort((a, b) => a.row - b.row);
+    return { created, failed };
   }
 
   async update(id: string, input: UpdateEmployeeInput): Promise<EmployeeDto> {
