@@ -14,3 +14,4 @@ export * from './domain/menu';
 export * from './contracts/catalogue';
 export * from './domain/catalogue';
 export * from './contracts/pricing';
+export * from './contracts/menu';

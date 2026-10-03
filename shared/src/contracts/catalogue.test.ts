@@ -42,3 +42,13 @@ describe('catalogue contracts', () => {
     expect(updateDishSchema.safeParse({}).success).toBe(false);
   });
 });
+
+describe('menu contracts', () => {
+  it('slugify turns a category name into its slug', async () => {
+    const { slugify, menuSlug } = await import('./menu');
+    expect(slugify("Chef's Table")).toBe('chefs-table');
+    expect(slugify('  Bowls & Wraps ')).toBe('bowls-wraps');
+    expect(menuSlug.safeParse('Chefs-Table').data).toBe('chefs-table');
+    expect(menuSlug.safeParse('chefs table').success).toBe(false);
+  });
+});
