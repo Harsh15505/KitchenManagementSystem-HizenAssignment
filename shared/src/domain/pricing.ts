@@ -145,3 +145,61 @@ export function pricingContext(
     explicit: (tierId, item) => rows.get(`${tierId}|${item.kind}|${item.id}`),
   };
 }
+
+/**
+ * Tier factors are stored in basis points (ADR-005) and typed by staff as a multiplier ("2.4",
+ * FROM_COST) or a percent change ("-10", FROM_TIER). Parsed from the string, never via floats.
+ */
+const MULTIPLIER = /^(\d{1,2})(?:\.(\d{1,4}))?$/;
+const PERCENT = /^([+-]?)(\d{1,3})(?:\.(\d{1,2}))?$/;
+
+export function multiplierToBps(text: string): BasisPoints | null {
+  const m = MULTIPLIER.exec(text.trim());
+  if (!m) return null;
+  const bps = Number(m[1]) * 10_000 + Number((m[2] ?? '').padEnd(4, '0'));
+  return bps > 0 ? bps : null;
+}
+
+export function percentToBps(text: string): BasisPoints | null {
+  const m = PERCENT.exec(text.trim());
+  if (!m) return null;
+  const delta = Number(m[2]) * 100 + Number((m[3] ?? '').padEnd(2, '0'));
+  const bps = 10_000 + (m[1] === '-' ? -delta : delta);
+  return bps > 0 ? bps : null;
+}
+
+/** 24000 → "2.4" */
+export function bpsToMultiplier(bps: BasisPoints): string {
+  const whole = Math.trunc(bps / 10_000);
+  const frac = String(bps % 10_000)
+    .padStart(4, '0')
+    .replace(/0+$/, '');
+  return frac ? `${whole}.${frac}` : String(whole);
+}
+
+/** 9000 → "-10", 11500 → "+15", 10000 → "0" */
+export function bpsToPercent(bps: BasisPoints): string {
+  const delta = bps - 10_000;
+  const abs = Math.abs(delta);
+  const whole = Math.trunc(abs / 100);
+  const frac = String(abs % 100)
+    .padStart(2, '0')
+    .replace(/0+$/, '');
+  const body = frac ? `${whole}.${frac}` : String(whole);
+  return delta > 0 ? `+${body}` : delta < 0 ? `-${body}` : '0';
+}
+
+/**
+ * What a tier would charge for an item if it had no explicit row of its own: the grid shows this
+ * next to the override so staff can see what they are replacing (FR-PRC-06).
+ */
+export function resolveWithoutOverride(
+  item: PricedItem,
+  tierId: string,
+  ctx: PricingContext,
+): ResolvedPrice {
+  return resolvePrice(item, tierId, {
+    tiers: ctx.tiers,
+    explicit: (t, i) => (t === tierId ? undefined : ctx.explicit(t, i)),
+  });
+}

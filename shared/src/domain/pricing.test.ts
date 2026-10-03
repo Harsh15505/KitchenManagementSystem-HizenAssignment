@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bpsToMultiplier,
+  bpsToPercent,
   effectiveTierId,
   findDerivationCycle,
+  multiplierToBps,
+  percentToBps,
   type PricedItem,
   pricingContext,
   resolvePrice,
+  resolveWithoutOverride,
   TierCycleError,
   type TierRule,
 } from './pricing';
@@ -149,5 +154,53 @@ describe('BR-PRC-05: derivation loops are rejected', () => {
     expect(() => resolvePrice(bowl, 'a', pricingContext([loopA, loopB], []))).toThrow(
       TierCycleError,
     );
+  });
+});
+
+describe('FR-PRC-05: tier factors typed by staff', () => {
+  it('parses multipliers to basis points without floats', () => {
+    expect(multiplierToBps('2.4')).toBe(24_000);
+    expect(multiplierToBps('1.0725')).toBe(10_725);
+    expect(multiplierToBps('3')).toBe(30_000);
+    expect(multiplierToBps('0')).toBeNull();
+    expect(multiplierToBps('2.40001')).toBeNull();
+    expect(multiplierToBps('abc')).toBeNull();
+  });
+
+  it('parses percent changes to basis points', () => {
+    expect(percentToBps('-10')).toBe(9_000);
+    expect(percentToBps('+15')).toBe(11_500);
+    expect(percentToBps('7.5')).toBe(10_750);
+    expect(percentToBps('-100')).toBeNull();
+    expect(percentToBps('5%')).toBeNull();
+  });
+
+  it('formats basis points back for editing', () => {
+    expect(bpsToMultiplier(24_000)).toBe('2.4');
+    expect(bpsToMultiplier(10_725)).toBe('1.0725');
+    expect(bpsToMultiplier(30_000)).toBe('3');
+    expect(bpsToPercent(9_000)).toBe('-10');
+    expect(bpsToPercent(11_500)).toBe('+15');
+    expect(bpsToPercent(10_750)).toBe('+7.5');
+    expect(bpsToPercent(10_000)).toBe('0');
+  });
+});
+
+describe('FR-PRC-06: the grid shows what an override replaces', () => {
+  it('ignores the tier own row but keeps base-tier overrides', () => {
+    const rows = [
+      { tierId: 'std', kind: 'DISH' as const, itemId: 'bowl', priceCents: 1200 },
+      { tierId: 'ent', kind: 'DISH' as const, itemId: 'bowl', priceCents: 999 },
+    ];
+    expect(resolvePrice(bowl, 'ent', ctx(rows))).toEqual({ cents: 999, source: 'EXPLICIT' });
+    expect(resolveWithoutOverride(bowl, 'ent', ctx(rows))).toEqual({
+      cents: 1080,
+      source: 'DERIVED',
+    });
+  });
+
+  it('a manual tier has nothing underneath an override', () => {
+    const rows = [{ tierId: 'stp', kind: 'DISH' as const, itemId: 'bowl', priceCents: 500 }];
+    expect(resolveWithoutOverride(bowl, 'stp', ctx(rows)).source).toBe('MISSING');
   });
 });
