@@ -55,6 +55,10 @@ function Frame({ children }: { children: ReactNode }) {
   const { me, ability, logout } = useAuth();
   const pathname = usePathname();
   const items = visibleNav(ability);
+  // The most specific match wins, so /menu/preview lights "Menu preview", not "Menu" as well.
+  const activeHref = items
+    .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
     <div className="flex min-h-svh flex-1 flex-col md:flex-row">
@@ -65,7 +69,7 @@ function Frame({ children }: { children: ReactNode }) {
         </div>
         <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-col md:pb-0">
           {items.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active = item.href === activeHref;
             return (
               <Link
                 key={item.href}

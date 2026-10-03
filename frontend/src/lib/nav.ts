@@ -4,6 +4,7 @@ import {
   BookOpen,
   Building2,
   Contact,
+  Eye,
   LayoutDashboard,
   ListChecks,
   type LucideIcon,
@@ -47,6 +48,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   { href: '/catalogue/options', label: 'Options', icon: Carrot, anyOf: [['read', 'Catalogue']] },
   { href: '/menu', label: 'Menu', icon: BookOpen, anyOf: [['read', 'Menu']] },
+  { href: '/menu/preview', label: 'Menu preview', icon: Eye, anyOf: [['read', 'Menu']] },
   { href: '/pricing', label: 'Pricing', icon: Tags, anyOf: [['read', 'Pricing']] },
   { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
   {
