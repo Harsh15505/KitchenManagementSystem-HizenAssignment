@@ -15,6 +15,10 @@ const badgeVariants = cva(
         outline: 'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground',
         ghost: 'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
+        // Status tones for the Fernleaf palette (good / attention / information).
+        success: 'bg-emerald-600/12 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300',
+        warning: 'bg-amber-500/15 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300',
+        info: 'bg-sky-600/12 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300',
       },
     },
     defaultVariants: {

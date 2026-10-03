@@ -2,6 +2,7 @@
 
 import { type AdminDashboardDto, formatUsd } from '@fernleaf/shared';
 import { useQuery } from '@tanstack/react-query';
+import { AlertTriangle, Timer, Truck, UtensilsCrossed } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -52,20 +53,28 @@ export function AdminSection() {
         </div>
       )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Orders today" value={d.today.orders} hint={`${d.today.meals} meals`} />
+        <Metric
+          label="Orders today"
+          icon={UtensilsCrossed}
+          value={d.today.orders}
+          hint={`${d.today.meals} meals`}
+        />
         <Metric
           label="Delivery progress"
+          icon={Truck}
           value={`${d.today.dropsDelivered}/${d.today.drops}`}
           hint={`drops delivered · ${ratio(d.today.dropsDelivered, d.today.drops)}`}
         />
         <Metric
           label="On time"
+          icon={Timer}
           value={ratio(today.onTime, today.delivered)}
           hint={`today (${today.onTime}/${today.delivered}) · 7 days ${ratio(week.onTime, week.delivered)}`}
           tone={today.rate !== null && today.rate < 0.8 ? 'amber' : undefined}
         />
         <Metric
           label="Late right now"
+          icon={AlertTriangle}
           value={late}
           hint={`${d.today.lateUnits} kitchen item${d.today.lateUnits === 1 ? '' : 's'} · ${d.today.lateDrops} drop${d.today.lateDrops === 1 ? '' : 's'}`}
           tone={late > 0 ? 'red' : 'green'}

@@ -9,7 +9,18 @@ import {
   minutesToHHmm,
 } from '@fernleaf/shared';
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle } from 'lucide-react';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ChefHat,
+  Clock,
+  CookingPot,
+  Package,
+  PackageCheck,
+  Route,
+  Timer,
+  Truck,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -103,22 +114,26 @@ export function KitchenSection() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Metric
           label="Meals today"
+          icon={CookingPot}
           value={meals(work)}
           hint={`${b.summary.orders} orders · ${b.summary.units} items`}
         />
         <Metric
           label="Done"
+          icon={CheckCircle2}
           value={meals(work.filter((u) => u.prepDoneAt))}
           hint={ratio(b.summary.done, b.summary.units) + ' of items'}
         />
         <Metric
           label="Late"
+          icon={AlertTriangle}
           value={b.summary.late}
           tone={b.summary.late > 0 ? 'red' : undefined}
           hint="items past their ready-by time"
         />
         <Metric
           label="At risk"
+          icon={Clock}
           value={b.summary.atRisk}
           tone={b.summary.atRisk > 0 ? 'amber' : undefined}
           hint="due within the warning window"
@@ -308,17 +323,19 @@ export function DispatchSection() {
         </Link>
       </div>
       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <Metric label="Waiting on kitchen" value={d.summary.COOKING} />
+        <Metric label="Waiting on kitchen" icon={ChefHat} value={d.summary.COOKING} />
         <Metric
           label="Ready to stage"
+          icon={Package}
           value={d.summary.KITCHEN_READY}
           tone={d.summary.KITCHEN_READY > 0 ? 'amber' : undefined}
         />
-        <Metric label="Dispatch-ready" value={d.summary.DISPATCH_READY} />
-        <Metric label="Out" value={d.summary.OUT_FOR_DELIVERY} />
-        <Metric label="Delivered" value={d.summary.DELIVERED} />
+        <Metric label="Dispatch-ready" icon={PackageCheck} value={d.summary.DISPATCH_READY} />
+        <Metric label="Out" icon={Truck} value={d.summary.OUT_FOR_DELIVERY} />
+        <Metric label="Delivered" icon={CheckCircle2} value={d.summary.DELIVERED} />
         <Metric
           label="On time today"
+          icon={Timer}
           value={ratio(delivered.filter((x) => x.deliveredOnTime).length, delivered.length)}
         />
       </div>
@@ -413,11 +430,13 @@ export function DriverSection() {
       <div className="grid grid-cols-2 gap-3">
         <Metric
           label="My drops today"
+          icon={Route}
           value={d.drops.length}
           hint={`${delivered.length} delivered · ${d.drops.length - delivered.length} to go`}
         />
         <Metric
           label="On time today"
+          icon={Timer}
           value={ratio(delivered.filter((x) => x.deliveredOnTime).length, delivered.length)}
         />
       </div>

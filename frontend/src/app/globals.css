@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-heading: var(--font-fraunces);
+  --shadow-card: var(--shadow-card);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,72 +50,77 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Fernleaf brand: fern green on warm cream, saffron accents (light theme). */
+  --background: oklch(0.982 0.009 85);
+  --foreground: oklch(0.25 0.03 155);
+  --card: oklch(0.997 0.004 85);
+  --card-foreground: oklch(0.25 0.03 155);
+  --popover: oklch(0.997 0.004 85);
+  --popover-foreground: oklch(0.25 0.03 155);
+  --primary: oklch(0.5 0.12 152);
+  --primary-foreground: oklch(0.99 0.01 140);
+  --secondary: oklch(0.945 0.025 145);
+  --secondary-foreground: oklch(0.32 0.07 152);
+  --muted: oklch(0.955 0.012 85);
+  --muted-foreground: oklch(0.5 0.025 150);
+  --accent: oklch(0.95 0.05 82);
+  --accent-foreground: oklch(0.38 0.09 62);
+  --destructive: oklch(0.56 0.21 27);
+  --border: oklch(0.9 0.015 85);
+  --input: oklch(0.88 0.018 85);
+  --ring: oklch(0.6 0.12 152);
+  --chart-1: oklch(0.5 0.12 152);
+  --chart-2: oklch(0.72 0.15 75);
+  --chart-3: oklch(0.65 0.1 180);
+  --chart-4: oklch(0.6 0.16 35);
+  --chart-5: oklch(0.82 0.08 140);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.27 0.055 155);
+  --sidebar-foreground: oklch(0.9 0.025 140);
+  --sidebar-primary: oklch(0.8 0.14 80);
+  --sidebar-primary-foreground: oklch(0.22 0.05 155);
+  --sidebar-accent: oklch(0.34 0.065 154);
+  --sidebar-accent-foreground: oklch(0.98 0.01 140);
+  --sidebar-border: oklch(0.36 0.05 155);
+  --sidebar-ring: oklch(0.8 0.14 80);
+  --shadow-card: 0 1px 2px oklch(0.3 0.03 155 / 6%), 0 4px 16px -6px oklch(0.3 0.03 155 / 10%);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* Same brand at night: deep forest surfaces, brighter fern green. */
+  color-scheme: dark; /* native date/time pickers and scrollbars follow the theme */
+  --background: oklch(0.165 0.018 160);
+  --foreground: oklch(0.94 0.012 90);
+  --card: oklch(0.205 0.022 158);
+  --card-foreground: oklch(0.94 0.012 90);
+  --popover: oklch(0.22 0.024 158);
+  --popover-foreground: oklch(0.94 0.012 90);
+  --primary: oklch(0.72 0.14 150);
+  --primary-foreground: oklch(0.18 0.035 155);
+  --secondary: oklch(0.27 0.03 155);
+  --secondary-foreground: oklch(0.9 0.04 145);
+  --muted: oklch(0.25 0.02 158);
+  --muted-foreground: oklch(0.72 0.025 140);
+  --accent: oklch(0.32 0.06 75);
+  --accent-foreground: oklch(0.9 0.08 82);
+  --destructive: oklch(0.68 0.19 24);
   --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.72 0.14 150);
+  --chart-1: oklch(0.72 0.14 150);
+  --chart-2: oklch(0.8 0.14 80);
+  --chart-3: oklch(0.72 0.1 190);
+  --chart-4: oklch(0.7 0.16 35);
+  --chart-5: oklch(0.55 0.08 150);
+  --sidebar: oklch(0.13 0.02 160);
+  --sidebar-foreground: oklch(0.86 0.02 140);
+  --sidebar-primary: oklch(0.8 0.14 80);
+  --sidebar-primary-foreground: oklch(0.18 0.035 155);
+  --sidebar-accent: oklch(0.22 0.03 156);
+  --sidebar-accent-foreground: oklch(0.97 0.01 140);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.8 0.14 80);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 30%), 0 6px 20px -8px oklch(0 0 0 / 45%);
 }
 
 @layer base {
@@ -126,5 +132,23 @@
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2 {
+    font-family: var(--font-fraunces), var(--font-geist-sans), serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Sidebar navigation: no scrollbar on the phone's horizontal strip; a thin, quiet one on desktop. */
+@layer utilities {
+  .nav-scroll {
+    scrollbar-width: none;
+  }
+  @media (min-width: 768px) {
+    .nav-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in oklch, var(--sidebar-foreground) 25%, transparent) transparent;
+    }
   }
 }

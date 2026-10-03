@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -8,12 +9,14 @@ export function Metric({
   value,
   hint,
   tone,
+  icon: Icon,
   children,
 }: {
   label: string;
   value: ReactNode;
   hint?: ReactNode;
   tone?: 'red' | 'amber' | 'green';
+  icon?: LucideIcon;
   children?: ReactNode;
 }) {
   return (
@@ -25,12 +28,28 @@ export function Metric({
       )}
     >
       <CardContent className="space-y-1 pt-5">
-        <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-          {label}
+        <div className="flex items-start justify-between gap-2">
+          <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            {label}
+          </div>
+          {Icon && (
+            <span
+              className={cn(
+                'flex size-8 shrink-0 items-center justify-center rounded-lg',
+                tone === 'red'
+                  ? 'bg-red-500/12 text-red-700 dark:text-red-300'
+                  : tone === 'amber'
+                    ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
+                    : 'bg-secondary text-secondary-foreground',
+              )}
+            >
+              <Icon className="size-4" aria-hidden />
+            </span>
+          )}
         </div>
         <div
           className={cn(
-            'text-2xl font-semibold tabular-nums',
+            'font-heading text-3xl font-semibold tabular-nums',
             tone === 'red' && 'text-red-700 dark:text-red-300',
             tone === 'amber' && 'text-amber-700 dark:text-amber-300',
           )}
@@ -56,7 +75,7 @@ export function Panel({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
-        <CardTitle className="text-base">{title}</CardTitle>
+        <CardTitle className="font-heading text-base font-semibold">{title}</CardTitle>
         {action}
       </CardHeader>
       <CardContent className="text-sm">{children}</CardContent>

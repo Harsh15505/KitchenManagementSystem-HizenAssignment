@@ -11,13 +11,13 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
 
 export const STATUS_VARIANT: Record<
   OrderStatus,
-  'default' | 'secondary' | 'outline' | 'destructive'
+  'default' | 'secondary' | 'outline' | 'destructive' | 'success' | 'warning' | 'info'
 > = {
   DRAFT: 'outline',
-  PLACED: 'secondary',
+  PLACED: 'info',
   CONFIRMED: 'default',
-  DELIVERED: 'secondary',
-  CANCELLED: 'outline',
+  DELIVERED: 'success',
+  CANCELLED: 'secondary',
   REJECTED: 'destructive',
 };
 

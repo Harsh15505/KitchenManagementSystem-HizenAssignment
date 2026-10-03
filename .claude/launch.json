@@ -12,6 +12,19 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@fernleaf/frontend", "dev"],
       "port": 3000
+    },
+    {
+      "name": "backend-3001",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@fernleaf/backend", "dev"],
+      "env": { "WEB_ORIGIN": "http://localhost:3001" },
+      "port": 4000
+    },
+    {
+      "name": "frontend-3001",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@fernleaf/frontend", "dev", "--port", "3001"],
+      "port": 3001
     }
   ]
 }
