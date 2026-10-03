@@ -118,5 +118,6 @@ export class DropPhotoController {
   imports: [OrdersModule],
   controllers: [DispatchController, DriverController, DropPhotoController],
   providers: [DispatchService],
+  exports: [DispatchService],
 })
 export class DispatchModule {}

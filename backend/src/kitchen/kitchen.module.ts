@@ -56,5 +56,6 @@ export class KitchenController {
   imports: [OrdersModule],
   controllers: [KitchenController],
   providers: [KitchenService],
+  exports: [KitchenService],
 })
 export class KitchenModule {}

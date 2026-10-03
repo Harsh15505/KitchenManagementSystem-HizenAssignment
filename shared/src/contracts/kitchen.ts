@@ -32,6 +32,8 @@ export interface KitchenUnitDto {
   timeliness: Timeliness;
   /** Allergens in the dish or its options that the employee is allergic to (FR-ORD-10). */
   allergenIds: string[];
+  /** Every allergen in the dish and its chosen options (dashboard allergen watch). */
+  containsAllergenIds: string[];
   /** FR-KIT-08: the order was cancelled or rejected after work started. */
   doNotCook: boolean;
 }
@@ -48,6 +50,12 @@ export interface KitchenBoardDto {
     late: number;
     atRisk: number;
     orders: number;
+  };
+  /** Orders still open (Placed) for the date while its cut-off hasn't passed: meals that may change. */
+  pending: {
+    cutoffAt: string;
+    cutoffPassed: boolean;
+    placedMealsByStation: Array<{ stationName: string; meals: number }>;
   };
   /** Units grouped by planned kitchen-ready time, earliest first. */
   slots: Array<{ plannedKitchenReadyAt: string; units: KitchenUnitDto[] }>;

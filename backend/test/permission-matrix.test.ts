@@ -54,6 +54,7 @@ const MATRIX: ReadonlyArray<{
   { method: 'get', path: '/api/kitchen/board', allowed: ['admin', 'kitchen', 'dispatch'] },
   { method: 'get', path: '/api/dispatch/board', allowed: ['admin', 'dispatch'] },
   { method: 'get', path: '/api/billing/summary', allowed: ['admin'] },
+  { method: 'get', path: '/api/dashboard/admin', allowed: ['admin'] },
   { method: 'post', path: '/api/invoices', allowed: ['admin'] },
   { method: 'post', path: `/api/orders/${TIER_ID}/shortage`, allowed: ['admin'] },
   { method: 'post', path: `/api/dispatch/drops/${TIER_ID}/out`, allowed: ['admin', 'dispatch'] },

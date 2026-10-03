@@ -25,3 +25,4 @@ export * from './contracts/kitchen';
 export * from './contracts/dispatch';
 export * from './domain/billing';
 export * from './contracts/billing';
+export * from './contracts/dashboard';

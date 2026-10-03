@@ -87,6 +87,12 @@ export class KitchenService {
         },
       }),
     ]);
+    // Placed (not yet confirmed) meals for the date, by station: they may still change before the cut-off.
+    const cutoffAt = planning.cutoffAt(date);
+    const placed = await this.prisma.orderLine.findMany({
+      where: { order: { deliveryDate: toDbDate(date), status: 'PLACED' } },
+      select: { quantity: true, dish: { select: { kitchenStationId: true } } },
+    });
     const stationName = new Map(stations.map((s) => [s.id, s.name]));
     const window = planning.settings.atRiskWindowMinutes;
 
@@ -122,6 +128,7 @@ export class KitchenService {
               ? 'DONE'
               : timeliness(o.plannedKitchenReadyAt, c.prepDoneAt, now, window),
             allergenIds: [...ids].filter((id) => allergies.has(id)),
+            containsAllergenIds: [...ids],
             doNotCook,
           });
         }
@@ -180,9 +187,25 @@ export class KitchenService {
       prep.set(key, station);
     }
 
+    const placedByStation = new Map<string, number>();
+    for (const l of placed) {
+      const name = l.dish.kitchenStationId
+        ? (stationName.get(l.dish.kitchenStationId) ?? 'Station')
+        : UNASSIGNED;
+      placedByStation.set(name, (placedByStation.get(name) ?? 0) + l.quantity);
+    }
+
     return {
       date,
       now: now.toISOString(),
+      pending: {
+        cutoffAt: cutoffAt.toISOString(),
+        cutoffPassed: now.getTime() >= cutoffAt.getTime(),
+        placedMealsByStation: [...placedByStation.entries()].map(([stationName, meals]) => ({
+          stationName,
+          meals,
+        })),
+      },
       stations: stationRows,
       summary: {
         units: work.length,
