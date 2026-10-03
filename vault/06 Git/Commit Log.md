@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 07:05 IST
+updated: 2026-10-03 06:40 IST
 ---
 
 # 🧷 Commit Log
@@ -30,6 +30,10 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 19 | 2026-10-03 06:05 | 8b9081a | feat(shared): resolve tier prices with derivation, overrides and exclusions | T-306, BR-PRC-01, BR-PRC-02, BR-PRC-03, BR-PRC-04, BR-PRC-05 | P3 |
 | 20 | 2026-10-03 06:07 | f242d57 | feat(shared): resolve an employee's menu with hiding, secrets and pricing | T-311, BR-MEN-01, BR-MEN-02, BR-MEN-03, BR-MEN-04, FR-PRC-04 | P3 |
 | 21 | 2026-10-03 06:13 | 70c6d5e | feat(backend): catalogue API for dishes, options and option groups | T-302, T-303, T-304, FR-CAT-01..05 | P3 |
-| 22 | 2026-10-03 06:33 | 67c38e0 | fix(shared): keep omitted fields on partial dish and option updates | T-302, T-303, BUG-003 | P3 |
-| 23 | 2026-10-03 06:33 | c01e586 | feat(frontend): catalogue screens for dishes, options and option groups | T-302, T-303, T-304, BUG-004 | P3 |
-| 24 | 2026-10-03 06:33 | e95775a | docs(vault): catalogue done, BUG-003/004, rebuilt commit log | T-302, T-303, T-304 | P3 |
+| 22 | 2026-10-03 06:27 | 67c38e0 | fix(shared): keep omitted fields on partial dish and option updates | T-302, T-303, BUG-003 | P3 |
+| 23 | 2026-10-03 06:27 | c01e586 | feat(frontend): catalogue screens for dishes, options and option groups | T-302, T-303, T-304, BUG-004 | P3 |
+| 24 | 2026-10-03 06:27 | e95775a | docs(vault): catalogue done, BUG-003/004, rebuilt commit log | T-302, T-303, T-304 | P3 |
+| 25 | 2026-10-03 06:37 | be31f2d | feat(shared): pricing contracts and tier factor parsing | T-307, T-308 | P3 |
+| 26 | 2026-10-03 06:37 | 659658e | feat(backend): price tiers, default switch and tier grid API | T-307, T-308 | P3 |
+| 27 | 2026-10-03 06:37 | 108fd8a | feat(frontend): price tier list and tier price grid | T-307, T-308 | P3 |
+| 28 | 2026-10-03 06:37 | 4f19d92 | docs: tiers and grid done, ADR-026 plain-table tier grid | T-307, T-308 | P3 |

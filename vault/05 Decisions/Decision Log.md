@@ -170,7 +170,7 @@ Template: `_templates/Decision Template.md`.
 - **Consequences:** TRD §2 updated. Component APIs follow the Base UI flavour of shadcn.
 
 ### ADR-026: Tier grid as a plain table over one whole-tier response
-- **Status:** Accepted · 2026-10-03 07:05
+- **Status:** Accepted · 2026-10-03 06:40
 - **Context:** TRD §2 listed TanStack Table for the tier grid. The catalogue is tens of dishes and options, the grid needs per-cell drafts and a preview of the effective price, and price resolution needs every tier and explicit row anyway.
 - **Decision:** `GET /price-tiers/:id/grid` returns every active item of one kind for the tier (search and "missing only" filter server-side, no pagination). The page renders a plain shadcn table with dirty-cell drafts and one bulk `PUT`. TanStack Table stays the plan for the order list (server pagination and sorting).
 - **Consequences:** TRD §2 and the tier-grid row in §UI updated. If the catalogue grows past a few hundred items, add pagination to the grid endpoint.
