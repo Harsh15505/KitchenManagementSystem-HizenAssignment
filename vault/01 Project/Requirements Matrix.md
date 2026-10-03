@@ -21,7 +21,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-SET-01 | Kitchen days, holidays, cut-off time/days in UI | Must | P2 | T-207 | ✅ | `backend/src/settings`, `frontend/src/app/(app)/settings` | API probe + browser |
 | FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ✅ | same | same |
 | FR-SET-03 | Reference lists CRUD | Must | P2 | T-208 | ✅ | `backend/src/reference`, `/settings/reference` | API probe + browser |
-| FR-SET-04 | Cut-off preview | Should | P5 | T-502 | ⬜ (needs the cut-off calculator) | | |
+| FR-SET-04 | Cut-off preview | Should | P5 | T-502 | ✅ (upcoming lock times on `/cutoff`, cut-off per date in the builder) | `cutoff.service.ts` overview | `cutoff.test.ts` |
 | FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ✅ | `backend/src/catalogue/dishes.service.ts`, `frontend/src/app/(app)/catalogue/dishes` | `contracts/catalogue.test.ts`, browser check |
 | FR-CAT-02 | Deactivate, never delete dishes | Must | P3 | T-302 | ✅ | no DELETE route; PATCH `isActive` | BUG-003 tests |
 | FR-CAT-03 | Reusable options | Must | P3 | T-303 | ✅ | `options.service.ts`, `frontend/src/app/(app)/catalogue/options` | browser check |
@@ -47,16 +47,16 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ✅ | `employees.service.ts`, employees card, `/employees` | `company.test.ts` BR-EMP-01, browser check |
 | FR-EMP-02 | Move employee | Must | P4 | T-405 | ✅ | `POST /employees/:id/move`, make-owner | `companies.test.ts` BR-EMP-01/02 |
 | FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⏭️ deferred (see Prioritisation Notes) | | |
-| FR-ORD-01 | Cut-off calculation | Must | P5 | T-502 | ⬜ | | |
-| FR-ORD-02 | Order builder flow | Must | P5 | T-504 T-505 T-506 T-507 | ⬜ | | |
-| FR-ORD-03 | Server validation + drafts | Must | P5 | T-505 T-506 | ⬜ | | |
-| FR-ORD-04 | Statuses; edit/cancel before cut-off | Must | P5 | T-506 T-508 | ⬜ | | |
-| FR-ORD-05 | Cut-off processing (idempotent, manual) | Must | P5 | T-509 T-510 | ⬜ | | |
-| FR-ORD-06 | Order list (search, filters, pagination) | Must | P5 | T-511 | ⬜ | | |
-| FR-ORD-07 | Order detail + timeline | Must | P5 | T-512 | ⬜ | | |
-| FR-ORD-08 | Admin delivery override | Must | P5/P7 | T-512 T-701 | ⬜ | | |
-| FR-ORD-09 | Admin cancel/reject | Must | P5/P8 | T-508 T-804 | ⬜ | | |
-| FR-ORD-10 | Allergy warning + acknowledgement | Should | P5 | T-505 T-507 | ⬜ | | |
+| FR-ORD-01 | Cut-off calculation | Must | P5 | T-502 | ✅ | `shared/src/domain/cutoff.ts` | `cutoff.test.ts` BR-CUT-01..03 (3 TZs) |
+| FR-ORD-02 | Order builder flow | Must | P5 | T-504 T-505 T-506 T-507 | ✅ | `/orders/context`, `/orders/quote`, `orders/order-builder.tsx` | browser check |
+| FR-ORD-03 | Server validation + drafts | Must | P5 | T-505 T-506 | ✅ | `normaliseOrder` + `OrdersService.prepare` (field-path errors) | `combinations.test.ts` BR-CMB/BR-MNY-02/BR-PRC-07, Neon probe |
+| FR-ORD-04 | Statuses; edit/cancel before cut-off | Must | P5 | T-506 T-508 | ✅ | `OrdersService` (version, lock, admin late orders) | Neon probe |
+| FR-ORD-05 | Cut-off processing (idempotent, manual) | Must | P5 | T-509 T-510 | ✅ | `cutoff.service.ts` (advisory lock), `jobs.service.ts`, `/cutoff` | Neon probe: run 1 = 1/1, run 2 = 0/0, future = 422 (no automated DB test yet) |
+| FR-ORD-06 | Order list (search, filters, pagination) | Must | P5 | T-511 | ✅ | `orders-query.service.ts`, `/orders` (URL state) | browser check |
+| FR-ORD-07 | Order detail + timeline | Must | P5 | T-512 | ✅ | `/orders/[id]` | browser check |
+| FR-ORD-08 | Admin delivery override | Must | P5/P7 | T-512 T-701 | ✅ | `PATCH /orders/:id/delivery` (re-plan, drop move) | Neon probe |
+| FR-ORD-09 | Admin cancel/reject | Must | P5/P8 | T-508 T-804 | 🟨 (done; billing effect in T-804) | `cancel`/`reject` | Neon probe |
+| FR-ORD-10 | Allergy warning + acknowledgement | Should | P5 | T-505 T-507 | ✅ (kitchen flag in P6) | `ALLERGEN_ACK_REQUIRED`, builder checkbox | `combinations.test.ts` warnings |
 | FR-KIT-01 | Board: prep units by station | Must | P6 | T-601 T-604 | ⬜ | | |
 | FR-KIT-02 | Start/done rules, races | Must | P6 | T-602 | ⬜ | | |
 | FR-KIT-03 | Kitchen started/ready times | Must | P6 | T-602 | ⬜ | | |
@@ -81,10 +81,10 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ⬜ | | |
 | FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ⬜ | | |
 | FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ⬜ | | |
-| FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | ⬜ | | |
-| FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ⬜ | | |
-| FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ⬜ | | |
-| FR-DAT-04 | Regenerate demo data | Should | P10 | T-1004 | ⬜ | | |
+| FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | 🟨 (orders window done; invoices with P8) | `demo/demo.service.ts` | Neon: 702 orders, every status |
+| FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ✅ (window extends on startup, timer and requests) | `DemoService.tick` via `JobsService` | |
+| FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ✅ | `DemoService.autopilot` | Neon: today's drops advance |
+| FR-DAT-04 | Regenerate demo data | Should | P10 | T-1004 | 🟨 (API done; button in P10) | `POST /demo/regenerate` | |
 
 ## Non-functional
 

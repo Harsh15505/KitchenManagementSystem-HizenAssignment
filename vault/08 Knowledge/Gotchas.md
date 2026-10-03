@@ -80,3 +80,7 @@ Read these before touching the related area. **Add a new entry every time someth
 - Keep rule conditions to simple equalities (`{ driverId: user.id }`), so the Prisma ability (backend) and the Mongo ability (frontend) behave the same.
 - Abilities answer "may this user attempt this?". State rules (only Confirmed orders can be cooked; locked after cut-off) stay in domain functions.
 - Out-of-scope single records → **404** (load them through `accessibleBy`), so the API doesn't reveal that they exist.
+- Throwaway DB scripts: name them `*.tmp.ts` (git-ignored since 8fb1b17); one slipped into a commit once.
+- `pg_advisory_xact_lock` returns `void`, which `$queryRaw` can't deserialise: call it with `$executeRaw`.
+- Demo data: generated orders have `source = DEMO`; regenerate keeps `STAFF` orders. Kitchen and dispatch actions on a demo order must set `demoAutopilotUntil = null` (the human takes over).
+

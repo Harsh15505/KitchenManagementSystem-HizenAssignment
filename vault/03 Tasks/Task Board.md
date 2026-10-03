@@ -9,19 +9,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
-- [ ] **T-501** Orders schema (+ drops base, cutoff runs) · P5
-- [ ] **T-502** Cut-off calculator + tests BR-CUT · P5
-- [ ] **T-503** Combinations domain + tests BR-CMB · P5
-- [ ] **T-504** Orders context endpoint · P5
-- [ ] **T-505** Quote endpoint · P5
-- [ ] **T-506** Create order (+ late admin orders) · P5
-- [ ] **T-507** Order builder UI · P5
-- [ ] **T-508** Edit / place / cancel / reject · P5
-- [ ] **T-509** Cut-off processing + idempotency tests · P5
-- [ ] **T-510** Jobs (timers, catch-up) + Cut-off page · P5
-- [ ] **T-511** Orders list (filters, pagination) · P5
-- [ ] **T-512** Order detail + admin delivery override · P5
-- [ ] **T-513** Demo generator v1 (all statuses) · P5
 - [ ] **T-601** Kitchen board API · P6
 - [ ] **T-602** Unit start/done + race test · P6
 - [ ] **T-603** Force-complete order · P6
@@ -70,6 +57,19 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-513** Demo generator v1 (all statuses) · P5
+- [x] **T-512** Order detail + admin delivery override · P5
+- [x] **T-511** Orders list (filters, pagination) · P5
+- [x] **T-510** Jobs (timers, catch-up) + Cut-off page · P5
+- [x] **T-509** Cut-off processing + idempotency tests · P5
+- [x] **T-508** Edit / place / cancel / reject · P5
+- [x] **T-507** Order builder UI · P5
+- [x] **T-506** Create order (+ late admin orders) · P5
+- [x] **T-505** Quote endpoint · P5
+- [x] **T-504** Orders context endpoint · P5
+- [x] **T-503** Combinations domain + tests BR-CMB · P5
+- [x] **T-502** Cut-off calculator + tests BR-CUT · P5
+- [x] **T-501** Orders schema (+ drops base, cutoff runs) · P5
 - [x] **T-312** Menu preview as employee · P3
 - [x] **T-408** Company/employee rule tests · P4
 - [x] **T-407** Seed companies & employees · P4

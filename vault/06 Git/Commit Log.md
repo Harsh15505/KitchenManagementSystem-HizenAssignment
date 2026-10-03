@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 07:06 IST
+updated: 2026-10-03 10:58 IST
 ---
 
 # 🧷 Commit Log
@@ -49,3 +49,14 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 38 | 2026-10-03 07:07 | 32d5a4f | feat(frontend): companies and employees screens | T-402…T-405 | P4 |
 | 39 | 2026-10-03 07:07 | a22e8e8 | feat(db): seed five client companies and sixty employees | T-407 | P4 |
 | 40 | 2026-10-03 07:07 | 9252fe7 | docs(vault): P4 companies and employees done, CSV import deferred | T-401…T-408 | P4 |
+| 41 | 2026-10-03 07:14 | a699da9 | feat(backend): employee menu endpoints on one shared menu loader | T-312 | P3 |
+| 42 | 2026-10-03 07:14 | 7933421 | feat(frontend): menu preview as an employee | T-312 | P3 |
+| 43 | 2026-10-03 07:14 | a5ec8fa | docs(vault): P3 complete with the menu preview | T-312 | P3 |
+| 44 | 2026-10-03 07:16 | 8633865 | feat(shared): cut-off, deliverability, plans and order combinations | T-502, T-503 | P5 |
+| 45 | 2026-10-03 07:16 | 0ebac0d | docs: ADR-027 combination signature sorted by ids | T-503 | P5 |
+| 46 | 2026-10-03 10:42 | 26128e0 | feat(shared): order, quote, override and cut-off contracts | T-504…T-512 | P5 |
+| 47 | 2026-10-03 10:42 | 651a5f6 | feat(backend): orders, cut-off processing and the cut-off scheduler | T-504…T-512 | P5 |
+| 48 | 2026-10-03 10:49 | a35e92d | feat(frontend): order builder, order list and detail, cut-off page | T-507, T-510…T-512 | P5 |
+| 49 | 2026-10-03 10:54 | 51fbed6 | feat(backend): rolling demo window and demo autopilot | T-513 | P5 |
+| 50 | 2026-10-03 10:55 | 8fb1b17 | chore: drop a local check script and ignore *.tmp.ts | - | P5 |
+
