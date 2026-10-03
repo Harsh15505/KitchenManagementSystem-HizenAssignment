@@ -9,10 +9,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
-- [ ] **T-601** Kitchen board API · P6
-- [ ] **T-602** Unit start/done + race test · P6
-- [ ] **T-603** Force-complete order · P6
-- [ ] **T-604** Kitchen board UI · P6
 - [ ] **T-605** 400-order perf check · P6
 - [ ] **T-701** Drop service + override moves · P7
 - [ ] **T-702** Dispatch API + transitions + tests · P7
@@ -57,6 +53,10 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-604** Kitchen board UI · P6
+- [x] **T-603** Force-complete order · P6
+- [x] **T-602** Unit start/done + race test · P6
+- [x] **T-601** Kitchen board API · P6
 - [x] **T-513** Demo generator v1 (all statuses) · P5
 - [x] **T-512** Order detail + admin delivery override · P5
 - [x] **T-511** Orders list (filters, pagination) · P5

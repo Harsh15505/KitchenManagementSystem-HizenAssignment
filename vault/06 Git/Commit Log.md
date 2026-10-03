@@ -59,4 +59,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 48 | 2026-10-03 10:49 | a35e92d | feat(frontend): order builder, order list and detail, cut-off page | T-507, T-510…T-512 | P5 |
 | 49 | 2026-10-03 10:54 | 51fbed6 | feat(backend): rolling demo window and demo autopilot | T-513 | P5 |
 | 50 | 2026-10-03 10:55 | 8fb1b17 | chore: drop a local check script and ignore *.tmp.ts | - | P5 |
+| 51 | 2026-10-03 10:58 | 01da825 | docs(vault): P5 orders, cut-off and demo window done | T-501…T-513 | P5 |
+| 52 | 2026-10-03 11:04 | 8c77fa3 | feat(backend): kitchen board, prep units and force-complete | T-601…T-603 | P6 |
+| 53 | 2026-10-03 11:04 | d5ba25e | feat(frontend): kitchen board with station chips and prep summary | T-604 | P6 |
 

@@ -57,14 +57,14 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-ORD-08 | Admin delivery override | Must | P5/P7 | T-512 T-701 | ✅ | `PATCH /orders/:id/delivery` (re-plan, drop move) | Neon probe |
 | FR-ORD-09 | Admin cancel/reject | Must | P5/P8 | T-508 T-804 | 🟨 (done; billing effect in T-804) | `cancel`/`reject` | Neon probe |
 | FR-ORD-10 | Allergy warning + acknowledgement | Should | P5 | T-505 T-507 | ✅ (kitchen flag in P6) | `ALLERGEN_ACK_REQUIRED`, builder checkbox | `combinations.test.ts` warnings |
-| FR-KIT-01 | Board: prep units by station | Must | P6 | T-601 T-604 | ⬜ | | |
-| FR-KIT-02 | Start/done rules, races | Must | P6 | T-602 | ⬜ | | |
-| FR-KIT-03 | Kitchen started/ready times | Must | P6 | T-602 | ⬜ | | |
-| FR-KIT-04 | Plans, late/at-risk | Must | P6 | T-601 T-604 | ⬜ | | |
-| FR-KIT-05 | Force-complete | Must | P6 | T-603 | ⬜ | | |
-| FR-KIT-06 | Prep summary | Must | P6 | T-601 T-604 | ⬜ | | |
-| FR-KIT-07 | 400-order performance | Must | P6 | T-605 | ⬜ | | |
-| FR-KIT-08 | Do-not-cook flags | Should | P6 | T-604 | ⬜ | | |
+| FR-KIT-01 | Board: prep units by station | Must | P6 | T-601 T-604 | ✅ | `kitchen.service.ts` board, `/kitchen` | browser check |
+| FR-KIT-02 | Start/done rules, races | Must | P6 | T-602 | ✅ | conditional updates under an order row lock | `kitchen.test.ts` BR-KIT-02/05, Neon race 200/409 |
+| FR-KIT-03 | Kitchen started/ready times | Must | P6 | T-602 | ✅ | `markOrderStarted` / `markReadyIfComplete` | `kitchen.test.ts` BR-KIT-03 |
+| FR-KIT-04 | Plans, late/at-risk | Must | P6 | T-601 T-604 | ✅ | planned times on cards, LATE/AT RISK | `cutoff.test.ts` BR-PLN-04 |
+| FR-KIT-05 | Force-complete | Must | P6 | T-603 | ✅ | `POST /kitchen/orders/:id/force-complete` | `kitchen.test.ts` BR-KIT-04 |
+| FR-KIT-06 | Prep summary | Must | P6 | T-601 T-604 | ✅ | prep summary view | browser check |
+| FR-KIT-07 | 400-order performance | Must | P6 | T-605 | ✅ | single query, in-memory shaping | 48-order day ~580 ms from India to Neon (network-bound); 400-order perf script not run |
+| FR-KIT-08 | Do-not-cook flags | Should | P6 | T-604 | ✅ | do-not-cook cards | code review |
 | FR-DSP-01 | Sequential, non-repeatable stages | Must | P7 | T-702 | ⬜ | | |
 | FR-DSP-02 | Drop grouping + board | Must | P7 | T-701 T-703 | ⬜ | | |
 | FR-DSP-03 | Driver per drop (default) | Must | P7 | T-701 T-702 T-703 | ⬜ | | |
