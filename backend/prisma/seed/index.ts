@@ -8,6 +8,7 @@ import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { seedAccess } from './access';
+import { seedCatalogue } from './catalogue';
 import { seedPlatform } from './platform';
 import { seedReference } from './reference';
 
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
     await seedPlatform(prisma);
     await seedAccess(prisma);
     await seedReference(prisma);
+    await seedCatalogue(prisma);
     console.log(`Seed complete in ${Date.now() - started} ms`);
   } finally {
     await prisma.$disconnect();
