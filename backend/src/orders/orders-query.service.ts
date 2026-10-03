@@ -128,6 +128,10 @@ export class OrdersQueryService {
             include: { combinations: { include: { choices: { orderBy: { sortOrder: 'asc' } } } } },
           },
           events: { orderBy: { at: 'asc' } },
+          adjustments: {
+            orderBy: { createdAt: 'asc' },
+            include: { invoiceLine: { select: { id: true } } },
+          },
         },
       }),
       this.planning.load(),
@@ -135,6 +139,15 @@ export class OrdersQueryService {
     if (!o) throw new DomainError('NOT_FOUND', 'Order not found.');
     const date = fromDbDate(o.deliveryDate);
     const locked = planning.isLocked(date);
+    const short = new Map<string, number>();
+    for (const adj of o.adjustments) {
+      if (adj.kind !== 'SHORT_DELIVERY_CREDIT') continue;
+      const items =
+        (adj.details as { items?: Array<{ combinationId: string; shortQty: number }> } | null)
+          ?.items ?? [];
+      for (const item of items)
+        short.set(item.combinationId, (short.get(item.combinationId) ?? 0) + item.shortQty);
+    }
     const address = o.addressSnapshot as OrderDetail['address'];
     const open = o.status === 'DRAFT' || o.status === 'PLACED';
     const override = actor.ability.can('override', 'Order');
@@ -194,6 +207,7 @@ export class OrdersQueryService {
           totalCents: c.totalCents,
           prepStartedAt: iso(c.prepStartedAt),
           prepDoneAt: iso(c.prepDoneAt),
+          shortQuantity: short.get(c.id) ?? 0,
           choices: c.choices.map((ch) => ({
             groupId: ch.optionGroupId,
             groupName: ch.optionGroupName,
@@ -204,6 +218,14 @@ export class OrdersQueryService {
             priceCents: ch.priceCents,
           })),
         })),
+      })),
+      adjustments: o.adjustments.map((adj) => ({
+        id: adj.id,
+        kind: adj.kind,
+        amountCents: adj.amountCents,
+        reason: adj.reason,
+        createdAt: adj.createdAt.toISOString(),
+        invoiced: adj.invoiceLine !== null,
       })),
       events: o.events.map((e) => ({
         id: e.id,
@@ -222,6 +244,7 @@ export class OrdersQueryService {
           (o.status === 'PLACED' || o.status === 'CONFIRMED') &&
           actor.ability.can('reject', 'Order'),
         overrideDelivery: o.status === 'CONFIRMED' && !o.drop?.outForDeliveryAt && override,
+        recordShortage: o.status === 'DELIVERED' && actor.ability.can('manage', 'Invoice'),
       },
     };
   }

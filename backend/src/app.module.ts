@@ -13,6 +13,7 @@ import { OrdersModule } from './orders/orders.module';
 import { DemoModule } from './demo/demo.module';
 import { KitchenModule } from './kitchen/kitchen.module';
 import { DispatchModule } from './dispatch/dispatch.module';
+import { BillingModule } from './billing/billing.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -38,6 +39,7 @@ import { StaffModule } from './staff/staff.module';
     DemoModule,
     KitchenModule,
     DispatchModule,
+    BillingModule,
   ],
   controllers: [HealthController],
   providers: [

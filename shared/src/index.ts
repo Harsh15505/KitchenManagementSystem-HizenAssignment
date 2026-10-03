@@ -23,3 +23,5 @@ export * from './domain/combinations';
 export * from './contracts/orders';
 export * from './contracts/kitchen';
 export * from './contracts/dispatch';
+export * from './domain/billing';
+export * from './contracts/billing';

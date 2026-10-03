@@ -3,6 +3,7 @@ import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import {
   addDays,
   type CalendarDate,
+  calendarDate,
   compareDates,
   fromDbDate,
   isoWeekday,
@@ -15,6 +16,8 @@ import {
   toDbDate,
   toInstant,
 } from '@fernleaf/shared';
+import type { CurrentUserInfo } from '../authz/current-user';
+import { BillingService } from '../billing/billing.service';
 import { ClockService } from '../clock/clock.service';
 import type { Prisma } from '../generated/prisma/client';
 import {
@@ -136,6 +139,7 @@ export class DemoService implements OnModuleInit {
     private readonly planning: PlanningService,
     private readonly menuInput: MenuInputService,
     private readonly jobs: JobsService,
+    private readonly billing: BillingService,
   ) {}
 
   onModuleInit(): void {
@@ -158,6 +162,78 @@ export class DemoService implements OnModuleInit {
     )
       await this.ensureWindow();
     await this.autopilot();
+    await this.ensureInvoices();
+  }
+
+  /**
+   * TRD §12: weekly invoices per company for delivered demo orders older than 7 days; earlier
+   * weeks are paid, the latest stays issued, and the last 7 days stay uninvoiced.
+   */
+  async ensureInvoices(): Promise<number> {
+    const cutoff = addDays(this.clock.today(), -7);
+    const orders = await this.prisma.order.findMany({
+      where: {
+        source: 'DEMO',
+        status: 'DELIVERED',
+        invoiceLine: { is: null },
+        deliveryDate: { lt: toDbDate(cutoff) },
+      },
+      select: { id: true, companyId: true, deliveryDate: true },
+    });
+    if (orders.length === 0) return 0;
+    const admin = await this.prisma.user.findUnique({
+      where: { email: 'admin@test.com' },
+      select: { id: true },
+    });
+    if (!admin) return 0;
+    const actor = { id: admin.id, name: 'Weekly billing run' } as CurrentUserInfo;
+    const weeks = new Map<string, { companyId: string; ids: string[] }>();
+    for (const o of orders) {
+      const date = fromDbDate(o.deliveryDate);
+      const monday = addDays(date, 1 - isoWeekday(date));
+      const key = `${o.companyId}|${monday}`;
+      const week = weeks.get(key) ?? { companyId: o.companyId, ids: [] };
+      week.ids.push(o.id);
+      weeks.set(key, week);
+    }
+    let created = 0;
+    for (const [key, week] of [...weeks.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+      const invoice = await this.billing.createInvoice(
+        {
+          companyId: week.companyId,
+          orderIds: week.ids,
+          adjustmentIds: [],
+          notes: `Weekly invoice, week of ${key.split('|')[1]} (demo)`,
+        },
+        actor,
+      );
+      // Issued the Monday after the week, mid-morning IST, like a real weekly run.
+      const monday = calendarDate(key.split('|')[1]!);
+      await this.prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { issuedAt: toInstant(addDays(monday, 7), 10 * 60, this.clock.timeZone) },
+      });
+      created++;
+    }
+    // Every demo invoice except each company's latest is paid.
+    const issued = await this.prisma.invoice.findMany({
+      where: { status: 'ISSUED', notes: { endsWith: '(demo)' } },
+      orderBy: { number: 'desc' },
+      select: { id: true, companyId: true, issuedAt: true },
+    });
+    const latest = new Set<string>();
+    for (const inv of issued) {
+      if (!latest.has(inv.companyId)) {
+        latest.add(inv.companyId);
+        continue;
+      }
+      await this.prisma.invoice.update({
+        where: { id: inv.id },
+        data: { status: 'PAID', paidAt: new Date(inv.issuedAt.getTime() + 3 * 24 * 60 * MIN) },
+      });
+    }
+    if (created > 0) this.logger.log(`Demo billing: ${created} weekly invoices`);
+    return created;
   }
 
   /** FR-DAT-04: drop all generated data (never staff-created orders) and build the window again. */
@@ -173,6 +249,11 @@ export class DemoService implements OnModuleInit {
       )
         .map((o) => o.dropId)
         .filter((id): id is string => Boolean(id));
+      // Invoices holding any generated order go too (their lines point at those orders).
+      await tx.invoice.deleteMany({
+        where: { OR: [{ notes: { endsWith: '(demo)' } }, { lines: { some: { order: demo } } }] },
+      });
+      await tx.orderAdjustment.deleteMany({ where: { order: demo } });
       await tx.order.deleteMany({ where: demo });
       await tx.drop.deleteMany({ where: { id: { in: dropIds }, orders: { none: {} } } });
       await tx.demoDay.deleteMany({});

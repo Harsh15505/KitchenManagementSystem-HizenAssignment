@@ -241,6 +241,8 @@ export interface OrderDetail extends OrderListItem {
       totalCents: number;
       prepStartedAt: string | null;
       prepDoneAt: string | null;
+      /** Already recorded short on delivery (FR-BIL-05). */
+      shortQuantity: number;
       choices: Array<{
         groupId: string | null;
         groupName: string;
@@ -253,6 +255,14 @@ export interface OrderDetail extends OrderListItem {
     }>;
   }>;
   events: OrderEventDto[];
+  adjustments: Array<{
+    id: string;
+    kind: 'CANCELLATION_CREDIT' | 'SHORT_DELIVERY_CREDIT' | 'MANUAL';
+    amountCents: number;
+    reason: string;
+    createdAt: string;
+    invoiced: boolean;
+  }>;
   /** What the current user may do right now (the server re-checks every action). */
   actions: {
     edit: boolean;
@@ -260,6 +270,7 @@ export interface OrderDetail extends OrderListItem {
     cancel: boolean;
     reject: boolean;
     overrideDelivery: boolean;
+    recordShortage: boolean;
   };
 }
 

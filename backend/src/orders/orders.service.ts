@@ -4,6 +4,7 @@ import {
   type CapturedCombination,
   type CreateOrderInput,
   calendarDate,
+  cancellationCredit,
   capturedKey,
   type DeliveryOverrideInput,
   deliverableDates,
@@ -748,6 +749,32 @@ export class OrdersService {
           data: { reason },
         },
       });
+      // BR-BIL-06: an invoiced order can't be un-billed; it gets a credit on the next invoice.
+      const billed = await tx.order.findUniqueOrThrow({
+        where: { id },
+        select: { companyId: true, totalCents: true, invoiceLine: { select: { id: true } } },
+      });
+      if (billed.invoiceLine && billed.totalCents > 0) {
+        await tx.orderAdjustment.create({
+          data: {
+            orderId: id,
+            companyId: billed.companyId,
+            kind: 'CANCELLATION_CREDIT',
+            amountCents: cancellationCredit(billed.totalCents),
+            reason: `${status === 'CANCELLED' ? 'Cancelled' : 'Rejected'} after invoicing: ${reason}`,
+            createdById: actor.id,
+          },
+        });
+        await tx.orderEvent.create({
+          data: {
+            orderId: id,
+            type: 'ADJUSTMENT_ADDED',
+            actorId: actor.id,
+            actorLabel: actor.name,
+            data: { amountCents: -billed.totalCents },
+          },
+        });
+      }
       if (dropId) await removeDropIfEmpty(tx, dropId);
     });
   }

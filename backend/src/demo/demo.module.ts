@@ -1,5 +1,6 @@
 import { Controller, HttpCode, Module, Post } from '@nestjs/common';
 import { CheckPolicies } from '../authz/policies';
+import { BillingModule } from '../billing/billing.module';
 import { MenuModule } from '../menu/menu.module';
 import { OrdersModule } from '../orders/orders.module';
 import { DemoService } from './demo.service';
@@ -25,7 +26,7 @@ export class DemoController {
 }
 
 @Module({
-  imports: [OrdersModule, MenuModule],
+  imports: [OrdersModule, MenuModule, BillingModule],
   controllers: [DemoController],
   providers: [DemoService],
 })
