@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 11:06 IST
-phase: P7 next (P0-P6 done locally; T-108 deploy waiting on owner)
-active_task: T-701
+updated: 2026-10-03 11:22 IST
+phase: P8 next (P0-P7 done locally; T-108 deploy waiting on owner)
+active_task: T-801
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-701
 
 ## TL;DR
 
-P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options, option groups, price tiers, the tier grid and menu categories work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). P4 companies and employees (Musts) are done and seeded. P5 orders and cut-off are done, with a rolling demo window (702 orders) and an autopilot. P6 kitchen board done too. Next: P7 dispatch board and driver view.
+P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board and the driver view. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: P8 billing.
 
 ## ⏳ Deadline
 
@@ -24,17 +24,17 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 - **P3**: ✅ → [[P3 Catalogue Pricing Menu]]
 - **P4**: ✅ Musts (T-401…405, 407, 408); T-406 CSV import deferred → [[P4 Companies and Employees]]
 - **P5**: ✅ (T-501…T-513) → [[P5 Orders and Cutoff]]
-- **P6**: ✅ (T-601…T-604; T-605 perf partly) → [[P6 Kitchen Board]] → [[P3 Catalogue Pricing Menu]]
+- **P6**: ✅ (T-601…T-604; T-605 perf partly) → [[P6 Kitchen Board]]
+- **P7**: ✅ (T-701…T-706) → [[P7 Dispatch and Driver]]
 
 ## 🔨 Active task
 
-- **P7** dispatch + driver: drops already exist (`orders/drops.ts`, created at confirmation with the company default driver). Build the dispatch board (drops by time, readiness = kitchen-ready orders / active orders, assign driver, mark ready → out → delivered per TRD §8.6) and the driver's own-drops view (CASL row rule `driverId = user.id`). Human actions clear `demoAutopilotUntil` on the drop's orders.
+- **P8** billing: invoices per company over a date range from confirmed/delivered uninvoiced orders (InvoiceLine.orderId unique), adjustments for money changes after invoicing (cancel/reject/shortage, BR-BIL-06/07), mark paid, invoice page; then add weekly demo invoices to the generator (TRD §12).
 
 ## ⏭ Next up (in order)
 
-1. P7 dispatch/driver · P8 billing (+ demo invoices) · P9 dashboards · P10 deploy polish · P11 README
+1. P8 billing (+ demo invoices) · P9 dashboards · P10 deploy polish · P11 README
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
-3. P4 companies and employees
 
 ## ⛔ Blockers / waiting on owner
 
@@ -52,7 +52,7 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 
 ## ✅ Verified locally (2026-10-03 06:30)
 
-- `pnpm lint / typecheck / test` clean; 275 tests (105 shared, 170 backend).
+- `pnpm lint / typecheck / test` clean; 296 tests (105 shared, 191 backend).
 - Pricing (06:40): Neon probe of tiers, cycles, grid, bulk set/exclude/clear, default switch, guarded delete; browser check of `/pricing` and the grid.
 - Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
 - Browser (kitchen): catalogue read-only, no money columns.

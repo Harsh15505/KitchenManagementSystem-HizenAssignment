@@ -10,12 +10,6 @@ updated: 2026-10-03 01:51 IST
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
 - [ ] **T-406** CSV import (*Should*) · P4
 - [ ] **T-605** 400-order perf check · P6
-- [ ] **T-701** Drop service + override moves · P7
-- [ ] **T-702** Dispatch API + transitions + tests · P7
-- [ ] **T-703** Dispatch board UI · P7
-- [ ] **T-704** Driver API + scoping tests · P7
-- [ ] **T-705** Driver mobile UI · P7
-- [ ] **T-706** Delivery photo storage · P7
 - [ ] **T-801** Billing schema · P8
 - [ ] **T-802** Billing domain + tests BR-BIL · P8
 - [ ] **T-803** Invoices API + concurrency test · P8
@@ -53,6 +47,12 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-706** Delivery photo storage · P7
+- [x] **T-705** Driver mobile UI · P7
+- [x] **T-704** Driver API + scoping tests · P7
+- [x] **T-703** Dispatch board UI · P7
+- [x] **T-702** Dispatch API + transitions + tests · P7
+- [x] **T-701** Drop service + override moves · P7
 - [x] **T-604** Kitchen board UI · P6
 - [x] **T-603** Force-complete order · P6
 - [x] **T-602** Unit start/done + race test · P6

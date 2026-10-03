@@ -65,11 +65,11 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-KIT-06 | Prep summary | Must | P6 | T-601 T-604 | ✅ | prep summary view | browser check |
 | FR-KIT-07 | 400-order performance | Must | P6 | T-605 | ✅ | single query, in-memory shaping | 48-order day ~580 ms from India to Neon (network-bound); 400-order perf script not run |
 | FR-KIT-08 | Do-not-cook flags | Should | P6 | T-604 | ✅ | do-not-cook cards | code review |
-| FR-DSP-01 | Sequential, non-repeatable stages | Must | P7 | T-702 | ⬜ | | |
-| FR-DSP-02 | Drop grouping + board | Must | P7 | T-701 T-703 | ⬜ | | |
-| FR-DSP-03 | Driver per drop (default) | Must | P7 | T-701 T-702 T-703 | ⬜ | | |
-| FR-DSP-04 | Driver view (phone, note, photo) | Must | P7 | T-704 T-705 T-706 | ⬜ | | |
-| FR-DSP-05 | On-time recorded | Must | P7 | T-704 | ⬜ | | |
+| FR-DSP-01 | Sequential, non-repeatable stages | Must | P7 | T-702 | ✅ | `dispatch.service.ts` markReady/markOut/deliver | `dispatch.test.ts` BR-DSP-02..04, Neon probe |
+| FR-DSP-02 | Drop grouping + board | Must | P7 | T-701 T-703 | ✅ | drops keyed company/address/instant (`orders/drops.ts`), `/dispatch` | Neon probe, browser check |
+| FR-DSP-03 | Driver per drop (default) | Must | P7 | T-701 T-702 T-703 | ✅ | `PUT /dispatch/drops/:id/driver`, default driver at creation | Neon probe |
+| FR-DSP-04 | Driver view (phone, note, photo) | Must | P7 | T-704 T-705 T-706 | ✅ | `/driver` (own drops, today), mark-delivered sheet with note + photo | `dispatch.test.ts` BR-DSP-07, Neon probe, phone-width check |
+| FR-DSP-05 | On-time recorded | Must | P7 | T-704 | ✅ | `deliveredOnTime` stored at delivery | `dispatch.test.ts` BR-DSP-05 |
 | FR-BIL-01 | Confirmed orders billable | Must | P8 | T-802 T-803 | ⬜ | | |
 | FR-BIL-02 | Uninvoiced → invoice → paid | Must | P8 | T-803 T-805 | ⬜ | | |
 | FR-BIL-03 | Order on ≤ 1 invoice | Must | P8 | T-801 T-803 | ⬜ | | |

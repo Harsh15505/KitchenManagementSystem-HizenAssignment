@@ -62,4 +62,7 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 51 | 2026-10-03 10:58 | 01da825 | docs(vault): P5 orders, cut-off and demo window done | T-501…T-513 | P5 |
 | 52 | 2026-10-03 11:04 | 8c77fa3 | feat(backend): kitchen board, prep units and force-complete | T-601…T-603 | P6 |
 | 53 | 2026-10-03 11:04 | d5ba25e | feat(frontend): kitchen board with station chips and prep summary | T-604 | P6 |
+| 54 | 2026-10-03 11:06 | a918c84 | docs(vault): P6 kitchen board done | T-601…T-604 | P6 |
+| 55 | 2026-10-03 11:20 | 17cc877 | feat(backend): dispatch board, driver drops and proof of delivery | T-701, T-702, T-704, T-706 | P7 |
+| 56 | 2026-10-03 11:20 | 4d24ca5 | feat(frontend): dispatch board and the driver's phone view | T-703, T-705 | P7 |
 
