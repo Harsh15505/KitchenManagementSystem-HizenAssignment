@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 06:30 IST
 ---
 
 # 🧷 Commit Log
@@ -9,4 +9,24 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 
 | # | Date (IST) | Hash | Message | Tasks | Phase |
 |---|---|---|---|---|---|
-| 1 | 2026-10-03 | bf84a7f | vault formation complete (planning baseline: docs + vault, pushed by owner) | T-001…T-006 | P0 |
+| 1 | 2026-10-03 02:05 | bf84a7f | vault formation complete | T-001…T-006 | P0 |
+| 2 | 2026-10-03 02:13 | 87abdf9 | build: scaffold pnpm workspace root for frontend, backend and shared | T-101 | P1 |
+| 3 | 2026-10-03 02:16 | ea601c9 | build(shared): add shared package with money helpers and tests | T-102, BR-PRC-03, BR-MNY-01 | P1 |
+| 4 | 2026-10-03 02:24 | 1a1a0a4 | feat(backend): add NestJS API skeleton with health check and error envelope | T-103 | P1 |
+| 5 | 2026-10-03 02:34 | 9fd0959 | feat(db): add Prisma 7 schema with check constraints on Neon | T-104 | P1 |
+| 6 | 2026-10-03 02:43 | 8392d16 | feat(frontend): add Next.js 16 app with API rewrite and login redirect | T-105 | P1 |
+| 7 | 2026-10-03 02:45 | 33cb145 | build: add ESLint and Prettier across the workspace | T-106 | P1 |
+| 8 | 2026-10-03 02:47 | ee9472d | ci: run format, lint, typecheck, tests and build on every push | T-107 | P1 |
+| 9 | 2026-10-03 02:49 | 1aed8b7 | build: add Render blueprint for the API service | T-108 | P1 |
+| 10 | 2026-10-03 02:53 | 9d810d5 | feat(shared): add permission catalogue and CASL rules from permission codes | T-201, FR-ACC-04, BR-ACC-01, BR-DSP-07 | P2 |
+| 11 | 2026-10-03 02:56 | f7dd3a4 | feat(shared): add kitchen time helpers and a server clock | T-209, NFR-02, ADR-006 | P2 |
+| 12 | 2026-10-03 02:58 | 3715389 | feat(db): seed roles, reviewer accounts and platform settings | T-202, FR-ACC-01 | P2 |
+| 13 | 2026-10-03 03:04 | 51fbd36 | feat(backend): cookie sessions and CASL access control on every route | T-203, T-204, FR-ACC-01, FR-ACC-03, FR-ACC-05, BR-ACC-02, BR-ACC-03 | P2 |
+| 14 | 2026-10-03 05:41 | bf2f16b | feat(frontend): sign-in form and permission-driven app shell | T-205, FR-ACC-01, FR-ACC-04, FR-DSH-01 | P2 |
+| 15 | 2026-10-03 05:42 | f387720 | docs(vault): refresh status after P2 auth work |  | P2 |
+| 16 | 2026-10-03 05:50 | 0d78fc9 | feat: staff management with session revocation and self-lockout guard | T-206, FR-ACC-02, BR-ACC-02 | P2 |
+| 17 | 2026-10-03 05:59 | 8125bf1 | feat: platform settings, kitchen holidays and admin-managed reference lists | T-207, T-208, FR-SET-01, FR-SET-02, FR-SET-03 | P2 |
+| 18 | 2026-10-03 06:02 | d7b559d | test(backend): permission matrix on the real application module | T-210, FR-ACC-03 | P2 |
+| 19 | 2026-10-03 06:05 | 8b9081a | feat(shared): resolve tier prices with derivation, overrides and exclusions | T-306, BR-PRC-01, BR-PRC-02, BR-PRC-03, BR-PRC-04, BR-PRC-05 | P3 |
+| 20 | 2026-10-03 06:07 | f242d57 | feat(shared): resolve an employee's menu with hiding, secrets and pricing | T-311, BR-MEN-01, BR-MEN-02, BR-MEN-03, BR-MEN-04, FR-PRC-04 | P3 |
+| 21 | 2026-10-03 06:13 | 70c6d5e | feat(backend): catalogue API for dishes, options and option groups | T-302, T-303, T-304, FR-CAT-01..05 | P3 |

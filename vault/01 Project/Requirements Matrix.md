@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 06:30 IST
 ---
 
 # ✅ Requirements Matrix (traceability)
@@ -22,12 +22,12 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ✅ | same | same |
 | FR-SET-03 | Reference lists CRUD | Must | P2 | T-208 | ✅ | `backend/src/reference`, `/settings/reference` | API probe + browser |
 | FR-SET-04 | Cut-off preview | Should | P5 | T-502 | ⬜ (needs the cut-off calculator) | | |
-| FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ⬜ | | |
-| FR-CAT-02 | Deactivate, never delete dishes | Must | P3 | T-302 | ⬜ | | |
-| FR-CAT-03 | Reusable options | Must | P3 | T-303 | ⬜ | | |
-| FR-CAT-04 | Option groups per dish | Must | P3 | T-304 | ⬜ | | |
-| FR-CAT-05 | Portions (sizes, extra charge, support rule) | Should | P3 | T-303 T-304 | ⬜ | | |
-| FR-CAT-06 | Flag incomplete setup | Must | P3 | T-302 | ⬜ | | |
+| FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ✅ | `backend/src/catalogue/dishes.service.ts`, `frontend/src/app/(app)/catalogue/dishes` | `contracts/catalogue.test.ts`, browser check |
+| FR-CAT-02 | Deactivate, never delete dishes | Must | P3 | T-302 | ✅ | no DELETE route; PATCH `isActive` | BUG-003 tests |
+| FR-CAT-03 | Reusable options | Must | P3 | T-303 | ✅ | `options.service.ts`, `frontend/src/app/(app)/catalogue/options` | browser check |
+| FR-CAT-04 | Option groups per dish | Must | P3 | T-304 | ✅ | `option-groups.service.ts`, `dishes/[id]/option-groups-editor.tsx` | browser check |
+| FR-CAT-05 | Portions (sizes, extra charge, support rule) | Should | P3 | T-303 T-304 | ✅ | `shared/src/domain/catalogue.ts` `portionViolations` | `catalogue.test.ts`, browser check (error shown) |
+| FR-CAT-06 | Flag incomplete setup | Must | P3 | T-302 | ✅ | dish list badges (No station, Not on menu) | browser check |
 | FR-MEN-01 | Ordered/activatable categories & items | Must | P3 | T-309 T-310 | ⬜ | | |
 | FR-MEN-02 | Hide per company | Must | P4 | T-404 | ⬜ | | |
 | FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | 🟨 (rule + tests done) | | |

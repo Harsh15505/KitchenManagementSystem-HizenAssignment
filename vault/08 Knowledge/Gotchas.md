@@ -67,6 +67,8 @@ Read these before touching the related area. **Add a new entry every time someth
 - Render needs `corepack enable` for pnpm; set `packageManager` in the root `package.json`.
 - Windows: `.gitattributes` forces LF. Vault file names contain spaces, so quote paths in shells.
 - Zod 4: `@hookform/resolvers` ≥ 5, `nestjs-zod` ≥ 5.
+- Zod 4 applies `.default()` even inside `.partial()`: `create.partial()` turns `PATCH {isActive:false}` into a reset of every defaulted field (BUG-003). Build update schemas from a shape **without** defaults and add defaults only on the create schema (see `shared/src/contracts/catalogue.ts`).
+- The API strips every `*Cents` field for roles without `money.read`, so DTO money fields can be `undefined` at runtime. Gate money UI on `ability.can('read','Money')` before calling `formatUsd` (BUG-004).
 
 - **TypeScript 6 + tsup** (2026-10-03, T-102): tsup's dts build injects `baseUrl`, which TS 6 rejects (TS5101). Fixed with `dts: { compilerOptions: { ignoreDeprecations: "6.0" } }` in `shared/tsup.config.ts`.
 - **npm latest tags** (2026-10-03): `prisma@latest` is 8.0 RC and `@nestjs/core@latest` is 12 (ESM-only). Always install with explicit versions (ADR-024).

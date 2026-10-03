@@ -8,9 +8,6 @@ updated: 2026-10-03 01:51 IST
 
 - [ ] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-302** Dishes API + UI · P3
-- [ ] **T-303** Options API + UI (+ portion prices *Should*) · P3
-- [ ] **T-304** Option-group editor (+ portions *Should*) · P3
 - [ ] **T-307** Tiers API + UI · P3
 - [ ] **T-308** Tier grid (missing prices, bulk edit) · P3
 - [ ] **T-310** Menu management API + UI · P3
@@ -85,6 +82,9 @@ updated: 2026-10-03 01:51 IST
 
 ## ✅ Done
 
+- [x] **T-304** Option-group editor (+ portions *Should*) · P3
+- [x] **T-303** Options API + UI (+ portion prices *Should*) · P3
+- [x] **T-302** Dishes API + UI · P3
 - [x] **T-311** resolveEmployeeMenu + tests BR-MEN · P3
 - [x] **T-306** money + resolvePrice + tests BR-PRC · P3
 - [x] **T-309** Menu schema · P3

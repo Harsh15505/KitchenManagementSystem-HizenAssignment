@@ -1,37 +1,37 @@
 ---
 type: status
-updated: 2026-10-03 05:50 IST
-phase: P2 (P1 code done; T-108 deploy waiting on owner)
-active_task: T-301
+updated: 2026-10-03 06:30 IST
+phase: P3 (T-108 deploy waiting on owner)
+active_task: T-307
 ---
-
 # 📍 STATUS: live snapshot
 
 > **Update this note at the end of every task and every session.** It's the first thing the next agent reads.
 
 ## TL;DR
 
-The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rules, time helpers, the seed, cookie auth with a fail-closed CASL guard, and the frontend sign-in + shell all work locally against Neon. **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: T-206 staff management.
+P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options and option groups work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: T-307/T-308 tiers and the tier price grid.
 
 ## ⏳ Deadline
 
-**Sun 4 Oct 2026, 23:59 IST.** Checkpoints: [[Timeline and Checkpoints]] (CP1 = P1 + P2 deployed by Sat 13:00).
+**Sun 4 Oct 2026, 23:59 IST.** Checkpoints: [[Timeline and Checkpoints]].
 
 ## Current phase
 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
-- **P2**: ✅ locally (all tasks); live check after T-108 → [[P2 Auth and Access]]
+- **P2**: ✅ locally (T-201…T-210) → [[P2 Auth and Access]]
+- **P3**: 🟨 T-301 schema, T-302/303/304 catalogue, T-306 pricing rules, T-311 menu rules done → [[P3 Catalogue Pricing Menu]]
 
 ## 🔨 Active task
 
-- **T-302** dishes API + UI (then T-303/304 options and groups, T-307/308 tiers and grid, T-310 menu, T-312 preview, T-313 seed)
+- **T-307** pricing tiers API + UI (derivation, cycle check via `findDerivationCycle`), then **T-308** tier price grid (overrides, exclusions).
 
 ## ⏭ Next up (in order)
 
-1. T-206 staff management · T-207 settings + kitchen holidays · T-208 reference data · T-210 permission matrix test
+1. T-307 tiers · T-308 tier grid · T-310 menu management · T-312 menu preview · T-313 catalogue seed
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
-3. P3 catalogue / pricing / menu
+3. P4 companies and employees
 
 ## ⛔ Blockers / waiting on owner
 
@@ -43,15 +43,16 @@ The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rule
 | Env | URL | Status |
 |---|---|---|
 | Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ CI green |
-| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (4 roles, 7 staff) |
+| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (roles, 7 staff, reference lists). Catalogue empty until T-313 |
 | API (Render) | _tbd_ | ⏳ blueprint ready (`render.yaml`) |
 | Web (Vercel) | _tbd_ | ⏳ after the API |
 
-## ✅ Verified locally (2026-10-03)
+## ✅ Verified locally (2026-10-03 06:30)
 
-- `pnpm lint / typecheck / test / build / format:check` clean; 44 tests (28 shared, 16 backend).
-- Browser: `/dashboard` → login redirect → sign in → role-specific dashboard for kitchen, admin, driver (phone width ok).
-- API: 4 reviewer accounts sign in with `Test@1234`; no cookie → 401; wrong role → 403; foreign Origin → 403.
+- `pnpm lint / typecheck / test` clean; 127 tests (65 shared, 62 backend).
+- Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
+- Browser (kitchen): catalogue read-only, no money columns.
+- Found and fixed BUG-003 and BUG-004 (see [[Bug Tracker]]).
 
 ## 🧾 Key decisions
 
@@ -59,11 +60,13 @@ ADR-001…ADR-025 in [[Decision Log]]. Latest: ADR-024 version pins (Prisma 7.10
 
 ## 🧷 Last commit
 
-`bf2f16b` feat(frontend): sign-in form and permission-driven app shell
+See [[Commit Log]] (rebuilt from `git log` at 06:30).
 
 ## 🤝 Handoff notes for the next agent
 
 - Read [[AGENT PROTOCOL]] first. Every task updates the Task Board, phase note, Requirements Matrix and this note.
 - Routes need `@Public`, `@AnyUser` or `@CheckPolicies`, or the app won't boot (by design).
 - Don't `import type` classes that Nest injects (see [[Gotchas]]).
-- Local servers: start with `node dist/main.js` (backend) and `node node_modules/next/dist/bin/next start` (frontend) to avoid orphaned processes on Windows.
+- Update schemas: never `.partial()` a schema with defaults (BUG-003). Money UI: gate on `read Money` (BUG-004).
+- Local dev: `.claude/launch.json` has `backend` (:4000) and `frontend` (:3000). After rebuilding `shared`, restart the backend.
+- Browser probes create real rows in Neon: name them `ZZ Probe…` / `ZZ-PROBE-…` and delete them afterwards.
