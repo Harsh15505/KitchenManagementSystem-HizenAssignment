@@ -29,18 +29,18 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CAT-05 | Portions (sizes, extra charge, support rule) | Should | P3 | T-303 T-304 | ✅ | `shared/src/domain/catalogue.ts` `portionViolations` | `catalogue.test.ts`, browser check (error shown) |
 | FR-CAT-06 | Flag incomplete setup | Must | P3 | T-302 | ✅ | dish list badges (No station, Not on menu) | browser check |
 | FR-MEN-01 | Ordered/activatable categories & items | Must | P3 | T-309 T-310 | ✅ | `backend/src/menu`, `frontend/src/app/(app)/menu` | permission matrix, browser check |
-| FR-MEN-02 | Hide per company | Must | P4 | T-404 | ⬜ | | |
+| FR-MEN-02 | Hide per company | Must | P4 | T-404 | ✅ | `PUT /companies/:id/menu-visibility`, menu visibility card; applied in `resolveEmployeeMenu` | `menu.test.ts` BR-MEN-01/02, Neon preview (Lumen hides Desserts) |
 | FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | ✅ | `GET /menu/for-employee/:id/secret/:slug`, preview slug box | `menu.test.ts` BR-MEN-02, Neon probe |
 | FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | ✅ | `MenuInputService` + `resolveEmployeeMenu`, `/menu/preview` | `menu.test.ts`, Neon probe, browser check |
 | FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ✅ | `backend/src/pricing`, `frontend/src/app/(app)/pricing` | permission matrix, Neon probe, browser check |
 | FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ✅ | required FK on settings; `POST /price-tiers/:id/make-default` single update; default can't be deleted | Neon probe |
-| FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ⬜ | | |
+| FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ✅ | `effectiveTierId` in `MenuInputService` / orders | `pricing.test.ts` BR-PRC-01, Neon preview (Enterprise prices) |
 | FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | ✅ (pricing + menu resolvers, tests) | | |
 | FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | ✅ | `shared/src/domain/pricing.ts` (resolver, factor parsing), tier form, grid | `pricing.test.ts` BR-PRC-* + FR-PRC-05 |
 | FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ✅ | `GET /price-tiers/:id/grid`, `PUT …/prices`, `pricing/[tierId]` page | `pricing.test.ts` FR-PRC-06, browser check |
-| FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ⬜ | | |
+| FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ✅ | prices captured per combination; `capturedFrom` on edit | `combinations.test.ts` BR-PRC-07, browser ("price kept") |
 | FR-CMP-01 | Company core (domains, addresses, billing, owner) | Must | P4 | T-402 T-403 | ✅ | `backend/src/companies`, `frontend/src/app/(app)/companies` | `company.test.ts`, `companies.test.ts`, Neon probe |
-| FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | 🟨 (working days + holidays stored and edited; delivery-date check in T-502) | | |
+| FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | ✅ | company working days + holidays; `undeliverableReason` in orders | `cutoff.test.ts` BR-CAL-01, Neon probe |
 | FR-CMP-03 | Delivery defaults | Must | P4 | T-402 | ✅ | company settings form; driver via `delivery.perform` (`drivers.ts`) | Neon probe (DRIVER_REQUIRED) |
 | FR-CMP-04 | Tier + hidden menu | Must | P4 | T-402 T-404 | ✅ | `PUT /companies/:id/menu-visibility`, menu visibility card | Neon probe, browser check |
 | FR-CMP-05 | Holiday conflict warning | Should | P4 | T-403 | ⬜ (needs orders, P5) | | |
@@ -84,7 +84,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | ✅ | `demo.service.ts` (orders window + weekly invoices) | Neon: ~700 orders, 7 weekly invoices |
 | FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ✅ (window extends on startup, timer and requests) | `DemoService.tick` via `JobsService` | |
 | FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ✅ | `DemoService.autopilot` | Neon: today's drops advance |
-| FR-DAT-04 | Regenerate demo data | Should | P10 | T-1004 | 🟨 (API done; button in P10) | `POST /demo/regenerate` | |
+| FR-DAT-04 | Regenerate demo data | Should | P10 | T-1004 | ✅ | `POST /demo/regenerate`, Settings → Demo data card | code review |
 
 ## Non-functional
 
