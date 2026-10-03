@@ -4,6 +4,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs" // NestJS compiles to CommonJS
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {

@@ -95,4 +95,8 @@ Read these before touching the related area. **Add a new entry every time someth
 - **`WEB_ORIGIN` holds exactly one origin.** After renaming the Vercel domain, update Render; the old domain then gets 403 on every write (login included), so share only the current URL (https://kitchen-management-hizen.vercel.app).
 - **View Transitions are skipped on hidden tabs** (`InvalidStateError`, the switch still happens). Check the theme reveal with the window visible.
 - **Python on Windows** writes CRLF in text mode: open files with `newline=''` or run Prettier afterwards. Long Python edits inside a Bash heredoc can fail to parse on nested quotes: write the script to the scratchpad and run it.
+- **Prisma `relationJoins` is on (ADR-030)**: every nested read is one SQL query. It's a preview feature: after a Prisma upgrade, re-run `perf:kitchen` and compare a few endpoints.
+- **pg warns "client.query() when the client is already executing a query"** (from the running API, seen in the perf runs): some code runs queries in parallel on one connection, probably `Promise.all` inside an interactive transaction. Harmless today, removed in pg 9: run those sequentially when touching that code.
+- **CI runs `prettier --check .`**: any JSON/TS written by a script (e.g. `.claude/launch.json`) must be formatted before committing (BUG-013).
+- **`nest build` and the perf scripts share `backend/dist`**: stop the dev API before building for `perf:kitchen` / `probe:concurrency`.
 - **`gh` isn't on the Git Bash PATH.** The public GitHub REST API answers without auth (`/repos/<owner>/<repo>/actions/runs`, visibility).

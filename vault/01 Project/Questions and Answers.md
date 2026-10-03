@@ -32,7 +32,7 @@ Every question asked of the owner, with the answer and when it was given. Answer
 | ~~O-02~~ | ~~Repo name~~ — https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | — |
 | ~~O-03~~ | ~~Accounts ready~~ — done; deployed 2026-10-03 12:55 | — |
 | O-04 | Is Render's `DATABASE_URL` host `ep-autumn-forest-azgcpotr…` (same branch as local, ADR-029)? | T-605 |
-| O-05 | Create a throwaway Neon branch (e.g. `perf`) **from `dev`** (the one with the data); paste its connection string into `backend/.env.perf` yourself (not in chat) | T-605, T-1206 (Sun morning) |
-| O-07 | Hover the hourglass next to `dev` in Neon → Branches; if it shows an expiry, remove it (branch ⋮ menu). An expired branch is deleted with all live data | **now** |
+| ~~O-05~~ | ~~Throwaway `perf` branch~~ — done 2026-10-03 (auto-deletes after 1 day). Was: create a throwaway Neon branch (e.g. `perf`) **from `dev`** (the one with the data); paste its connection string into `backend/.env.perf` yourself (not in chat) | T-605, T-1206 (Sun morning) |
+| ~~O-07~~ | ~~Remove the expiry on `dev`~~ — done by the owner 2026-10-03 | — |
 | O-08 | Optional: set the `dev` compute's max autoscale to 0.25 CU (it shows 0.25 ↔ 2) so the free 100 CU-h/month lasts the 2-week review | before submission |
-| O-06 | Rotate the Neon password (it was pasted in chat); update Render and `backend/.env` | before submission |
+| ~~O-06~~ | ~~Rotate the Neon password~~ — owner: not needed. Was: rotate the Neon password (it was pasted in chat); update Render and `backend/.env` | before submission |

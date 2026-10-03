@@ -483,6 +483,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs" // NestJS compiles to CommonJS
+  previewFeatures = ["relationJoins"] // ADR-030: nested reads in one SQL query
 }
 
 datasource db {

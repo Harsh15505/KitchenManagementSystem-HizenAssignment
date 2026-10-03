@@ -296,6 +296,7 @@ Full reasoning in [`vault/05 Decisions/Decision Log.md`](vault/05%20Decisions/De
 | 027 | Combination signature sorted by ids, not display order | Reordering the catalogue can't silently re-price an open order |
 | 028 | Warm brand theme through the shadcn tokens, dark mode (next-themes), CSS motion and hand-built charts | No chart library: simpler charts, smaller bundle; every animation is off under "reduce motion" |
 | 029 | One Neon branch for local dev and production; bulk test scripts on a throwaway branch | Local clicks change live data, so probes clean up after themselves |
+| 030 | Prisma `relationJoins`: nested reads in one SQL query | A preview feature; turned on only after 42 endpoints returned identical JSON both ways |
 
 ---
 
@@ -347,6 +348,18 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
 * A **permission matrix** boots the real application module and asserts, route by route, which of the four roles get through.
 * Domain tests pass under three server time zones (CI runs them under each).
 * Behaviour that needs a real database (concurrent invoicing, simultaneous "done" clicks, cut-off re-runs) was verified against Neon during development and is recorded in the phase notes in `vault/02 Phases/`. Two repeatable scripts run the same checks through the real API on a throwaway Neon branch (`backend/.env.perf`; they refuse the live database): `pnpm --filter @fernleaf/backend probe:concurrency` (races + total reconciliation) and `pnpm --filter @fernleaf/backend perf:kitchen` (a 400-order day, board timings).
+* **Concurrency, last run 2026-10-03 (9/9 pass):** two simultaneous *Start* and two *Done* clicks on one prep unit → 200 + 409; two simultaneous invoices for one company → 201 + 409 `ALREADY_INVOICED`; the cut-off run fired twice at once handled 6 + 0 orders and a third run 0/0; no company without owner or default address; every combination, line, order and invoice total reconciles.
+* **Kitchen board at 400 orders** (the brief's bar). The script filled today to 400 confirmed orders through the API, then timed 30 requests each from a laptop in India through the local API to Neon in Singapore (one database round trip ≈ 71 ms from there). The first run showed the time was mostly sequential round trips, one per relation level, so Prisma's join loading went in (ADR-030):
+
+| Request (400 orders, 568 prep units) | p50 before | p50 after | p95 after |
+|---|---|---|---|
+| `GET /kitchen/board` | 1525 ms | **584 ms** | 773 ms |
+| `GET /kitchen/board?stationId` | 1450 ms | 548 ms | 630 ms |
+| `GET /dispatch/board` | 706 ms | 381 ms | 454 ms |
+| `GET /dashboard/admin` | 2308 ms | 1160 ms | 1395 ms |
+| `GET /orders` (page 1) | 418 ms | 216 ms | 323 ms |
+
+  On Render the API sits in the same region as Neon (round trip 3–37 ms), so production is faster than these laptop numbers.
 
 ---
 

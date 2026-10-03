@@ -92,9 +92,9 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 |---|---|---|---|
 | NFR-01 | Money: integer cents; reconciling totals | T-306 T-503 T-802 tests; DB CHECKs | ✅ (`money`, `pricing`, `combinations`, `billing` tests; CHECK `total = unit × qty`; invoice total asserted) |
 | NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | ✅ (domain tests under UTC/LA/IST in CI; server TZ=UTC on Render) |
-| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | 🟨 (row locks, advisory lock, conditional updates, unique keys; races verified by Neon probes; `probe:concurrency` script written, run pending O-05) |
+| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | ✅ (row locks, advisory lock, conditional updates, unique keys; `probe:concurrency` 9/9 on 2026-10-03) |
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
-| NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | 🟨 (server pagination ✅; board measured at 48 orders only, 400-order run T-605 on Sun) |
+| NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | ✅ (board p50 584 / p95 773 ms at 400 orders, from the laptop; ADR-030) |
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
 | NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (328 tests: 118 shared, 210 backend) |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |

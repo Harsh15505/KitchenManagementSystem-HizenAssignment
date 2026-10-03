@@ -12,9 +12,6 @@ updated: 2026-10-03 18:47 IST
 
 ## ▶ Next Up
 
-- [ ] **T-605** 400-order kitchen board perf: script ready, run when O-05 is done · P6/P12
-- [ ] **T-1206** Concurrency + integrity probe: script ready, run when O-05 is done · P12
-- [ ] **T-1207** README final pass: done except perf/concurrency numbers · P12
 - [ ] **T-1006** Live smoke checklist (owner, Sun 20:00 after freeze) · P10
 - [ ] **T-1102** Quality gate final run, history review, tag `v1.0.0` · P11
 - [ ] **T-1103** Submit the Google Form by 22:30 IST Sun · P11
@@ -24,13 +21,15 @@ updated: 2026-10-03 18:47 IST
 
 ## ⛔ Blocked
 
-- [ ] **O-05** Throwaway Neon branch + `backend/.env.perf` (owner) blocks T-605 and T-1206
 
 ## 👀 Review / Verify
 
 
 ## ✅ Done
 
+- [x] **T-1207** README final pass + screenshots + numbers · P12
+- [x] **T-1206** Concurrency + integrity probe (9/9) · P12
+- [x] **T-605** 400-order kitchen board perf + ADR-030 · P6/P12
 - [x] **T-406** Employee CSV import (*Should*) · P4/P12
 - [x] **T-1205** Form screens design pass · P12
 - [x] **T-409** Holiday conflict warning (*Should*) · P4/P12

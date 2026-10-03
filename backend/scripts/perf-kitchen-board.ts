@@ -14,6 +14,7 @@ import type {
   OrderContextDto,
   Paginated,
 } from '@fernleaf/shared';
+import { Client } from 'pg';
 import { loadPerfEnv, percentile, type Session, signIn, startApi } from './perf-harness';
 
 const TARGET_ORDERS = 400;
@@ -70,25 +71,33 @@ async function main() {
     }
     if (contexts.length === 0) throw new Error('No employee can receive a delivery today.');
 
+    // Employees who may pick a time get one of the last evening slots (new drops). The others
+    // keep their company default, unless that delivery has already left today.
+    const late = (ctx: OrderContextDto, i: number) =>
+      ctx.window.endMinutes - (i % 4) * ctx.window.slotMinutes;
+    const blocked = new Set<string>();
     let created = 0;
     let failed = 0;
     let firstError = '';
     const started = performance.now();
-    for (let batch = 0; batch < missing; batch += 8) {
+    let i = 0;
+    while (created < missing && i < missing * 3) {
+      const usable = contexts.filter((c) => !blocked.has(c.employee.id));
+      if (usable.length === 0) break;
       await Promise.all(
-        Array.from({ length: Math.min(8, missing - batch) }, async (_, k) => {
-          const i = batch + k;
-          const ctx = contexts[i % contexts.length]!;
+        Array.from({ length: Math.min(8, missing - created) }, async () => {
+          const n = i++;
+          const ctx = usable[n % usable.length]!;
           const dishes = ctx.menu.flatMap((c) => c.items);
-          const lines = [lineFor(dishes[i % dishes.length]!, i)];
-          if (i % 2 === 0) {
-            const second = dishes[(i * 7 + 3) % dishes.length]!;
-            if (second.dishId !== lines[0]!.dishId) lines.push(lineFor(second, i + 1));
+          const lines = [lineFor(dishes[n % dishes.length]!, n)];
+          if (n % 2 === 0) {
+            const second = dishes[(n * 7 + 3) % dishes.length]!;
+            if (second.dishId !== lines[0]!.dishId) lines.push(lineFor(second, n + 1));
           }
           const res = await admin.send('/orders', 'POST', {
             employeeId: ctx.employee.id,
             deliveryDate: today,
-            deliveryTimeMinutes: null,
+            deliveryTimeMinutes: ctx.employee.canChangeDeliveryTime ? late(ctx, n) : null,
             addressId: null,
             packagingTypeId: null,
             notes: '',
@@ -99,14 +108,29 @@ async function main() {
           if (res.ok) created++;
           else {
             failed++;
-            firstError ||= `${res.status} ${await res.text()}`;
+            const text = await res.text();
+            if (text.includes('DROP_ALREADY_DISPATCHED')) blocked.add(ctx.employee.id);
+            else firstError ||= `${res.status} ${text}`;
           }
         }),
       );
     }
     const createSeconds = (performance.now() - started) / 1000;
-    console.log(`Created ${created} orders in ${createSeconds.toFixed(0)} s (${failed} refused).`);
+    console.log(
+      `Created ${created} orders in ${createSeconds.toFixed(0)} s (${failed} refused; ` +
+        `${blocked.size} employees skipped because their delivery had already left).`,
+    );
     if (firstError) console.log(`First refusal: ${firstError.slice(0, 300)}`);
+
+    const db = new Client({ connectionString: env.DATABASE_URL });
+    await db.connect();
+    const rtt: number[] = [];
+    for (let k = 0; k < 20; k++) {
+      const t = performance.now();
+      await db.query('SELECT 1');
+      rtt.push(performance.now() - t);
+    }
+    await db.end();
 
     const board = await kitchen.get<KitchenBoardDto>('/kitchen/board');
     const station = board.stations.find((s) => s.id)?.id;
@@ -127,7 +151,8 @@ async function main() {
     console.log(
       `\nBoard for ${today}: ${board.summary.orders} orders, ${board.summary.units} prep units, ` +
         `${board.slots.length} slots. ${SAMPLES} sequential requests each, measured from this ` +
-        'machine through the local API to Neon:\n',
+        'machine through the local API to Neon. One database round trip from here: ' +
+        `p50 ${percentile(rtt, 50)} ms.\n`,
     );
     console.log('| Request | p50 ms | p95 ms | max ms | payload KB |');
     console.log('|---|---|---|---|---|');

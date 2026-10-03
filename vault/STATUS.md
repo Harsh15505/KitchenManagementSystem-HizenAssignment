@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 20:03 IST
+updated: 2026-10-03 22:50 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
-active_task: waiting on O-05 to run T-605/T-1206; then numbers into README §11
+active_task: none — all build work done; owner steps left (smoke test, tag, form)
 ---
 # 📍 STATUS: live snapshot
 
@@ -20,27 +20,24 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 - **P0–P10**: ✅ (see [[Phase Plan]] for actual finish times; T-605 and T-1006 open, see below)
 - **P11**: 🟨 README ✅, quality gate run 18:40 (lint/typecheck/319 tests clean, CI green); tag `v1.0.0` + Google Form pending → [[P11 README and Submission]]
-- **P12**: 🟨 T-1201…T-1204 ✅ (theme, dashboards, boards, theme reveal), T-409 ✅ (holiday warning), T-1205 ✅ (form screens), T-406 ✅ (CSV import); perf + concurrency scripts ready → [[P12 Polish and Proof]]
+- **P12**: 🟨 T-1201…T-1204 ✅ (theme, dashboards, boards, theme reveal), T-409 ✅ (holiday warning), T-1205 ✅ (form screens), T-406 ✅ (CSV import); perf + concurrency done (9/9, board 584 ms at 400 orders after ADR-030) → [[P12 Polish and Proof]]
 
 ## 🔨 Active task
 
-- Everything buildable is done. T-605 + T-1206 scripts run as soon as `backend/.env.perf` exists (O-05); their numbers go into README §11 (last part of T-1207).
+- None. All P12 work is done; what remains are the owner's submission steps below.
 
 ## ⏭ Next up (in order)
 
 1. ~~T-409 holiday warning~~ ✅ 18:55
 2. ~~T-1205 form screens design pass~~ ✅ 19:02
-3. T-605 perf + T-1206 concurrency/integrity script on a throwaway Neon branch (Sun morning; needs **O-05**)
-4. ~~T-1207 README pass + screenshots~~ ✅ 20:03 (numbers pending); ~~T-406 CSV import~~ ✅ 19:57
+3. ~~T-605 perf + T-1206 concurrency~~ ✅ 22:45 (ADR-030)
+4. ~~T-1207 README pass + screenshots + numbers~~ ✅; ~~T-406 CSV import~~ ✅ 19:57
 5. Sun 20:00 freeze → owner runs T-1006 live smoke → T-1102 tag `v1.0.0` → T-1103 Google Form by 22:30
 
 ## ⛔ Blockers / waiting on owner
 
-- **O-07 (urgent)**: Neon shows an hourglass on the `dev` branch (= expiry date). Hover it; if an expiry is set, remove it, or the live data is deleted when it expires.
-- **O-08**: optional, cap `dev` autoscaling at 0.25 CU to protect the 100 CU-h/month free budget.
-- **O-04**: confirm Render's `DATABASE_URL` host is `ep-autumn-forest-azgcpotr…` (same branch as local, ADR-029).
-- **O-05** (blocks T-605/T-1206, needed Sun morning): in the Neon console create a branch (e.g. `perf`) from the current one and paste its connection string into `backend/.env.perf` yourself (git-ignored; not in chat).
-- **O-06**: rotate the Neon password (it was pasted in chat), then update Render and `backend/.env`.
+- **O-08** (optional): cap `dev` autoscaling at 0.25 CU to protect the 100 CU-h/month free budget.
+- Submission (owner): live smoke test (T-1006), private-window check, tag `v1.0.0`, Google Form (T-1103).
 
 ## 🌐 Environments
 
@@ -53,13 +50,13 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## ✅ Verified (2026-10-03 18:40)
 
-- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 328 tests (118 shared, 210 backend) at 19:56. Frontend build clean (19:56).
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 328 tests (118 shared, 210 backend) at 22:45 with ADR-030; `probe:concurrency` 9/9; frontend build clean (19:56).
 - Live: origin check (new domain 204, old 403), `/api/health` through Vercel 200. Owner: 4 logins, role-limited nav, dashboards with data (13:58).
 - Browser (local, 17:20–17:35): all 4 dashboards, kitchen/dispatch boards, order detail, billing; light + dark; phone width without horizontal scroll.
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-029 in [[Decision Log]]. Latest: ADR-028 warm brand theme + dark mode (+ motion, theme reveal), ADR-029 one Neon branch for local and production.
+ADR-001…ADR-030 in [[Decision Log]]. Latest: ADR-028 brand theme, ADR-029 one Neon branch (`dev`), ADR-030 Prisma `relationJoins`.
 
 ## 🧷 Last commit
 

@@ -421,6 +421,7 @@ Full context, alternatives and consequences for each decision are in `vault/05 D
 | ADR-021 | **Docs = spec, vault = state**; vault committed | Wiki outside repo | Any agent or human can resume from the repo alone |
 | ADR-024 → ADR-027 | Version pins; shadcn on Base UI; tier grid as a plain table; combination signature sorted by ids | — | See `vault/05 Decisions/Decision Log.md` |
 | ADR-028 | **Warm brand theme through shadcn tokens, dark mode via next-themes, CSS motion utilities, hand-built charts** | Chart library; neutral defaults | Every screen inherits the look; small bundle; reduced-motion safe |
+| ADR-030 | **Prisma `relationJoins`**: nested reads load in one SQL query (joins) instead of one query per relation level | Preview feature; a global switch | Kitchen board at 400 orders 1525 → 584 ms; 42 endpoints returned identical JSON either way |
 | ADR-029 | **One Neon branch for local dev and production (as provisioned)**; bulk test scripts on a throwaway branch; service tests with a fake Prisma | Separate `dev`/`test` branches | Matches what exists; switching databases a day before submission risks the live app |
 
 ---

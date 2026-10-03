@@ -3,7 +3,7 @@ type: session
 id: S03
 date: 2026-10-03
 start: 12:20 IST
-end:
+end: 22:50 IST
 agent: Claude (Claude Code, Opus)
 phase: P10 → P12
 ---
@@ -37,13 +37,16 @@ Get the app live on the owner's accounts, fix what the live run shows, give the 
 - 18:55 T-409 holiday conflict warning (company + kitchen holidays; `GET /orders/open-on`; tests 322).
 - 19:02 T-1205 form screens pass (global inputs, order builder steps/summary, new company steps); BUG-012 fixed.
 
+- 19:35–20:03 T-605/T-1206 scripts, T-406 CSV import, T-1207 README (screenshots).
+- 22:45 Scripts run on the `perf` branch: 9/9 races/integrity; board at 400 orders 1525 → 584 ms after ADR-030 (identical JSON on 42 endpoints). BUG-013 (CI format) fixed.
+
 ## Decisions (ADR IDs)
 
-ADR-028 (+ two follow-ups), ADR-029.
+ADR-028 (+ two follow-ups), ADR-029, ADR-030.
 
 ## Bugs (BUG IDs)
 
-BUG-006…BUG-012 (all fixed).
+BUG-006…BUG-013 (all fixed).
 
 ## Commits
 

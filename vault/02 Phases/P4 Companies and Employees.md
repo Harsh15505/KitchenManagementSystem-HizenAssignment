@@ -26,7 +26,7 @@ Specs: PRD FR-CMP-*, FR-EMP-*, BR-CMP-*, BR-EMP-*, A-21, A-26…A-30 · DATABASE
 
 ## Exit criteria
 
-- [ ] A company can't exist without owner + default address (seed integrity test). *Enforced:* company + owner + domain + default address are created in one transaction, the default address can't be archived and the owner can't be deactivated or moved (BR-EMP-02 tests). *Not done:* a seed-integrity test; T-1206 adds the check to the probe script.
+- [x] A company can't exist without owner + default address (`probe:concurrency` check: 0 found, 2026-10-03 22:45). *Enforced:* company + owner + domain + default address are created in one transaction, the default address can't be archived and the owner can't be deactivated or moved (BR-EMP-02 tests). *Not done:* a seed-integrity test; T-1206 adds the check to the probe script.
 - [x] Menu preview reflects company tier + hiding (P3 log 07:12)
 
 ## Log

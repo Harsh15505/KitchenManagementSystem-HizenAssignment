@@ -97,3 +97,4 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 85 | 2026-10-03 19:02 | a77195c | feat(frontend): form screens pass: order builder steps, inputs, new company | T-1205, BUG-012 | P12 |
 | 86 | 2026-10-03 19:57 | 31d98c7 | feat: import employees from a CSV file with a per-row report | T-406 | P12 |
 | 87 | 2026-10-03 19:58 | 6bd6d92 | test(backend): repeatable perf and concurrency scripts on a throwaway branch | T-605, T-1206 | P12 |
+| 88 | 2026-10-03 20:02 | 1f65a6c | docs: README screenshots, final decisions and prioritisation pass (CI failed: BUG-013) | T-1207 | P12 |

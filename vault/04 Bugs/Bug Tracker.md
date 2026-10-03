@@ -35,4 +35,6 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 
 | BUG-012 | Switching theme in a hidden tab logged "Uncaught (in promise) InvalidStateError": the skipped view transition rejects `ready`, which wasn't caught | S4 | fixed | frontend | 2026-10-03 18:58, Claude (console check) | T-1205 commit (`.catch` on `transition.ready`) | manual (no unhandled rejection; theme still switches) |
 
+| BUG-013 | CI failed on 1f65a6c: `.claude/launch.json` (written by Python `json.dump`) wasn't Prettier-formatted, and CI runs `prettier --check .` | S3 | fixed | tooling | 2026-10-03 22:45, Claude (local `prettier --check`, then the CI run) | next commit (formatted) | CI format step |
+
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

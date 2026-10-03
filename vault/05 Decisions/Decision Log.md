@@ -1,6 +1,6 @@
 ---
 type: decisions
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-03 22:45 IST
 ---
 
 # 🧭 Decision Log (ADRs)
@@ -188,6 +188,14 @@ Template: `_templates/Decision Template.md`.
 - **Consequences:** Every screen inherits the look without per-page edits; hard-coded colours keep `dark:` variants. Next.js dev badge overlaps the logo in development only.
 - **Follow-up (17:35):** Motion utilities in `globals.css` (`animate-rise`, `stagger`, `animate-grow-x/y`, `animate-soft-pulse`, `lift`), all disabled under `prefers-reduced-motion`; `CountUp` for headline numbers; `.page-title` serif title with a saffron underline. Charts are hand-built divs/CSS (no chart library) to keep the bundle small and the theme tokens in charge.
 - **Follow-up (theme switch):** Toggling uses the View Transitions API for a circular reveal from the toggle (600 ms); instant under reduced motion or without support. `disableTransitionOnChange` stays on so element colour transitions don't fight the snapshot. Browsers skip view transitions on hidden tabs.
+
+### ADR-030: Prisma `relationJoins` (nested reads in one SQL query)
+- **Status:** Accepted · 2026-10-03 22:45
+- **Context:** T-605 at 400 orders: kitchen board p50 1525 ms (p95 2401) from the laptop, admin dashboard 2308 ms. One database round trip ≈ 71 ms, and going from 175 to 400 orders added only 16 %: the cost was ~20 sequential round trips (Prisma's default loads one query per relation level), not data volume.
+- **Decision:** `previewFeatures = ["relationJoins"]`; Prisma's default relation load strategy becomes `join` (LATERAL joins + JSON aggregation, one query).
+- **Evidence:** board p50 584 ms / p95 773 ms (target 800), dispatch 381 ms, dashboard 1160 ms, orders 216 ms. The 42 main GET responses (boards, dashboard, orders, companies, employees, catalogue, tier grids, billing, invoices, settings, cut-off, driver) were byte-identical with and without it (`now` excluded). `probe:concurrency` 9/9 and all 328 tests still pass.
+- **Alternatives:** hand-written SQL for the board (more code, a day before the deadline); fewer nested selects with parallel lookups (helps the board only).
+- **Consequences:** a preview feature, so pin Prisma (ADR-024) and re-check on upgrades. `docs/DATABASE_MODELS.md` generator block updated.
 
 ### ADR-029: One Neon branch for local dev and production (as provisioned)
 - **Status:** Accepted · 2026-10-03 18:50 (found during the vault catch-up; owner to confirm Render's `DATABASE_URL` host matches)
