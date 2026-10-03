@@ -8,6 +8,8 @@ import { CatalogueModule } from './catalogue/catalogue.module';
 import { PricingModule } from './pricing/pricing.module';
 import { MenuModule } from './menu/menu.module';
 import { CompaniesModule } from './companies/companies.module';
+import { CutoffCatchUpMiddleware } from './orders/orders.controller';
+import { OrdersModule } from './orders/orders.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -29,6 +31,7 @@ import { StaffModule } from './staff/staff.module';
     PricingModule,
     MenuModule,
     CompaniesModule,
+    OrdersModule,
   ],
   controllers: [HealthController],
   providers: [
@@ -38,6 +41,6 @@ import { StaffModule } from './staff/staff.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(OriginCheckMiddleware).forRoutes('*splat');
+    consumer.apply(OriginCheckMiddleware, CutoffCatchUpMiddleware).forRoutes('*splat');
   }
 }
