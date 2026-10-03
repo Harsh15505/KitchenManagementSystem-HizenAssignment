@@ -181,3 +181,9 @@ Template: `_templates/Decision Template.md`.
 - **Decision:** `signatureOf` sorts `groupId:optionId@size` tokens by id. Display order is kept separately on each choice (`sortOrder`) for the kitchen board and order detail.
 - **Consequences:** The canonical identity is stable across catalogue reorders. TRD §8.3 updated.
 
+### ADR-028: Warm Fernleaf brand theme with a dark mode toggle
+- **Status:** Accepted · 2026-10-03 16:25 (owner chose "warm kitchen brand" + dark mode toggle)
+- **Context:** The first UI used shadcn's neutral defaults and read as unfinished.
+- **Decision:** Theme through the shadcn CSS tokens only (fern green primary, warm cream background, saffron accents, soft card shadow; forest-green dark palette). Fraunces for headings, Geist for text. Dark green grouped sidebar. Dark mode via `next-themes` (`class` attribute, default light, remembered per browser). Status badges gain success/warning/info variants.
+- **Consequences:** Every screen inherits the look without per-page edits; hard-coded colours keep `dark:` variants. Next.js dev badge overlaps the logo in development only.
+

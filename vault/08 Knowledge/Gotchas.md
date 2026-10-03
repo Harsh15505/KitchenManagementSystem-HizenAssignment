@@ -85,3 +85,6 @@ Read these before touching the related area. **Add a new entry every time someth
 - Demo data: generated orders have `source = DEMO`; regenerate keeps `STAFF` orders. Kitchen and dispatch actions on a demo order must set `demoAutopilotUntil = null` (the human takes over).
 - shadcn on Base UI: `DropdownMenuLabel` must be wrapped in `DropdownMenuGroup` (Base UI throws "MenuGroupContext is missing"); Radix-era examples don't do this (BUG-006).
 - Don't run `pnpm build` while `pnpm dev` runs: `nest build` wipes `backend/dist` and the dev API crashes with "Cannot find module './app.module'". Restart the backend.
+- If port 3000 is taken by another project, use the `backend-3001` + `frontend-3001` launch configs (the API then accepts `WEB_ORIGIN=http://localhost:3001`).
+- `shared` is rebuilt by the frontend build only when `shared/dist` is missing (Vercel). Never rebuild it inside a package build that runs in parallel with others: tsup cleans `dist` first (CI race, fixed in 268744d).
+
