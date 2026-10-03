@@ -1,6 +1,7 @@
 import type { Action, AppAbility, SubjectName } from '@fernleaf/shared';
 import {
   Carrot,
+  BookOpen,
   LayoutDashboard,
   ListChecks,
   type LucideIcon,
@@ -41,6 +42,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     anyOf: [['read', 'Catalogue']],
   },
   { href: '/catalogue/options', label: 'Options', icon: Carrot, anyOf: [['read', 'Catalogue']] },
+  { href: '/menu', label: 'Menu', icon: BookOpen, anyOf: [['read', 'Menu']] },
   { href: '/pricing', label: 'Pricing', icon: Tags, anyOf: [['read', 'Pricing']] },
   { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
   {
