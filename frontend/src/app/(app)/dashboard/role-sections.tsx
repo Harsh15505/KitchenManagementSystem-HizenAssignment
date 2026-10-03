@@ -102,7 +102,7 @@ export function KitchenSection() {
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Metric
-          label="Meals to cook"
+          label="Meals today"
           value={meals(work)}
           hint={`${b.summary.orders} orders · ${b.summary.units} items`}
         />
@@ -124,6 +124,16 @@ export function KitchenSection() {
           hint="due within the warning window"
         />
       </div>
+      {doNotCook.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm dark:bg-red-950/30"
+        >
+          <span className="font-medium">Do not cook</span> (cancelled or rejected after work
+          started):{' '}
+          {doNotCook.map((u) => `#${u.order.number} ${u.quantity} × ${u.dish.name}`).join(' · ')}
+        </div>
+      )}
       <div className="grid gap-4 lg:grid-cols-3">
         <Panel title="Production by station (meals)">
           <table className="w-full text-xs">
@@ -211,18 +221,6 @@ export function KitchenSection() {
         </Panel>
         <Panel title={day === 'today' ? 'Tomorrow' : 'Still open for this day'}>
           <TomorrowBlock board={day === 'today' ? tomorrow.data : b} />
-          {doNotCook.length > 0 && (
-            <div className="mt-3">
-              <div className="text-xs font-medium">Do not cook (cancelled after work started)</div>
-              <ul className="text-xs text-muted-foreground">
-                {doNotCook.map((u) => (
-                  <li key={u.id}>
-                    #{u.order.number} {u.quantity} × {u.dish.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </Panel>
       </div>
     </div>
