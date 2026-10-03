@@ -89,3 +89,5 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 77 | 2026-10-03 17:22 | 9d9525c | feat(frontend): rebuilt dashboards with charts, count-up and motion | T-UI | Polish |
 | 78 | 2026-10-03 17:27 | 3f92e86 | feat(frontend): polished kitchen, dispatch and driver boards | T-UI | Polish |
 | 79 | 2026-10-03 17:33 | 3a77ded | feat(frontend): order lifecycle stepper, timeline rail, billing metrics | T-UI | Polish |
+| 80 | 2026-10-03 17:33 | 8dad0b2 | docs(vault): UI redesign done; commit log backfilled; STATUS | T-UI | Polish |
+| 81 | 2026-10-03 18:01 | 9c6e749 | feat(frontend): circular reveal animation when switching theme | T-UI | Polish |
