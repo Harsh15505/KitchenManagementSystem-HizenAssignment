@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 06:30 IST
+updated: 2026-10-03 07:05 IST
 phase: P3 (T-108 deploy waiting on owner)
-active_task: T-307
+active_task: T-310
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,7 +10,7 @@ active_task: T-307
 
 ## TL;DR
 
-P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options and option groups work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: T-307/T-308 tiers and the tier price grid.
+P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in progress: the pricing and menu rules are pure functions with tests, and dishes, options, option groups, price tiers and the tier grid work end to end (API + UI). **Not deployed yet**: waiting for the owner to create the Render service from `render.yaml` (T-108). Next: T-310 menu management.
 
 ## ⏳ Deadline
 
@@ -21,15 +21,15 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
 - **P2**: ✅ locally (T-201…T-210) → [[P2 Auth and Access]]
-- **P3**: 🟨 T-301 schema, T-302/303/304 catalogue, T-306 pricing rules, T-311 menu rules done → [[P3 Catalogue Pricing Menu]]
+- **P3**: 🟨 done: T-301/305/309 schema, T-302/303/304 catalogue, T-306 pricing rules, T-307/308 tiers + grid, T-311 menu rules. Left: T-310, T-312, T-313 → [[P3 Catalogue Pricing Menu]]
 
 ## 🔨 Active task
 
-- **T-307** pricing tiers API + UI (derivation, cycle check via `findDerivationCycle`), then **T-308** tier price grid (overrides, exclusions).
+- **T-310** menu management API + UI (categories with slug/secret flag, items, ordering, activate), then **T-312** menu preview as an employee and **T-313** the catalogue/tier/menu seed.
 
 ## ⏭ Next up (in order)
 
-1. T-307 tiers · T-308 tier grid · T-310 menu management · T-312 menu preview · T-313 catalogue seed
+1. T-310 menu management · T-312 menu preview · T-313 catalogue seed
 2. **T-108** once the owner shares the Render URL: verify the API deploy, create the Vercel project (root `frontend`, `API_ORIGIN`), set Render `WEB_ORIGIN`; T-109 UptimeRobot
 3. P4 companies and employees
 
@@ -49,14 +49,15 @@ P1 and P2 are done locally and CI is green. P3 (catalogue, pricing, menu) is in 
 
 ## ✅ Verified locally (2026-10-03 06:30)
 
-- `pnpm lint / typecheck / test` clean; 127 tests (65 shared, 62 backend).
+- `pnpm lint / typecheck / test` clean; 156 tests (70 shared, 86 backend).
+- Pricing (07:05): Neon probe of tiers, cycles, grid, bulk set/exclude/clear, default switch, guarded delete; browser check of `/pricing` and the grid.
 - Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
 - Browser (kitchen): catalogue read-only, no money columns.
 - Found and fixed BUG-003 and BUG-004 (see [[Bug Tracker]]).
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-025 in [[Decision Log]]. Latest: ADR-024 version pins (Prisma 7.10, Nest 11, TS 6), ADR-025 shadcn on Base UI.
+ADR-001…ADR-026 in [[Decision Log]]. Latest: ADR-025 shadcn on Base UI, ADR-026 tier grid as a plain table.
 
 ## 🧷 Last commit
 

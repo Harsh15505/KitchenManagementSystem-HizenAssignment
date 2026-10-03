@@ -32,12 +32,12 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-MEN-02 | Hide per company | Must | P4 | T-404 | ⬜ | | |
 | FR-MEN-03 | Secret categories (slug) | Must | P3 | T-310 T-311 T-312 | 🟨 (rule + tests done) | | |
 | FR-MEN-04 | Preview as employee | Must | P3 | T-311 T-312 | 🟨 (resolver: `shared/src/domain/menu.ts`) | | |
-| FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ⬜ | | |
-| FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ⬜ | | |
+| FR-PRC-01 | Named tiers, prices per tier | Must | P3 | T-305 T-307 | ✅ | `backend/src/pricing`, `frontend/src/app/(app)/pricing` | permission matrix, Neon probe, browser check |
+| FR-PRC-02 | Exactly one default tier | Must | P3 | T-305 T-307 | ✅ | required FK on settings; `POST /price-tiers/:id/make-default` single update; default can't be deleted | Neon probe |
 | FR-PRC-03 | Company tier → employee price | Must | P3/P4 | T-306 T-402 | ⬜ | | |
 | FR-PRC-04 | No price ⇒ not on menu | Must | P3 | T-306 T-311 | ✅ (pricing + menu resolvers, tests) | | |
-| FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | 🟨 (resolver: `shared/src/domain/pricing.ts`, `pricing.test.ts`) | | |
-| FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ⬜ | | |
+| FR-PRC-05 | Derived tiers + overrides + ceil 5¢ | Must | P3 | T-306 T-307 T-308 | ✅ | `shared/src/domain/pricing.ts` (resolver, factor parsing), tier form, grid | `pricing.test.ts` BR-PRC-* + FR-PRC-05 |
+| FR-PRC-06 | Tier grid + missing prices | Must | P3 | T-308 | ✅ | `GET /price-tiers/:id/grid`, `PUT …/prices`, `pricing/[tierId]` page | `pricing.test.ts` FR-PRC-06, browser check |
 | FR-PRC-07 | Price changes affect new orders only | Must | P5 | T-503 T-506 T-508 | ⬜ | | |
 | FR-CMP-01 | Company core (domains, addresses, billing, owner) | Must | P4 | T-402 T-403 | ⬜ | | |
 | FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | ⬜ | | |

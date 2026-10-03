@@ -38,7 +38,7 @@
 | Language | **TypeScript (strict)** | Shared types end to end. `noUncheckedIndexedAccess` on |
 | Frontend | **Next.js 16 (App Router)** + React 19 | Mandated. App Router layouts suit a role-based shell. **`proxy.ts`** replaces `middleware.ts` in v16 |
 | UI kit | **shadcn/ui + Tailwind CSS 4** + lucide icons + sonner toasts | We own the component code, it's accessible (Base UI primitives: shadcn's current `base-nova` default, ADR-025), and it's fast to build admin UIs with |
-| Data grid | **TanStack Table 8** | Server-side pagination, sorting and filtering on the order list and tier grid |
+| Data grid | **TanStack Table 8** | Server-side pagination, sorting and filtering on the order list (the tier grid is a plain table over one whole-tier response, ADR-026) |
 | Server state | **TanStack Query 5** | Caching, polling for the boards, optimistic updates with rollback on 409 |
 | Forms | **React Hook Form 7 + Zod 4** (`@hookform/resolvers` ≥ 5) | Uses the **same Zod schemas** as the API. Server errors map onto fields |
 | Dates | **date-fns 4 + @date-fns/tz** | Explicit time-zone math (`TZDate`), tree-shakable, works in both apps |
@@ -532,7 +532,7 @@ Base path `/api`. JSON unless noted. `🔓` = public. Money fields (`*Cents`) ar
 | **Kitchen board** | Date and station chips with counts; summary strip (late / at risk / in progress / done); grouped by planned kitchen-ready slot; unit card = dish, combination text, qty, order #, employee, allergen flags; big **Start** / **Done** buttons; LATE in red, AT RISK in amber. 1,000 cards: memoised cards, collapsible groups, `content-visibility: auto`, plus virtualization if measurement demands it |
 | **Dispatch board** | Drops grouped by delivery time: company, address label, boxes, readiness bar (x/y kitchen-ready), driver select (default pre-filled), next-step button, lateness badges, filters by stage and driver |
 | **Driver view** | Phone-first: large cards in time order, a "Next stop" hero, tap-to-call and maps link, **Mark delivered** sheet with note and camera input (`accept="image/*" capture="environment"`), client-side compression, works one-handed |
-| **Tier grid** | TanStack Table: SKU, dish, cost, base price (if derived), derived, override input, effective, source badge; "Missing only" toggle; dirty-cell tracking → bulk save |
+| **Tier grid** | Plain table (ADR-026): SKU, dish, cost, base price (if derived), derived, override input, effective, source badge; "Missing only" toggle; dirty-cell tracking → bulk save |
 | **Menu preview** | Pick company → employee; renders exactly the employee menu payload; "Open secret category" slug input |
 | **Order detail** | Header with status and stage chips, lock countdown, actions allowed for this user; tabs: Lines & money · Delivery · Timeline |
 
