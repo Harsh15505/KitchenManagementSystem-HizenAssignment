@@ -7,6 +7,7 @@ import { OriginCheckMiddleware } from './authz/origin.middleware';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { PricingModule } from './pricing/pricing.module';
 import { MenuModule } from './menu/menu.module';
+import { CompaniesModule } from './companies/companies.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -27,6 +28,7 @@ import { StaffModule } from './staff/staff.module';
     CatalogueModule,
     PricingModule,
     MenuModule,
+    CompaniesModule,
   ],
   controllers: [HealthController],
   providers: [
