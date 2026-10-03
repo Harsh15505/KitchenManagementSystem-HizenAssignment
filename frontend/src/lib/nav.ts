@@ -1,5 +1,5 @@
 import type { Action, AppAbility, SubjectName } from '@fernleaf/shared';
-import { LayoutDashboard, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, type LucideIcon, Users } from 'lucide-react';
 
 /**
  * Navigation is derived from abilities, never from role names (FR-ACC-04). Items are added as
@@ -25,6 +25,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
       ['read', 'DriverDashboard'],
     ],
   },
+  { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
 ];
 
 export function visibleNav(ability: AppAbility): NavItem[] {

@@ -2,7 +2,7 @@
 type: status
 updated: 2026-10-03 05:50 IST
 phase: P2 (P1 code done; T-108 deploy waiting on owner)
-active_task: T-206
+active_task: T-207
 ---
 
 # 📍 STATUS: live snapshot
@@ -21,11 +21,11 @@ The P1 skeleton is built and CI passes. P2 is half done: permissions + CASL rule
 
 - **P0**: ✅ → [[P0 Planning]]
 - **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
-- **P2**: 🟨 T-201, T-202, T-203, T-204, T-205, T-209 done; T-206, T-207, T-208, T-210 left → [[P2 Auth and Access]]
+- **P2**: 🟨 T-201…T-206, T-209 done; T-207, T-208, T-210 left → [[P2 Auth and Access]]
 
 ## 🔨 Active task
 
-- **T-206** Staff management API + UI
+- **T-207** Settings + kitchen holidays + public-domain blocklist
 
 ## ⏭ Next up (in order)
 

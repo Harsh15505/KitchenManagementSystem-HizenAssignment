@@ -58,6 +58,24 @@ export class ApiExceptionFilter implements ExceptionFilter {
       };
     }
 
+    const prismaCode = prismaErrorCode(exception);
+    if (prismaCode === 'P2002') {
+      // Unique constraint. Services pre-check the common cases for friendlier field errors;
+      // this is the race-proof backstop (two requests creating the same thing at once).
+      return {
+        error: {
+          code: 'UNIQUE_VIOLATION',
+          message: 'That value is already in use. Refresh and try again.',
+          status: HttpStatus.CONFLICT,
+        },
+      };
+    }
+    if (prismaCode === 'P2025') {
+      return {
+        error: { code: 'NOT_FOUND', message: 'Record not found.', status: HttpStatus.NOT_FOUND },
+      };
+    }
+
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const response = exception.getResponse();
@@ -76,6 +94,13 @@ export class ApiExceptionFilter implements ExceptionFilter {
       },
     };
   }
+}
+
+/** Prisma known-request errors carry a P-code (P2002 unique, P2025 not found). */
+function prismaErrorCode(exception: unknown): string | undefined {
+  if (typeof exception !== 'object' || exception === null) return undefined;
+  const { name, code } = exception as { name?: unknown; code?: unknown };
+  return name === 'PrismaClientKnownRequestError' && typeof code === 'string' ? code : undefined;
 }
 
 export function toFieldErrors(error: ZodError): FieldErrors {

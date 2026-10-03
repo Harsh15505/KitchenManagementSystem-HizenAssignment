@@ -20,6 +20,13 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 |---|---|---|
 | _tbd_ | | |
 
+## Interpretations made during the build
+
+| When (IST) | Topic | Interpretation |
+|---|---|---|
+| 2026-10-03 06:00 | Self-lockout | An admin cannot deactivate their own account or change their own role, so the last admin can't lock everyone out. Changing another user's role, deactivating them or resetting their password signs them out everywhere (token version) |
+| 2026-10-03 05:45 | Admin vs driver views | The admin role has every permission except the driver-only ones (`delivery.perform`, `dashboard.driver`); admins act on drops through dispatch permissions |
+
 ## Skipped / simplified
 
 | When (IST) | Item | Priority | Why | What we'd do with more time |

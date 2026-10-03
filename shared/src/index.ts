@@ -5,3 +5,5 @@ export * from './permissions/catalogue';
 export * from './permissions/default-roles.seed';
 export * from './authz/rules';
 export * from './domain/time';
+export * from './contracts/pagination';
+export * from './contracts/staff';
