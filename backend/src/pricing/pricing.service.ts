@@ -200,6 +200,19 @@ export class PricingService {
     return { saved: input.changes.length };
   }
 
+  /**
+   * Active dishes employees on the default tier can't see: missing a price or explicitly not sold
+   * there (flagged on the menu screen).
+   */
+  async dishesUnpricedOnDefault(): Promise<Set<string>> {
+    const snap = await this.snapshot();
+    return new Set(
+      snap.dishes
+        .filter((d) => resolvePrice(d, snap.defaultTierId, snap.ctx).cents === null)
+        .map((d) => d.id),
+    );
+  }
+
   private toDto(tier: PricingSnapshot['tiers'][number], snap: PricingSnapshot): PriceTierDto {
     const missing = (items: CatalogueItem[]) =>
       items.filter((item) => resolvePrice(item, tier.id, snap.ctx).source === 'MISSING').length;

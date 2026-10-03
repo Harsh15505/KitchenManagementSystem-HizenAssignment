@@ -41,6 +41,9 @@ const MATRIX: ReadonlyArray<{
   { method: 'get', path: '/api/price-tiers', allowed: ['admin'] },
   { method: 'post', path: '/api/price-tiers', allowed: ['admin'] },
   { method: 'put', path: `/api/price-tiers/${TIER_ID}/prices`, allowed: ['admin'] },
+  { method: 'get', path: '/api/menu/categories', allowed: ['admin'] },
+  { method: 'post', path: '/api/menu/categories', allowed: ['admin'] },
+  { method: 'put', path: '/api/menu/categories/order', allowed: ['admin'] },
 ];
 
 const users = new Map<
