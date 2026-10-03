@@ -36,3 +36,6 @@ Thumbs.db
 vault/.obsidian/
 vault/.trash/
 vault/_assets/*.pdf
+
+# local throwaway scripts
+*.tmp.ts
