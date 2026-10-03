@@ -641,7 +641,7 @@ export function normaliseLine(line: LineIn, dish: MenuDish /* groups + offered o
   // 3. per combination: each choice's group ∈ dish.groups; option offered in that group (active + priced) → COMBINATION_INVALID
   //    required groups have ≥1 choice; count ≤ maxSelections; no duplicate option within a group
   //    portioned group ⇒ portionSizeId ∈ group sizes and option supports it; non-portioned ⇒ no size → PORTION_SIZE_UNSUPPORTED
-  // 4. signature = choices sorted by (group.sortOrder, item.sortOrder) → `${g}:${o}${p ? '@' + p : ''}` joined by '|'
+  // 4. signature = `${g}:${o}${p ? '@' + p : ''}` tokens sorted by id, joined by '|' (ADR-027: stable across reorders)
   // 5. merge combinations with equal signature (sum quantities)  → each remaining one = one prep unit
   // 6. line.quantity ≥ dish.minOrderQty → MIN_QTY_NOT_MET
   // errors carry paths: lines.{i}.combinations.{j}.choices / .quantity

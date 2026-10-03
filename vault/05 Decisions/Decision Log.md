@@ -175,3 +175,9 @@ Template: `_templates/Decision Template.md`.
 - **Decision:** `GET /price-tiers/:id/grid` returns every active item of one kind for the tier (search and "missing only" filter server-side, no pagination). The page renders a plain shadcn table with dirty-cell drafts and one bulk `PUT`. TanStack Table stays the plan for the order list (server pagination and sorting).
 - **Consequences:** TRD §2 and the tier-grid row in §UI updated. If the catalogue grows past a few hundred items, add pagination to the grid endpoint.
 
+### ADR-027: Combination signature sorted by ids, not display order
+- **Status:** Accepted · 2026-10-03 07:20
+- **Context:** BR-CMB-04 / TRD §8.3 describe the signature as "choices sorted by group order then option order". Price capture on edit (BR-PRC-07) looks combinations up by `(dishId, signature)`. If the signature used display order, reordering groups or options in the catalogue would change the signature of an unchanged combination and silently re-price it on the next edit.
+- **Decision:** `signatureOf` sorts `groupId:optionId@size` tokens by id. Display order is kept separately on each choice (`sortOrder`) for the kitchen board and order detail.
+- **Consequences:** The canonical identity is stable across catalogue reorders. TRD §8.3 updated.
+
