@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 19:57 IST
+updated: 2026-10-03 20:03 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
-active_task: T-1207 README final pass (T-605/T-1206 wait for O-05)
+active_task: waiting on O-05 to run T-605/T-1206; then numbers into README §11
 ---
 # 📍 STATUS: live snapshot
 
@@ -24,14 +24,14 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## 🔨 Active task
 
-- T-1207 README final pass. T-605 + T-1206 scripts are written; they run as soon as `backend/.env.perf` exists (O-05).
+- Everything buildable is done. T-605 + T-1206 scripts run as soon as `backend/.env.perf` exists (O-05); their numbers go into README §11 (last part of T-1207).
 
 ## ⏭ Next up (in order)
 
 1. ~~T-409 holiday warning~~ ✅ 18:55
 2. ~~T-1205 form screens design pass~~ ✅ 19:02
 3. T-605 perf + T-1206 concurrency/integrity script on a throwaway Neon branch (Sun morning; needs **O-05**)
-4. T-1207 README final pass + screenshots; ~~T-406 CSV import~~ ✅ 19:57
+4. ~~T-1207 README pass + screenshots~~ ✅ 20:03 (numbers pending); ~~T-406 CSV import~~ ✅ 19:57
 5. Sun 20:00 freeze → owner runs T-1006 live smoke → T-1102 tag `v1.0.0` → T-1103 Google Form by 22:30
 
 ## ⛔ Blockers / waiting on owner

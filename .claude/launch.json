@@ -4,27 +4,59 @@
     {
       "name": "backend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@fernleaf/backend", "dev"],
+      "runtimeArgs": [
+        "--filter",
+        "@fernleaf/backend",
+        "dev"
+      ],
       "port": 4000
     },
     {
       "name": "frontend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@fernleaf/frontend", "dev"],
+      "runtimeArgs": [
+        "--filter",
+        "@fernleaf/frontend",
+        "dev"
+      ],
       "port": 3000
     },
     {
       "name": "backend-3001",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@fernleaf/backend", "dev"],
-      "env": { "WEB_ORIGIN": "http://localhost:3001" },
+      "runtimeArgs": [
+        "--filter",
+        "@fernleaf/backend",
+        "dev"
+      ],
+      "env": {
+        "WEB_ORIGIN": "http://localhost:3001"
+      },
       "port": 4000
     },
     {
       "name": "frontend-3001",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@fernleaf/frontend", "dev", "--port", "3001"],
+      "runtimeArgs": [
+        "--filter",
+        "@fernleaf/frontend",
+        "dev",
+        "--port",
+        "3001"
+      ],
       "port": 3001
+    },
+    {
+      "name": "frontend-prod-3002",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@fernleaf/frontend",
+        "start",
+        "--port",
+        "3002"
+      ],
+      "port": 3002
     }
   ]
 }

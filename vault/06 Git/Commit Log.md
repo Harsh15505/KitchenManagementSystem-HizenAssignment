@@ -95,3 +95,5 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 83 | 2026-10-03 18:47 | 4730b23 | docs(vault): full catch-up after deploy and redesign; plan P12 | T-1102, T-1207 | P12 |
 | 84 | 2026-10-03 18:55 | 2972ad6 | feat: warn about open orders when adding a company or kitchen holiday | T-409 | P12 |
 | 85 | 2026-10-03 19:02 | a77195c | feat(frontend): form screens pass: order builder steps, inputs, new company | T-1205, BUG-012 | P12 |
+| 86 | 2026-10-03 19:57 | 31d98c7 | feat: import employees from a CSV file with a per-row report | T-406 | P12 |
+| 87 | 2026-10-03 19:58 | 6bd6d92 | test(backend): repeatable perf and concurrency scripts on a throwaway branch | T-605, T-1206 | P12 |

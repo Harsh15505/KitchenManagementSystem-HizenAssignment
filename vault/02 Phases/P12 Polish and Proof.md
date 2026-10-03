@@ -22,7 +22,7 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - [x] **T-1205** Form screens design pass: order builder, new/edit company, employee, dish/option editors, settings. *Accept:* same card/heading/spacing language as the boards; errors still inline; works at phone width.
 - [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch → [[P6 Kitchen Board]]. *Accept:* p50/p95 for `GET /kitchen/board` logged in the P6 note and README §11.
 - [ ] **T-1206** Concurrency + integrity script on the same throwaway branch: two simultaneous "done" clicks, two simultaneous invoices for one company, cut-off run twice, company integrity (owner + default address). *Accept:* `pnpm --filter @fernleaf/backend probe:concurrency` prints pass/fail per check; README §11 updated.
-- [ ] **T-1207** README final pass + screenshots (light and dark).
+- [ ] **T-1207** README final pass + screenshots (light and dark). *Done except the perf/concurrency numbers in §11, which wait for the script run.*
 - [x] **T-406** *(Should)* CSV import → [[P4 Companies and Employees]]. Built Saturday evening (owner: push everything today).
 
 ## Exit criteria
@@ -47,5 +47,7 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 
 - 19:35: T-605 and T-1206 scripts written (`backend/scripts/perf-harness.ts`, `perf-kitchen-board.ts`, `probe-concurrency.ts`; `pnpm … perf:kitchen` / `probe:concurrency`). The harness starts the built API on :4100 against `backend/.env.perf` and refuses the live endpoint (verified: missing file → clear message). Waiting on O-05 to run them.
 - 2026-10-03 19:57: T-406 done. Tests 328 (118 shared, 210 backend); frontend build clean.
+
+- 2026-10-03 20:03: T-1207 mostly done: README screenshots (admin dashboard light + dark, kitchen board, dispatch board; captured from the production build on :3002 at 1440×900 so the dev badge is absent), tour mentions holiday warning, CSV import and dark mode; ADR-028/029 in §8; §9 says all Shoulds are built, the CI race-test gap and next steps; §11 has 328 tests and the two scripts; §13 mentions P12.
 
 ## Outcome

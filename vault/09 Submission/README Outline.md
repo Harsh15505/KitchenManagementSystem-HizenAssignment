@@ -5,7 +5,7 @@ updated: 2026-10-03 18:47 IST
 
 # 📝 README Outline (assembled in T-1101)
 
-> **Status:** all 16 sections are in `README.md` (2026-10-03 12:18, sections 1–13 there). Live links updated 18:47. Left for T-1207: screenshots, perf/concurrency numbers in §11, a line on the UI theme in §8.
+> **Status:** all 16 sections are in `README.md` (2026-10-03 12:18, sections 1–13 there). Live links updated 18:47. T-1207 (2026-10-03 20:03): screenshots, ADR-028/029 and the scripts are in. Left: perf/concurrency numbers in §11 after the run.
 
 The brief requires **setup · architecture overview + data model diagram · key decisions and trade-offs · dashboard definitions · prioritisation notes**. The email also asks for an explanation of the approach. Each section below lists its source, so writing the README is assembly, not authoring.
 

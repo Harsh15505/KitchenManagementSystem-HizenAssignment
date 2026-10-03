@@ -21,6 +21,16 @@ Built for the Heizen engineering assignment with the mandatory stack: **Next.js*
 
 Every account has only its role's access. The server enforces it on every route; the UI simply hides what the server would refuse.
 
+| Admin dashboard | Kitchen board | Dispatch board |
+|---|---|---|
+| ![Admin dashboard: today's figures, next cut-off countdown, 7-day pipeline, getting paid, revenue and on-time charts](docs/screenshots/admin-dashboard.jpg) | ![Kitchen board: station chips, summary, prep units grouped by ready-by time with status stripes](docs/screenshots/kitchen-board.jpg) | ![Dispatch board: drops grouped by delivery time with a five-stage tracker and readiness](docs/screenshots/dispatch-board.jpg) |
+
+<details><summary>Dark mode (moon icon, top right)</summary>
+
+![Admin dashboard in dark mode](docs/screenshots/admin-dashboard-dark.jpg)
+
+</details>
+
 ---
 
 ## Contents
@@ -47,7 +57,7 @@ The data is generated around **today**, whichever day you look: two weeks of del
 
 | As | Try this |
 |---|---|
-| **Admin** | **Dashboard**: today's progress, the next cut-off with the drafts it will cancel, the 7-day pipeline, money owed. **Orders → New order**: pick Lumen Labs and an employee, add a bowl, split it into *6 × brown rice + 4 × jeera rice*, watch the server price it live. **Cut-off**: lock times and the run history (**Run now** is safe to repeat). **Pricing**: open *Startup* and tick "Missing only". **Menu preview**: an allergic employee at Lumen Labs, then type `chefs-table`. **Billing**: create an invoice; on a delivered order, **Record shortage**. |
+| **Admin** | **Dashboard**: today's progress, the next cut-off with the drafts it will cancel, the 7-day pipeline, money owed. **Orders → New order**: pick Lumen Labs and an employee, add a bowl, split it into *6 × brown rice + 4 × jeera rice*, watch the server price it live. **Cut-off**: lock times and the run history (**Run now** is safe to repeat). **Pricing**: open *Startup* and tick "Missing only". **Menu preview**: an allergic employee at Lumen Labs, then type `chefs-table`. **Billing**: create an invoice; on a delivered order, **Record shortage**. **Companies → a company**: pick a holiday date that already has orders (the warning lists them), or **Import CSV** with the template. The moon icon (top right) switches to dark mode. |
 | **Kitchen** | **Kitchen board**: station chips, items grouped by ready-by time, red LATE and amber AT RISK, **Start / Done**. Click Done on the same item in two tabs: one wins, the other gets a clear conflict message. **Prep summary** for the day's totals. |
 | **Dispatch** | **Dispatch board**: drops (company + address + exact time), cooked x/y, driver picker, **Mark packed → Send out**. |
 | **Driver** | Open on a phone: **My deliveries** with the next stop first; **Mark delivered** with a note and a camera photo. |
@@ -284,6 +294,8 @@ Full reasoning in [`vault/05 Decisions/Decision Log.md`](vault/05%20Decisions/De
 | 018 | Delivery photos in Postgres (compressed in the browser) | Fine at this scale; object storage later |
 | 026 | Tier grid as a plain table over one whole-tier response | Would need pagination past a few hundred items |
 | 027 | Combination signature sorted by ids, not display order | Reordering the catalogue can't silently re-price an open order |
+| 028 | Warm brand theme through the shadcn tokens, dark mode (next-themes), CSS motion and hand-built charts | No chart library: simpler charts, smaller bundle; every animation is off under "reduce motion" |
+| 029 | One Neon branch for local dev and production; bulk test scripts on a throwaway branch | Local clicks change live data, so probes clean up after themselves |
 
 ---
 
@@ -293,7 +305,7 @@ The brief gives more scope than time. The rule I followed: every **Must** proper
 
 **Built (all Musts):** access and staff (with self-lockout guards and session revocation), settings and kitchen holidays, admin-managed reference lists, catalogue with option groups and portions, four price tiers with a derivation grid, menu with secret categories and per-employee preview, companies and employees with moves and ownership, the order builder with live server validation, cut-off locking and processing, the kitchen board, the dispatch board, the driver's phone view with photos, billing with credits and shortages, four role dashboards, and self-renewing demo data.
 
-**Shoulds built:** portions, allergy acknowledgement, money hidden from non-admin roles, cut-off preview, company and kitchen holiday conflict warning, employee CSV import with a per-row report, demo autopilot, demo regenerate.
+**Shoulds built (all of them):** portions, allergy acknowledgement, money hidden from non-admin roles, cut-off preview, company and kitchen holiday conflict warning, employee CSV import with a per-row report, demo autopilot, demo regenerate.
 
 **Skipped, and why:**
 
@@ -302,7 +314,9 @@ The brief gives more scope than time. The rule I followed: every **Must** proper
 | Roles editor UI | Could | Roles are already data | Permission checkboxes per role |
 | Admin line edits after confirmation | Could | Would desync kitchen units and invoices | Re-plan units + adjustment if already invoiced |
 | Invoice void/reissue, exports, payments, notifications | Could / out of scope | Credits cover corrections; email is simulated in the log | Void + reissue with a reason |
-| Automated DB-backed concurrency tests | — | Verified by probes against the real database instead | A disposable Neon branch in CI |
+| Database race tests in CI | — | CI has no database; the races are checked by `probe:concurrency` on a throwaway Neon branch (§11) | Create a Neon branch per CI run and run the script there |
+
+**Next, with more time:** live board updates (SSE) instead of 15–30 s polling, object storage for photos and dish images, a notifications outbox instead of simulated emails, Playwright end-to-end tests for the reviewer paths, and multi-kitchen support.
 
 ---
 
@@ -347,6 +361,6 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
 
 ## 13. How I worked (and the AI note)
 
-I planned before coding: the specs in `docs/` (requirements with IDs, technical design, data model, architecture) came first, and the build followed them phase by phase (P0–P11). Deviations are recorded as ADRs and reflected back into the docs. The `vault/` folder is an Obsidian vault that holds the live state: task board, phase logs, requirements matrix, bug tracker, decision log, commit log and session handoffs, so any person or agent can pick the project up mid-way.
+I planned before coding: the specs in `docs/` (requirements with IDs, technical design, data model, architecture) came first, and the build followed them phase by phase (P0–P11), then a last phase (P12) for polish and proof: the UI redesign, the remaining Shoulds, and repeatable perf and concurrency scripts. Deviations are recorded as ADRs and reflected back into the docs. The `vault/` folder is an Obsidian vault that holds the live state: task board, phase logs, requirements matrix, bug tracker, decision log, commit log and session handoffs, so any person or agent can pick the project up mid-way.
 
 I used an AI coding assistant (Claude) throughout, for drafting specs, writing code and tests, and probing the running app. I reviewed every change, ran the checks (lint, types, tests, build, CI) on each commit, and verified behaviour against the real database and in the browser. I can explain any line in this repository.
