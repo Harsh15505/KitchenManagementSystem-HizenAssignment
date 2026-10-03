@@ -40,6 +40,25 @@ export function sumCents(values: readonly Cents[]): Cents {
   }, 0);
 }
 
+/**
+ * Parses what staff type ("12", "12.5", "$1,250.75") into integer cents with string arithmetic,
+ * never parseFloat × 100 (0.29 × 100 = 28.999…). Returns null for anything that is not money.
+ */
+export function parseUsd(input: string): Cents | null {
+  const cleaned = input.trim().replace(/^\$/, '').replace(/,/g, '');
+  const match = /^(\d{1,7})(?:\.(\d{1,2}))?$/.exec(cleaned);
+  if (!match) return null;
+  const dollars = Number(match[1]);
+  const cents = Number((match[2] ?? '0').padEnd(2, '0'));
+  return dollars * 100 + cents;
+}
+
+/** Cents to an editable "12.50" string (no currency symbol). */
+export function centsToInput(cents: Cents): string {
+  assertCents(cents);
+  return `${Math.trunc(cents / 100)}.${String(Math.abs(cents % 100)).padStart(2, '0')}`;
+}
+
 const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
 /** Display only. Never parse the output back into money. */

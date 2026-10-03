@@ -11,3 +11,5 @@ export * from './contracts/settings';
 export * from './contracts/reference';
 export * from './domain/pricing';
 export * from './domain/menu';
+export * from './contracts/catalogue';
+export * from './domain/catalogue';

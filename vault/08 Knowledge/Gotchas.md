@@ -46,6 +46,8 @@ Read these before touching the related area. **Add a new entry every time someth
 - **Supertest:** don't `await` another request while building one (`http().get(..).set('Cookie', await signIn())`): the first request's ephemeral server is gone (`Cannot read properties of null (reading 'address')`). Get the cookie first (2026-10-03, T-204).
 - Test modules must provide `PrismaService` themselves (a global fake module): `overrideProvider` only replaces providers that already exist.
 
+- **Never put regex or other backslash code in `node -e` / bash heredocs**: the shell strips backslashes silently (`d` became `d` in `parseUsd`, caught by its test). Write code with the editor tools (2026-10-03).
+
 ## Time
 
 - Never call `getDay()` / `getDate()` on a business date. Use `isoWeekday(CalendarDate)` and `toKitchenDate(instant)`.

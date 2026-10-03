@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveCents, divCeil, formatUsd, sumCents } from './money';
+import { centsToInput, deriveCents, divCeil, formatUsd, parseUsd, sumCents } from './money';
 
 describe('divCeil', () => {
   it('divides exactly and rounds remainders up', () => {
@@ -52,5 +52,24 @@ describe('BR-MNY-01: money is integer cents', () => {
 
   it('formats for display only', () => {
     expect(formatUsd(123456)).toBe('$1,234.56');
+  });
+});
+
+describe('parseUsd: typed dollars to integer cents without floats', () => {
+  it('parses whole and fractional dollars exactly', () => {
+    expect(parseUsd('12')).toBe(1200);
+    expect(parseUsd('12.5')).toBe(1250);
+    expect(parseUsd('0.29')).toBe(29); // parseFloat('0.29') * 100 = 28.999…
+    expect(parseUsd('$1,250.75')).toBe(125075);
+  });
+
+  it('rejects non-money input', () => {
+    for (const bad of ['', 'abc', '1.234', '-5', '1e3']) expect(parseUsd(bad), bad).toBeNull();
+  });
+
+  it('round-trips through the edit format', () => {
+    expect(centsToInput(1250)).toBe('12.50');
+    expect(centsToInput(5)).toBe('0.05');
+    expect(parseUsd(centsToInput(98765))).toBe(98765);
   });
 });

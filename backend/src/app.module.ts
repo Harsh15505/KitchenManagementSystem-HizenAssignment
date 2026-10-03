@@ -4,6 +4,7 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { AuthModule } from './auth/auth.module';
 import { AuthzModule } from './authz/authz.module';
 import { OriginCheckMiddleware } from './authz/origin.middleware';
+import { CatalogueModule } from './catalogue/catalogue.module';
 import { ClockModule } from './clock/clock.module';
 import { ApiExceptionFilter } from './common/api-exception.filter';
 import { HealthController } from './health/health.controller';
@@ -21,6 +22,7 @@ import { StaffModule } from './staff/staff.module';
     StaffModule,
     SettingsModule,
     ReferenceModule,
+    CatalogueModule,
   ],
   controllers: [HealthController],
   providers: [
