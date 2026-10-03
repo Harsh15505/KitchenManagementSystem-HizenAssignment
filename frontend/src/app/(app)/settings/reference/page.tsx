@@ -47,8 +47,10 @@ export default function ReferencePage() {
               aria-selected={t === type}
               onClick={() => setType(t)}
               className={cn(
-                'rounded-md border px-3 py-1.5 text-sm',
-                t === type ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-muted',
+                'rounded-full border px-3 py-1.5 text-sm transition-colors',
+                t === type
+                  ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-card hover:bg-muted',
               )}
             >
               {REFERENCE_LABELS[t].plural}

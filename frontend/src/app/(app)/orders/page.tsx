@@ -189,8 +189,10 @@ function OrderList() {
                     })
                   }
                   className={cn(
-                    'rounded-full border px-2.5 py-0.5 text-xs',
-                    on ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-muted',
+                    'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
+                    on
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'bg-card hover:bg-muted',
                   )}
                 >
                   {STATUS_LABEL[s]}

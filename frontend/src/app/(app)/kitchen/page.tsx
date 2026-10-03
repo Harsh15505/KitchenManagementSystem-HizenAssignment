@@ -6,6 +6,7 @@ import { AlertTriangle, Ban, Check, Flame, Play, Snowflake } from 'lucide-react'
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { CountUp } from '@/components/count-up';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -115,7 +116,7 @@ function KitchenBoard() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
-          <div className="flex rounded-md border p-0.5">
+          <div className="flex rounded-full border bg-card p-1 shadow-(--shadow-card)">
             {(['board', 'prep'] as const).map((v) => (
               <button
                 key={v}
@@ -123,8 +124,8 @@ function KitchenBoard() {
                 aria-pressed={view === v}
                 onClick={() => setView(v)}
                 className={cn(
-                  'rounded px-3 py-1 text-sm',
-                  view === v ? 'bg-primary text-primary-foreground' : '',
+                  'rounded-full px-3.5 py-1 text-sm transition-colors',
+                  view === v ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted',
                 )}
               >
                 {v === 'board' ? 'Board' : 'Prep summary'}
@@ -152,7 +153,7 @@ function KitchenBoard() {
               />
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          <div className="stagger grid grid-cols-3 gap-2 sm:grid-cols-6">
             <Stat label="Orders" value={data.summary.orders} />
             <Stat label="Items" value={data.summary.units} />
             <Stat label="Done" value={data.summary.done} />
@@ -173,7 +174,7 @@ function KitchenBoard() {
 
       {!data && <Skeleton className="h-96" />}
       {data && view === 'prep' && (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="stagger grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.prep.length === 0 && (
             <p className="text-sm text-muted-foreground">Nothing to cook for this day.</p>
           )}
@@ -211,16 +212,32 @@ function KitchenBoard() {
             <p className="text-sm text-muted-foreground">No confirmed orders for this day.</p>
           )}
           {data.slots.map((slot) => {
-            const open = slot.units.filter((u) => !u.prepDoneAt && !u.doNotCook).length;
+            const work = slot.units.filter((u) => !u.doNotCook);
+            const open = work.filter((u) => !u.prepDoneAt).length;
+            const pct = work.length === 0 ? 100 : ((work.length - open) / work.length) * 100;
             return (
-              <section key={slot.plannedKitchenReadyAt} className="space-y-2">
-                <h2 className="text-sm font-semibold">
-                  Ready by {formatIst(slot.plannedKitchenReadyAt)}
-                  <span className="ml-2 font-normal text-muted-foreground">
+              <section key={slot.plannedKitchenReadyAt} className="animate-rise space-y-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    className={cn(
+                      'size-2.5 shrink-0 rounded-full',
+                      open === 0 ? 'bg-primary' : 'animate-soft-pulse bg-sidebar-primary',
+                    )}
+                  />
+                  <h2 className="font-heading text-lg font-semibold">
+                    Ready by {formatIst(slot.plannedKitchenReadyAt)}
+                  </h2>
+                  <span className="text-sm text-muted-foreground">
                     {open === 0 ? 'all done' : `${open} to go`}
                   </span>
-                </h2>
-                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="ml-auto hidden h-1.5 w-40 overflow-hidden rounded-full bg-muted sm:block">
+                    <div
+                      className="h-full rounded-full bg-primary transition-[width] duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="stagger grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   {slot.units.map((u) => (
                     <UnitCard
                       key={u.id}
@@ -260,12 +277,12 @@ function StationChip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3 py-1 text-sm',
+        'rounded-full border px-3 py-1 text-sm transition-colors',
         active
-          ? 'bg-primary text-primary-foreground'
+          ? 'border-primary bg-primary text-primary-foreground shadow-sm'
           : warn
             ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/30'
-            : 'bg-background hover:bg-muted',
+            : 'bg-card hover:bg-muted',
       )}
     >
       {label}
@@ -277,15 +294,17 @@ function Stat({ label, value, tone }: { label: string; value: number; tone?: 're
   return (
     <div
       className={cn(
-        'rounded-lg border p-2 text-center',
+        'rounded-xl border bg-card p-2.5 text-center shadow-(--shadow-card)',
         tone === 'red' &&
           'border-red-400 bg-red-50 text-red-800 dark:bg-red-950/40 dark:text-red-200',
         tone === 'amber' &&
           'border-amber-400 bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200',
       )}
     >
-      <div className="text-xl font-semibold tabular-nums">{value}</div>
-      <div className="text-xs">{label}</div>
+      <div className="font-heading text-2xl font-semibold tabular-nums">
+        <CountUp value={value} />
+      </div>
+      <div className="text-xs text-muted-foreground">{label}</div>
     </div>
   );
 }
@@ -311,16 +330,24 @@ function UnitCard({
   return (
     <div
       className={cn(
-        'space-y-2 rounded-lg border-2 p-3',
-        unit.doNotCook && 'border-dashed border-muted-foreground/40 bg-muted/40 opacity-80',
-        !unit.doNotCook && done && 'border-green-300 bg-green-50/50 dark:bg-green-950/20',
-        !unit.doNotCook && !done && unit.timeliness === 'LATE' && 'border-red-500',
-        !unit.doNotCook && !done && unit.timeliness === 'AT_RISK' && 'border-amber-400',
+        'lift relative space-y-2 overflow-hidden rounded-xl border bg-card p-3 pl-4 shadow-(--shadow-card)',
+        'before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-border',
+        unit.doNotCook && 'border-dashed bg-muted/40 opacity-80',
+        !unit.doNotCook && done && 'bg-primary/[0.04] before:bg-primary',
+        !unit.doNotCook && !done && unit.prepStartedAt && 'before:bg-chart-2',
+        !unit.doNotCook &&
+          !done &&
+          unit.timeliness === 'AT_RISK' &&
+          'border-amber-400 before:bg-amber-500',
+        !unit.doNotCook &&
+          !done &&
+          unit.timeliness === 'LATE' &&
+          'border-red-400 before:bg-red-500',
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="text-lg leading-tight font-semibold">
+          <div className="font-heading text-lg leading-tight font-semibold">
             {unit.quantity} × {unit.dish.name}
           </div>
           {unit.choices.length > 0 && <div className="text-sm">{unit.choices.join(' · ')}</div>}
@@ -341,7 +368,7 @@ function UnitCard({
           <Badge variant="destructive">LATE</Badge>
         )}
         {!unit.doNotCook && !done && unit.timeliness === 'AT_RISK' && (
-          <Badge className="bg-amber-500 text-white hover:bg-amber-500">AT RISK</Badge>
+          <Badge variant="warning">AT RISK</Badge>
         )}
         {unit.allergenIds.map((id) => (
           <Badge key={id} variant="destructive">
@@ -360,7 +387,7 @@ function UnitCard({
       {!unit.doNotCook && (
         <div className="flex items-center gap-2">
           {done ? (
-            <span className="flex items-center gap-1 text-sm text-green-700">
+            <span className="flex items-center gap-1 text-sm text-primary">
               <Check className="size-4" aria-hidden /> Done {formatIst(unit.prepDoneAt!)}
             </span>
           ) : canWork ? (
@@ -374,8 +401,9 @@ function UnitCard({
                 <Check className="size-4" aria-hidden /> Done
               </Button>
               {unit.prepStartedAt && (
-                <span className="text-xs text-muted-foreground">
-                  started {formatIst(unit.prepStartedAt)}
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span className="animate-soft-pulse size-1.5 rounded-full bg-chart-2" />
+                  cooking since {formatIst(unit.prepStartedAt)}
                 </span>
               )}
             </>

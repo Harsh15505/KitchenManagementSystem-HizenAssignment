@@ -52,6 +52,16 @@ function MyDeliveries() {
             ? `${formatKitchenDate(data.date)} · ${pending.length} to go, ${data.drops.length - pending.length} done`
             : 'Loading…'}
         </p>
+        {data && data.drops.length > 0 && (
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+            <div
+              className="animate-grow-x h-full rounded-full bg-primary"
+              style={{
+                width: `${((data.drops.length - pending.length) / data.drops.length) * 100}%`,
+              }}
+            />
+          </div>
+        )}
       </div>
       {!data && <Skeleton className="h-64" />}
       {data && data.drops.length === 0 && (
@@ -59,17 +69,19 @@ function MyDeliveries() {
       )}
       {next && (
         <div className="space-y-1">
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          <p className="text-xs font-semibold tracking-wide text-sidebar-primary uppercase">
             Next stop
           </p>
           <DropCard drop={next} hero onDeliver={() => setDelivering(next)} />
         </div>
       )}
-      {data?.drops
-        .filter((d) => d.id !== next?.id)
-        .map((d) => (
-          <DropCard key={d.id} drop={d} onDeliver={() => setDelivering(d)} />
-        ))}
+      <div className="stagger space-y-4">
+        {data?.drops
+          .filter((d) => d.id !== next?.id)
+          .map((d) => (
+            <DropCard key={d.id} drop={d} onDeliver={() => setDelivering(d)} />
+          ))}
+      </div>
       {delivering && <DeliverSheet drop={delivering} onClose={() => setDelivering(null)} />}
     </div>
   );
@@ -93,15 +105,22 @@ function DropCard({
     .join(', ');
   const done = drop.stage === 'DELIVERED';
   return (
-    <Card className={cn(hero && 'border-2 border-primary', done && 'opacity-70')}>
+    <Card
+      className={cn(
+        hero && 'ring-2 ring-sidebar-primary/70',
+        done && 'bg-muted/40 opacity-75 shadow-none',
+      )}
+    >
       <CardContent className="space-y-2 pt-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <div className="text-lg font-semibold">{minutesToHHmm(drop.deliveryTimeMinutes)}</div>
+            <div className="font-heading text-2xl font-semibold">
+              {minutesToHHmm(drop.deliveryTimeMinutes)}
+            </div>
             <div className="font-medium">{drop.company.name}</div>
           </div>
           <Badge
-            variant={done ? 'secondary' : drop.stage === 'OUT_FOR_DELIVERY' ? 'default' : 'outline'}
+            variant={done ? 'success' : drop.stage === 'OUT_FOR_DELIVERY' ? 'warning' : 'outline'}
           >
             {STATUS[drop.stage]}
           </Badge>
@@ -192,14 +211,14 @@ function DeliverSheet({ drop, onClose }: { drop: DropDto; onClose: () => void })
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end bg-black/40 sm:items-center sm:justify-center"
+      className="fixed inset-0 z-50 flex animate-in items-end bg-black/40 backdrop-blur-sm fade-in sm:items-center sm:justify-center"
       role="dialog"
       aria-modal="true"
       aria-label="Mark delivered"
     >
-      <div className="w-full space-y-4 rounded-t-2xl bg-background p-4 sm:max-w-md sm:rounded-2xl">
+      <div className="w-full animate-in space-y-4 rounded-t-2xl bg-card p-5 shadow-xl slide-in-from-bottom-8 sm:max-w-md sm:rounded-2xl">
         <div>
-          <h2 className="text-lg font-semibold">Delivered to {drop.company.name}?</h2>
+          <h2 className="font-heading text-xl font-semibold">Delivered to {drop.company.name}?</h2>
           <p className="text-sm text-muted-foreground">
             {drop.address.label} · {drop.boxes} box{drop.boxes === 1 ? '' : 'es'}
           </p>

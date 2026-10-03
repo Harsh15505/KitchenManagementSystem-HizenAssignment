@@ -120,7 +120,7 @@ function DispatchBoard() {
           ))}
           {data.summary.late > 0 && <Badge variant="destructive">{data.summary.late} late</Badge>}
           {data.summary.atRisk > 0 && (
-            <Badge className="bg-amber-500 text-white">{data.summary.atRisk} at risk</Badge>
+            <Badge variant="warning">{data.summary.atRisk} at risk</Badge>
           )}
           {data.summary.unassigned > 0 && (
             <Badge variant="outline">{data.summary.unassigned} without a driver</Badge>
@@ -132,9 +132,16 @@ function DispatchBoard() {
         <p className="text-sm text-muted-foreground">No drops match.</p>
       )}
       {[...groups.entries()].map(([at, drops]) => (
-        <section key={at} className="space-y-2">
-          <h2 className="text-sm font-semibold">Deliver at {formatIst(at)}</h2>
-          <div className="grid gap-2 lg:grid-cols-2">
+        <section key={at} className="animate-rise space-y-3">
+          <div className="flex items-center gap-3">
+            <Truck className="size-4 text-sidebar-primary" aria-hidden />
+            <h2 className="font-heading text-lg font-semibold">Deliver at {formatIst(at)}</h2>
+            <span className="text-sm text-muted-foreground">
+              {drops.length} drop{drops.length === 1 ? '' : 's'}
+            </span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div className="stagger grid gap-3 lg:grid-cols-2">
             {drops.map((d) => (
               <DropCard
                 key={d.id}
@@ -159,8 +166,10 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3 py-1 text-sm',
-        active ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-muted',
+        'rounded-full border px-3 py-1 text-sm transition-colors',
+        active
+          ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+          : 'bg-card hover:bg-muted',
       )}
     >
       {label}
@@ -186,15 +195,15 @@ function DropCard({
   return (
     <div
       className={cn(
-        'space-y-2 rounded-lg border-2 p-3',
-        live && drop.timeliness === 'LATE' && 'border-red-500',
-        live && drop.timeliness === 'AT_RISK' && 'border-amber-400',
+        'lift space-y-3 rounded-xl border bg-card p-4 shadow-(--shadow-card)',
+        live && drop.timeliness === 'LATE' && 'border-red-400 ring-1 ring-red-400/40',
+        live && drop.timeliness === 'AT_RISK' && 'border-amber-400 ring-1 ring-amber-400/40',
         !live && 'bg-muted/30',
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <div className="font-semibold">
+          <div className="font-heading text-base font-semibold">
             {drop.company.name} · {drop.address.label}
           </div>
           <div className="text-xs text-muted-foreground">
@@ -203,25 +212,29 @@ function DropCard({
           </div>
         </div>
         <div className="flex flex-wrap gap-1">
-          <Badge variant={drop.stage === 'DELIVERED' ? 'secondary' : 'default'}>
-            {STAGE_TEXT[drop.stage]}
-          </Badge>
           {live && drop.timeliness === 'LATE' && <Badge variant="destructive">LATE</Badge>}
-          {live && drop.timeliness === 'AT_RISK' && (
-            <Badge className="bg-amber-500 text-white">AT RISK</Badge>
-          )}
+          {live && drop.timeliness === 'AT_RISK' && <Badge variant="warning">AT RISK</Badge>}
           {drop.deliveredOnTime === false && <Badge variant="destructive">Delivered late</Badge>}
-          {drop.deliveredOnTime === true && <Badge variant="outline">On time</Badge>}
+          {drop.deliveredOnTime === true && <Badge variant="success">On time</Badge>}
         </div>
       </div>
+      <StageSteps stage={drop.stage} />
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span
-          className={cn(
-            'tabular-nums',
-            drop.readiness.ready < drop.readiness.total && 'text-amber-700',
-          )}
-        >
-          Cooked {drop.readiness.ready}/{drop.readiness.total}
+        <span className="flex items-center gap-2">
+          <span className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
+            <span
+              className={cn(
+                'block h-full rounded-full transition-[width] duration-500',
+                drop.readiness.ready < drop.readiness.total ? 'bg-chart-2' : 'bg-primary',
+              )}
+              style={{
+                width: `${drop.readiness.total ? (drop.readiness.ready / drop.readiness.total) * 100 : 0}%`,
+              }}
+            />
+          </span>
+          <span className="text-xs tabular-nums">
+            Cooked {drop.readiness.ready}/{drop.readiness.total}
+          </span>
         </span>
         <span className="text-muted-foreground">·</span>
         {canAssign && !drop.outForDeliveryAt ? (
@@ -304,13 +317,46 @@ function DropCard({
               <Link href={`/orders/${o.id}`} className="hover:underline">
                 #{o.number} {o.employeeName}
               </Link>
-              <span className={o.kitchenReady ? 'text-green-700' : 'text-amber-700'}>
+              <span
+                className={o.kitchenReady ? 'text-primary' : 'text-amber-700 dark:text-amber-300'}
+              >
                 {o.itemCount} items · {o.packaging} · {o.kitchenReady ? 'cooked' : 'cooking'}
               </span>
             </li>
           ))}
         </ul>
       )}
+    </div>
+  );
+}
+
+/** The five drop stages as a compact stepper; the current one is labelled. */
+function StageSteps({ stage }: { stage: DropStage }) {
+  const at = DROP_STAGES.indexOf(stage);
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center" aria-hidden>
+        {DROP_STAGES.map((s, i) => (
+          <div key={s} className="flex flex-1 items-center last:flex-none">
+            <span
+              className={cn(
+                'size-2.5 rounded-full transition-colors',
+                (i < at || stage === 'DELIVERED') && 'bg-primary',
+                i === at &&
+                  stage !== 'DELIVERED' &&
+                  'bg-sidebar-primary ring-4 ring-sidebar-primary/20',
+                i > at && 'bg-muted-foreground/25',
+              )}
+            />
+            {i < DROP_STAGES.length - 1 && (
+              <span
+                className={cn('mx-1 h-0.5 flex-1 rounded-full', i < at ? 'bg-primary' : 'bg-muted')}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="text-xs font-medium">{STAGE_TEXT[stage]}</div>
     </div>
   );
 }

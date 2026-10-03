@@ -33,9 +33,7 @@ export function ChipSelect({
             }
             className={cn(
               'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
-              on
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'bg-background hover:bg-muted',
+              on ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-muted',
             )}
           >
             {item.name}
