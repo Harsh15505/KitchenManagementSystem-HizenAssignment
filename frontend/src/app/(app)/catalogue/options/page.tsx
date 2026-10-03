@@ -61,7 +61,7 @@ function OptionList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Options</h1>
+          <h1 className="page-title">Options</h1>
           <p className="text-sm text-muted-foreground">
             Reusable choices (proteins, sides, sauces). One option can appear in many dishes&apos;
             groups.

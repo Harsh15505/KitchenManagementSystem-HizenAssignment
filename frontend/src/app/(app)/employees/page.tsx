@@ -44,7 +44,7 @@ function EmployeeSearch() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Employees</h1>
+        <h1 className="page-title">Employees</h1>
         <p className="text-sm text-muted-foreground">
           Everyone who can order, across all companies. Open the company to edit or move someone.
         </p>

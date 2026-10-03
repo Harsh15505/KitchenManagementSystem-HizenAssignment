@@ -67,7 +67,7 @@ function CutoffView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Cut-off</h1>
+        <h1 className="page-title">Cut-off</h1>
         <p className="text-sm text-muted-foreground">
           At each cut-off, drafts for that delivery date are cancelled and placed orders are
           confirmed, which sends them to the kitchen and makes them billable. Runs are safe to

@@ -43,7 +43,7 @@ function CompanyView({ company }: { company: CompanyDetail }) {
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight">
+          <h1 className="flex flex-wrap items-center gap-2 page-title">
             {company.name}
             {!company.isActive && <Badge variant="secondary">Inactive</Badge>}
           </h1>

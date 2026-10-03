@@ -66,7 +66,7 @@ function InvoiceView() {
         <>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+              <h1 className="flex items-center gap-2 page-title">
                 <span className="font-mono">{formatInvoiceNumber(inv.number)}</span>
                 <Badge variant={inv.status === 'PAID' ? 'secondary' : 'outline'}>
                   {inv.status === 'PAID' ? 'Paid' : 'Issued'}

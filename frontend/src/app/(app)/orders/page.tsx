@@ -101,7 +101,7 @@ function OrderList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Orders</h1>
+          <h1 className="page-title">Orders</h1>
           <p className="text-sm text-muted-foreground">
             Every order, past and future. Filters are kept in the address bar.
           </p>

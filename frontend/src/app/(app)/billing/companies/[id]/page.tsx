@@ -95,9 +95,7 @@ function InvoiceBuilder() {
       >
         <ArrowLeft className="size-4" aria-hidden /> Billing
       </Link>
-      <h1 className="text-2xl font-semibold tracking-tight">
-        New invoice · {data.data?.company.name ?? '…'}
-      </h1>
+      <h1 className="page-title">New invoice · {data.data?.company.name ?? '…'}</h1>
       {!data.data && <Skeleton className="h-64" />}
       {data.data && (
         <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">

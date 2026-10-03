@@ -79,7 +79,7 @@ function DispatchBoard() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Dispatch board</h1>
+          <h1 className="page-title">Dispatch board</h1>
           <p className="text-sm text-muted-foreground">
             {data ? `${formatKitchenDate(data.date)} · updated ${formatIst(data.now)}` : 'Loading…'}
           </p>

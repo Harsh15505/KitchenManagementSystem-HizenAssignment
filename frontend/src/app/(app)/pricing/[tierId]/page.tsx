@@ -146,7 +146,7 @@ function TierGridView() {
       </Link>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="page-title">
             {tier?.name ?? 'Tier'}{' '}
             {tier?.isDefault && <Badge className="align-middle">Default</Badge>}
           </h1>

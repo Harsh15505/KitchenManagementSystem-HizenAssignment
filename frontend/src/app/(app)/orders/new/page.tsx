@@ -15,7 +15,7 @@ export default function NewOrderPage() {
         >
           <ArrowLeft className="size-4" aria-hidden /> Orders
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight">New order</h1>
+        <h1 className="page-title">New order</h1>
         <OrderBuilder />
       </div>
     </RequireAbility>

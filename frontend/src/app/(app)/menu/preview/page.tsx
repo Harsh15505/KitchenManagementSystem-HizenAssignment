@@ -67,7 +67,7 @@ function MenuPreview() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Menu preview</h1>
+        <h1 className="page-title">Menu preview</h1>
         <p className="text-sm text-muted-foreground">
           See the menu as a specific employee: company hiding, their price tier, secret categories
           by slug, and warnings for their allergies.

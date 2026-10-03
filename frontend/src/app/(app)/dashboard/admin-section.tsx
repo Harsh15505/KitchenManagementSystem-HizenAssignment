@@ -2,14 +2,50 @@
 
 import { type AdminDashboardDto, formatUsd } from '@fernleaf/shared';
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, Timer, Truck, UtensilsCrossed } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowDownRight,
+  ArrowUpRight,
+  BadgeCheck,
+  Building2,
+  CalendarClock,
+  LockKeyhole,
+  MapPinOff,
+  Tags,
+  Timer,
+  Truck,
+  UtensilsCrossed,
+} from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { CountUp } from '@/components/count-up';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
+import { cn } from '@/lib/utils';
 import { Metric, Panel, ratio } from './metric';
+
+/** "in 2 h 13 min" / "passed", ticking every 30 s against the server's clock. */
+function Countdown({ to, now }: { to: string; now: string }) {
+  const [offset] = useState(() => Date.parse(now) - Date.now());
+  const [tick, setTick] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setTick(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+  const ms = Date.parse(to) - (tick + offset);
+  if (ms <= 0) return <span>passed</span>;
+  const h = Math.floor(ms / 3_600_000);
+  const m = Math.floor((ms % 3_600_000) / 60_000);
+  return (
+    <span>
+      in {h > 0 ? `${h} h ` : ''}
+      {m} min
+    </span>
+  );
+}
 
 /** PRD §8.2: "Is today on track, what needs me, are we getting paid?" */
 export function AdminSection() {
@@ -19,247 +55,471 @@ export function AdminSection() {
     refetchInterval: 60_000,
   });
   const d = q.data;
-  if (!d) return <Skeleton className="h-96" />;
+  if (!d) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 8 }, (_, i) => (
+          <Skeleton key={i} className="h-32 rounded-xl" />
+        ))}
+      </div>
+    );
+  }
+
   const today = d.onTime.at(-1)!;
   const week = d.onTime.reduce(
     (t, x) => ({ delivered: t.delivered + x.delivered, onTime: t.onTime + x.onTime }),
     { delivered: 0, onTime: 0 },
   );
   const late = d.today.lateUnits + d.today.lateDrops;
-  const maxRevenue = Math.max(1, ...d.revenue.days.map((x) => x.cents));
-  const daysOpen = d.openInvoices.oldestIssuedAt
-    ? Math.floor((Date.parse(d.now) - Date.parse(d.openInvoices.oldestIssuedAt)) / 86_400_000)
-    : null;
   const gaps =
     d.setupGaps.unpricedDishes.length +
     d.setupGaps.companiesWithoutDriver.length +
     d.setupGaps.dishesWithoutStation.length;
+  const weekDelta =
+    d.revenue.lastWeekCents === 0 ? null : d.revenue.thisWeekCents / d.revenue.lastWeekCents - 1;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {d.pendingProcessing.length > 0 && (
         <div
           role="alert"
-          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-red-400 bg-red-50 p-3 text-sm dark:bg-red-950/40"
+          className="animate-rise flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-300 bg-red-50 p-4 text-sm dark:border-red-900 dark:bg-red-950/40"
         >
-          <span>
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="size-4 text-red-600" aria-hidden />
             Cut-off processing is pending for{' '}
-            {d.pendingProcessing.map((p) => formatKitchenDate(p.deliveryDate)).join(', ')}: orders
-            are past their cut-off but not yet confirmed.
+            {d.pendingProcessing.map((p) => formatKitchenDate(p.deliveryDate)).join(', ')}.
           </span>
           <Link href="/cutoff" className={buttonVariants({ size: 'sm', variant: 'destructive' })}>
             Run now
           </Link>
         </div>
       )}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Metric
           label="Orders today"
-          icon={UtensilsCrossed}
           value={d.today.orders}
-          hint={`${d.today.meals} meals`}
+          icon={UtensilsCrossed}
+          hint={`${d.today.meals} meals in the boxes`}
         />
         <Metric
-          label="Delivery progress"
-          icon={Truck}
+          label="Delivered"
           value={`${d.today.dropsDelivered}/${d.today.drops}`}
-          hint={`drops delivered · ${ratio(d.today.dropsDelivered, d.today.drops)}`}
-        />
+          icon={Truck}
+          hint="drops delivered today"
+        >
+          <ProgressBar value={d.today.dropsDelivered} total={d.today.drops} />
+        </Metric>
         <Metric
           label="On time"
-          icon={Timer}
           value={ratio(today.onTime, today.delivered)}
-          hint={`today (${today.onTime}/${today.delivered}) · 7 days ${ratio(week.onTime, week.delivered)}`}
+          icon={Timer}
           tone={today.rate !== null && today.rate < 0.8 ? 'amber' : undefined}
+          hint={`today ${today.onTime}/${today.delivered} · 7 days ${ratio(week.onTime, week.delivered)}`}
         />
         <Metric
           label="Late right now"
-          icon={AlertTriangle}
           value={late}
-          hint={`${d.today.lateUnits} kitchen item${d.today.lateUnits === 1 ? '' : 's'} · ${d.today.lateDrops} drop${d.today.lateDrops === 1 ? '' : 's'}`}
+          icon={AlertTriangle}
           tone={late > 0 ? 'red' : 'green'}
+          hint={`${d.today.lateUnits} kitchen item${d.today.lateUnits === 1 ? '' : 's'} · ${d.today.lateDrops} drop${d.today.lateDrops === 1 ? '' : 's'}`}
         />
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
+
+      <div className="stagger grid gap-4 lg:grid-cols-3">
         <Panel
           title="Next cut-off"
           action={
-            <Link href="/cutoff" className="text-xs underline">
-              Cut-off page
+            <Link href="/cutoff" className="text-xs text-primary hover:underline">
+              Cut-off page →
             </Link>
           }
         >
           {d.nextCutoff ? (
-            <div className="space-y-1">
-              <p className="text-lg font-semibold">{formatIst(d.nextCutoff.cutoffAt, true)}</p>
-              <p>for {formatKitchenDate(d.nextCutoff.deliveryDate)} deliveries</p>
-              <p>
-                <Badge variant="outline">{d.nextCutoff.drafts} drafts will be cancelled</Badge>{' '}
-                <Badge>{d.nextCutoff.placed} placed will be confirmed</Badge>
-              </p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                  <LockKeyhole className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <div className="font-heading text-xl font-semibold">
+                    <Countdown to={d.nextCutoff.cutoffAt} now={d.now} />
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {formatIst(d.nextCutoff.cutoffAt, true)} · for{' '}
+                    {formatKitchenDate(d.nextCutoff.deliveryDate)}
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg bg-secondary/70 p-3">
+                  <div className="font-heading text-2xl font-semibold">
+                    <CountUp value={d.nextCutoff.placed} />
+                  </div>
+                  <div className="text-xs text-muted-foreground">placed → will be confirmed</div>
+                </div>
+                <div className="rounded-lg bg-muted p-3">
+                  <div className="font-heading text-2xl font-semibold">
+                    <CountUp value={d.nextCutoff.drafts} />
+                  </div>
+                  <div className="text-xs text-muted-foreground">drafts → will be cancelled</div>
+                </div>
+              </div>
             </div>
           ) : (
             <p className="text-muted-foreground">No upcoming cut-off.</p>
           )}
         </Panel>
+
         <Panel title="Next 7 days">
-          <table className="w-full text-xs">
-            <thead className="text-muted-foreground">
-              <tr>
-                <th className="text-left font-normal">Date</th>
-                <th className="text-right font-normal">Conf.</th>
-                <th className="text-right font-normal">Placed</th>
-                <th className="text-right font-normal">Draft</th>
-                <th className="text-right font-normal">Meals</th>
-              </tr>
-            </thead>
-            <tbody>
-              {d.pipeline.map((p) => (
-                <tr key={p.date}>
-                  <td>
-                    {formatKitchenDate(p.date)}
-                    {p.kitchenHoliday && (
-                      <Badge variant="outline" className="ml-1">
-                        kitchen closed
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="text-right tabular-nums">{p.confirmed}</td>
-                  <td className="text-right tabular-nums">{p.placed}</td>
-                  <td className="text-right tabular-nums">{p.draft}</td>
-                  <td className="text-right font-medium tabular-nums">{p.meals}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <PipelineChart pipeline={d.pipeline} />
         </Panel>
+
         <Panel
           title="Getting paid"
           action={
-            <Link href="/billing" className="text-xs underline">
-              Billing
+            <Link href="/billing" className="text-xs text-primary hover:underline">
+              Billing →
             </Link>
           }
         >
-          <div className="space-y-2">
-            <div>
-              <div className="text-xs text-muted-foreground">Not yet invoiced</div>
-              <div className="text-lg font-semibold tabular-nums">
-                {formatUsd(d.uninvoiced.cents)}
-              </div>
-              <ul className="text-xs">
-                {d.uninvoiced.top.map((t) => (
-                  <li key={t.companyId} className="flex justify-between">
-                    <span>{t.companyName}</span>
-                    <span className="tabular-nums">{formatUsd(t.cents)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground">Open invoices</div>
-              <div className="font-semibold tabular-nums">
-                {d.openInvoices.count} · {formatUsd(d.openInvoices.cents)}
-              </div>
-              {daysOpen !== null && (
-                <div className="text-xs text-muted-foreground">
-                  oldest issued {daysOpen} days ago
+          <GettingPaid d={d} />
+        </Panel>
+      </div>
+
+      <div className="stagger grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Panel
+            title="Booked revenue"
+            action={
+              weekDelta !== null && (
+                <Badge variant={weekDelta >= 0 ? 'success' : 'warning'}>
+                  {weekDelta >= 0 ? <ArrowUpRight aria-hidden /> : <ArrowDownRight aria-hidden />}
+                  {Math.abs(Math.round(weekDelta * 100))}% vs last week
+                </Badge>
+              )
+            }
+          >
+            <RevenueChart d={d} />
+          </Panel>
+        </div>
+        <Panel title="On time, last 7 days">
+          <OnTimeChart days={d.onTime} />
+        </Panel>
+      </div>
+
+      <Panel title={gaps === 0 ? 'Setup gaps' : `Setup gaps · ${gaps}`}>
+        {gaps === 0 ? (
+          <p className="flex items-center gap-2 text-muted-foreground">
+            <BadgeCheck className="size-4 text-emerald-600" aria-hidden /> Nothing missing.
+          </p>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-3">
+            <GapList
+              icon={Tags}
+              title="Unpriced on a tier in use"
+              items={d.setupGaps.unpricedDishes.map((g) => ({
+                key: `${g.dishId}-${g.tierName}`,
+                href: `/catalogue/dishes/${g.dishId}`,
+                label: g.dishName,
+                note: g.tierName,
+              }))}
+            />
+            <GapList
+              icon={Building2}
+              title="Companies without a default driver"
+              items={d.setupGaps.companiesWithoutDriver.map((c) => ({
+                key: c.id,
+                href: `/companies/${c.id}`,
+                label: c.name,
+              }))}
+            />
+            <GapList
+              icon={MapPinOff}
+              title="Dishes without a kitchen station"
+              items={d.setupGaps.dishesWithoutStation.map((x) => ({
+                key: x.id,
+                href: `/catalogue/dishes/${x.id}`,
+                label: x.name,
+              }))}
+            />
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+function ProgressBar({ value, total }: { value: number; total: number }) {
+  const pct = total === 0 ? 0 : (value / total) * 100;
+  return (
+    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+      <div className="animate-grow-x h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+function PipelineChart({ pipeline }: { pipeline: AdminDashboardDto['pipeline'] }) {
+  const max = Math.max(1, ...pipeline.map((p) => p.confirmed + p.placed + p.draft));
+  return (
+    <div className="space-y-2">
+      {pipeline.map((p, i) => {
+        const total = p.confirmed + p.placed + p.draft;
+        return (
+          <div key={p.date} className="grid grid-cols-[4.5rem_1fr_4rem] items-center gap-2 text-xs">
+            <span className="text-muted-foreground">{formatKitchenDate(p.date)}</span>
+            <div
+              className="flex h-5 overflow-hidden rounded-md bg-muted"
+              title={`${p.confirmed} confirmed · ${p.placed} placed · ${p.draft} draft`}
+            >
+              {p.kitchenHoliday ? (
+                <span className="px-2 text-[11px] leading-5 text-muted-foreground">
+                  kitchen closed
+                </span>
+              ) : (
+                <div
+                  className="animate-grow-x flex h-full"
+                  style={{ width: `${(total / max) * 100}%`, animationDelay: `${i * 60}ms` }}
+                >
+                  <span className="h-full bg-primary" style={{ flex: p.confirmed }} />
+                  <span className="h-full bg-chart-3" style={{ flex: p.placed }} />
+                  <span className="h-full bg-chart-2/70" style={{ flex: p.draft }} />
                 </div>
               )}
             </div>
-            <div>
-              <div className="text-xs text-muted-foreground">Paid in the last 30 days</div>
-              <div className="font-semibold tabular-nums">{formatUsd(d.paidLast30DaysCents)}</div>
-            </div>
+            <span className="text-right tabular-nums">
+              <span className="font-medium">{p.meals}</span>{' '}
+              <span className="text-muted-foreground">meals</span>
+            </span>
           </div>
-        </Panel>
+        );
+      })}
+      <div className="flex gap-3 pt-1 text-[11px] text-muted-foreground">
+        <Legend className="bg-primary" label="Confirmed" />
+        <Legend className="bg-chart-3" label="Placed" />
+        <Legend className="bg-chart-2/70" label="Draft" />
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <Panel title="Booked revenue by delivery date">
-            <div className="flex h-36 items-end gap-1" aria-label="Revenue chart">
-              {d.revenue.days.map((x) => (
-                <div
-                  key={x.date}
-                  className="flex flex-1 flex-col items-center gap-1"
-                  title={`${formatKitchenDate(x.date)}: ${formatUsd(x.cents)}`}
-                >
-                  <div
-                    className={
-                      x.future
-                        ? 'w-full rounded-t bg-primary/30'
-                        : x.date === d.date
-                          ? 'w-full rounded-t bg-amber-500'
-                          : 'w-full rounded-t bg-primary'
-                    }
-                    style={{ height: `${Math.max(2, (x.cents / maxRevenue) * 120)}px` }}
-                  />
-                </div>
-              ))}
+    </div>
+  );
+}
+
+function Legend({ className, label }: { className: string; label: string }) {
+  return (
+    <span className="flex items-center gap-1">
+      <span className={cn('size-2 rounded-full', className)} />
+      {label}
+    </span>
+  );
+}
+
+function GettingPaid({ d }: { d: AdminDashboardDto }) {
+  const total = d.uninvoiced.cents + d.openInvoices.cents + d.paidLast30DaysCents;
+  const seg = (v: number) => (total === 0 ? 0 : (v / total) * 100);
+  const daysOpen = d.openInvoices.oldestIssuedAt
+    ? Math.floor((Date.parse(d.now) - Date.parse(d.openInvoices.oldestIssuedAt)) / 86_400_000)
+    : null;
+  return (
+    <div className="space-y-3">
+      <div className="flex h-2.5 overflow-hidden rounded-full bg-muted">
+        <span
+          className="animate-grow-x h-full bg-chart-2"
+          style={{ width: `${seg(d.uninvoiced.cents)}%` }}
+        />
+        <span
+          className="animate-grow-x h-full bg-chart-3"
+          style={{ width: `${seg(d.openInvoices.cents)}%` }}
+        />
+        <span
+          className="animate-grow-x h-full bg-primary"
+          style={{ width: `${seg(d.paidLast30DaysCents)}%` }}
+        />
+      </div>
+      <dl className="space-y-2 text-sm">
+        <Money dot="bg-chart-2" label="Not yet invoiced" cents={d.uninvoiced.cents} />
+        <Money
+          dot="bg-chart-3"
+          label={`Open invoices (${d.openInvoices.count})`}
+          cents={d.openInvoices.cents}
+          note={daysOpen !== null ? `oldest ${daysOpen} days` : undefined}
+        />
+        <Money dot="bg-primary" label="Paid, last 30 days" cents={d.paidLast30DaysCents} />
+      </dl>
+      {d.uninvoiced.top.length > 0 && (
+        <div className="border-t pt-2">
+          <div className="pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+            Most owed
+          </div>
+          {d.uninvoiced.top.slice(0, 3).map((t) => (
+            <div key={t.companyId} className="flex justify-between text-xs">
+              <span>{t.companyName}</span>
+              <span className="tabular-nums">{formatUsd(t.cents)}</span>
             </div>
-            <div className="mt-1 flex justify-between text-xs text-muted-foreground">
-              <span>{formatKitchenDate(d.revenue.days[0]!.date)}</span>
-              <span>today</span>
-              <span>{formatKitchenDate(d.revenue.days.at(-1)!.date)} (confirmed so far)</span>
-            </div>
-            <p className="mt-2 text-xs">
-              This week so far {formatUsd(d.revenue.thisWeekCents)} vs{' '}
-              {formatUsd(d.revenue.lastWeekCents)} by the same day last week
-            </p>
-          </Panel>
+          ))}
         </div>
-        <Panel title={`Setup gaps (${gaps})`}>
-          {gaps === 0 && <p className="text-muted-foreground">Nothing missing.</p>}
-          {d.setupGaps.unpricedDishes.length > 0 && (
-            <div className="mb-2">
-              <div className="text-xs font-medium">
-                Dishes on the menu with no price on a tier in use
+      )}
+    </div>
+  );
+}
+
+function Money({
+  dot,
+  label,
+  cents,
+  note,
+}: {
+  dot: string;
+  label: string;
+  cents: number;
+  note?: string;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-2">
+      <dt className="flex items-center gap-2">
+        <span className={cn('size-2 rounded-full', dot)} />
+        {label}
+        {note && <span className="text-xs text-muted-foreground">· {note}</span>}
+      </dt>
+      <dd className="font-heading font-semibold tabular-nums">
+        <CountUp value={cents} format={(n) => formatUsd(Math.round(n))} />
+      </dd>
+    </div>
+  );
+}
+
+function RevenueChart({ d }: { d: AdminDashboardDto }) {
+  const max = Math.max(1, ...d.revenue.days.map((x) => x.cents));
+  return (
+    <div>
+      <div className="relative h-44">
+        {[0.25, 0.5, 0.75, 1].map((f) => (
+          <div
+            key={f}
+            className="absolute inset-x-0 border-t border-dashed border-border/70"
+            style={{ bottom: `${f * 100}%` }}
+          />
+        ))}
+        <div className="relative flex h-full items-end gap-1">
+          {d.revenue.days.map((x, i) => {
+            const isToday = x.date === d.date;
+            return (
+              <div key={x.date} className="group relative flex h-full flex-1 items-end">
+                <div
+                  className={cn(
+                    'animate-grow-y w-full rounded-t-md transition-[filter] group-hover:brightness-110',
+                    x.future ? 'bg-primary/30' : isToday ? 'bg-sidebar-primary' : 'bg-primary/85',
+                  )}
+                  style={{
+                    height: `${Math.max(1.5, (x.cents / max) * 100)}%`,
+                    animationDelay: `${i * 25}ms`,
+                  }}
+                />
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 rounded-md bg-foreground px-2 py-1 text-[11px] whitespace-nowrap text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  {formatKitchenDate(x.date)} · {formatUsd(x.cents)}
+                </div>
               </div>
-              <ul className="text-xs text-muted-foreground">
-                {d.setupGaps.unpricedDishes.slice(0, 6).map((g) => (
-                  <li key={`${g.dishId}-${g.tierName}`}>
-                    <Link href={`/catalogue/dishes/${g.dishId}`} className="hover:underline">
-                      {g.dishName}
-                    </Link>{' '}
-                    · {g.tierName}
-                  </li>
-                ))}
-                {d.setupGaps.unpricedDishes.length > 6 && (
-                  <li>+{d.setupGaps.unpricedDishes.length - 6} more (see Pricing)</li>
-                )}
-              </ul>
-            </div>
-          )}
-          {d.setupGaps.companiesWithoutDriver.length > 0 && (
-            <div className="mb-2">
-              <div className="text-xs font-medium">Companies without a default driver</div>
-              <ul className="text-xs text-muted-foreground">
-                {d.setupGaps.companiesWithoutDriver.map((c) => (
-                  <li key={c.id}>
-                    <Link href={`/companies/${c.id}`} className="hover:underline">
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {d.setupGaps.dishesWithoutStation.length > 0 && (
-            <div>
-              <div className="text-xs font-medium">Dishes without a kitchen station</div>
-              <ul className="text-xs text-muted-foreground">
-                {d.setupGaps.dishesWithoutStation.map((x) => (
-                  <li key={x.id}>
-                    <Link href={`/catalogue/dishes/${x.id}`} className="hover:underline">
-                      {x.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </Panel>
+            );
+          })}
+        </div>
       </div>
+      <div className="mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted-foreground">
+        <span>{formatKitchenDate(d.revenue.days[0]!.date)}</span>
+        <span className="flex items-center gap-1">
+          <span className="size-2 rounded-full bg-sidebar-primary" /> today
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="size-2 rounded-full bg-primary/30" /> next 7 days (confirmed so far)
+        </span>
+      </div>
+      <p className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+        <CalendarClock className="size-4 text-muted-foreground" aria-hidden />
+        This week so far{' '}
+        <strong className="tabular-nums">{formatUsd(d.revenue.thisWeekCents)}</strong>
+        <span className="text-muted-foreground">
+          vs {formatUsd(d.revenue.lastWeekCents)} by the same day last week
+        </span>
+      </p>
+    </div>
+  );
+}
+
+function OnTimeChart({ days }: { days: AdminDashboardDto['onTime'] }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex h-36 items-end gap-2">
+        {days.map((x, i) => (
+          <div
+            key={x.date}
+            className="flex flex-1 flex-col items-center gap-1"
+            title={`${formatKitchenDate(x.date)}: ${x.onTime}/${x.delivered}`}
+          >
+            <span className="text-[10px] text-muted-foreground tabular-nums">
+              {x.rate === null ? '—' : `${Math.round(x.rate * 100)}%`}
+            </span>
+            <div className="relative h-24 w-full overflow-hidden rounded-md bg-muted">
+              {x.rate !== null && (
+                <div
+                  className={cn(
+                    'animate-grow-y absolute inset-x-0 bottom-0 rounded-md',
+                    x.rate >= 0.9 ? 'bg-primary' : x.rate >= 0.75 ? 'bg-chart-2' : 'bg-chart-4',
+                  )}
+                  style={{ height: `${Math.max(4, x.rate * 100)}%`, animationDelay: `${i * 50}ms` }}
+                />
+              )}
+            </div>
+            <span className="text-[10px] text-muted-foreground">
+              {formatKitchenDate(x.date).split(',')[0]}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Share of delivered drops that arrived within the grace period. “—” means nothing was
+        delivered.
+      </p>
+    </div>
+  );
+}
+
+function GapList({
+  icon: Icon,
+  title,
+  items,
+}: {
+  icon: typeof Tags;
+  title: string;
+  items: Array<{ key: string; href: string; label: string; note?: string }>;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 text-xs font-medium">
+        <span
+          className={cn(
+            'flex size-6 items-center justify-center rounded-md',
+            items.length > 0
+              ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
+              : 'bg-secondary text-secondary-foreground',
+          )}
+        >
+          <Icon className="size-3.5" aria-hidden />
+        </span>
+        {title}
+        <Badge variant={items.length > 0 ? 'warning' : 'success'} className="ml-auto">
+          {items.length}
+        </Badge>
+      </div>
+      <ul className="space-y-1 text-xs">
+        {items.slice(0, 6).map((it) => (
+          <li key={it.key}>
+            <Link href={it.href} className="hover:text-primary hover:underline">
+              {it.label}
+            </Link>
+            {it.note && <span className="text-muted-foreground"> · {it.note}</span>}
+          </li>
+        ))}
+        {items.length > 6 && <li className="text-muted-foreground">+{items.length - 6} more</li>}
+        {items.length === 0 && <li className="text-muted-foreground">None</li>}
+      </ul>
     </div>
   );
 }

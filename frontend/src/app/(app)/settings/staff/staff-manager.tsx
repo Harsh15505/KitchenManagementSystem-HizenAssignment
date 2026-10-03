@@ -50,7 +50,7 @@ export function StaffManager() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Staff</h1>
+        <h1 className="page-title">Staff</h1>
         <p className="text-sm text-muted-foreground">
           Each staff member has exactly one role. Role changes and deactivation sign the person out
           everywhere.

@@ -53,7 +53,7 @@ function InvoiceList() {
         <ArrowLeft className="size-4" aria-hidden /> Billing
       </Link>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Invoices</h1>
+        <h1 className="page-title">Invoices</h1>
         <NativeSelect
           aria-label="Status"
           value={status}

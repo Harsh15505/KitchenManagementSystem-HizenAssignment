@@ -54,9 +54,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Good to see you, {me.user.name.split(' ')[0]}
-        </h1>
+        <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
         <p className="text-sm text-muted-foreground">
           {current ? current.question : `Signed in as ${me.role.name}`}
         </p>

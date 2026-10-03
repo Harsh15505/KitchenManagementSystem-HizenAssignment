@@ -63,7 +63,7 @@ function TierList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Price tiers</h1>
+          <h1 className="page-title">Price tiers</h1>
           <p className="text-sm text-muted-foreground">
             Each company orders on one tier (the default if it has none). A dish with no price on a
             tier is hidden from that tier&apos;s employees.

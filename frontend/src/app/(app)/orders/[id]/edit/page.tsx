@@ -28,9 +28,7 @@ export default function EditOrderPage() {
         {order.data ? (
           order.data.actions.edit ? (
             <>
-              <h1 className="text-2xl font-semibold tracking-tight">
-                Edit {formatOrderNumber(order.data.number)}
-              </h1>
+              <h1 className="page-title">Edit {formatOrderNumber(order.data.number)}</h1>
               <OrderBuilder order={order.data} />
             </>
           ) : (

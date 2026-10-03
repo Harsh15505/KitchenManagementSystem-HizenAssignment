@@ -46,7 +46,7 @@ function MyDeliveries() {
   return (
     <div className="mx-auto max-w-lg space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">My deliveries</h1>
+        <h1 className="page-title">My deliveries</h1>
         <p className="text-sm text-muted-foreground">
           {data
             ? `${formatKitchenDate(data.date)} · ${pending.length} to go, ${data.drops.length - pending.length} done`

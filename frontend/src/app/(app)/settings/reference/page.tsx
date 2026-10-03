@@ -33,7 +33,7 @@ export default function ReferencePage() {
     <RequireAbility action="read" subject="ReferenceData">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Reference data</h1>
+          <h1 className="page-title">Reference data</h1>
           <p className="text-sm text-muted-foreground">
             Lists used by dishes, options and companies. Deactivate entries you no longer use; they
             stay on past orders.

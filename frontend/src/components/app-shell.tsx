@@ -165,7 +165,12 @@ function Frame({ children }: { children: ReactNode }) {
             </DropdownMenu>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 md:p-8">{children}</main>
+        <main
+          key={pathname}
+          className="animate-rise mx-auto w-full max-w-[1400px] flex-1 p-4 md:p-8"
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

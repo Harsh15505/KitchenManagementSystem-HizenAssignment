@@ -85,7 +85,7 @@ function MenuManager() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Menu</h1>
+          <h1 className="page-title">Menu</h1>
           <p className="text-sm text-muted-foreground">
             Categories place dishes on the menu. Secret categories are never listed; they open by
             slug. Companies can hide categories or items (on the company page).

@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { CountUp } from '@/components/count-up';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ export function Metric({
   return (
     <Card
       className={cn(
+        'lift',
         tone === 'red' && 'border-red-400',
         tone === 'amber' && 'border-amber-400',
         tone === 'green' && 'border-green-400',
@@ -54,7 +56,7 @@ export function Metric({
             tone === 'amber' && 'text-amber-700 dark:text-amber-300',
           )}
         >
-          {value}
+          {typeof value === 'number' ? <CountUp value={value} /> : value}
         </div>
         {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
         {children}

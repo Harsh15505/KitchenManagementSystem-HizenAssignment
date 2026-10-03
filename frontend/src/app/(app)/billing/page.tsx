@@ -47,7 +47,7 @@ function BillingSummary() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Billing</h1>
+          <h1 className="page-title">Billing</h1>
           <p className="text-sm text-muted-foreground">
             Confirmed and delivered orders are owed in full. Invoices never change; later money
             changes become credits on the next invoice.
