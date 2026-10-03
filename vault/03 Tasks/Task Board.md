@@ -1,34 +1,43 @@
 ---
 kanban-plugin: basic
 type: board
-updated: 2026-10-03 01:51 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 ## 🗂 Backlog
 
-- [ ] **T-110** `pnpm vault:commits` script (optional) · P1
-- [ ] **T-406** CSV import (*Should*) · P4
-- [ ] **T-605** 400-order perf check · P6
-- [ ] **T-1006** Live smoke checklist + usage check · P10
-- [ ] **T-1102** Quality gate + history review · P11
-- [ ] **T-1103** Submit Google Form · P11
-- [ ] **T-1104** Keep alive 2 weeks · P11
-- [ ] **FR-ACC-06** Roles editor UI (*Could*)
+- [ ] **T-406** CSV import (*Should*, only if ahead by Sun 15:00) · P4
+- [ ] **T-1104** Keep alive 2 weeks; check Neon/Render usage on days 3 and 7 · P11
+- [ ] **FR-ACC-06** Roles editor UI (*Could*, won't do: roles are data; README §9)
+- [ ] ~~**T-110** `pnpm vault:commits` script~~ (won't do: Commit Log kept by hand) · P1
 
 ## ▶ Next Up
 
+- [ ] **T-409** Holiday conflict warning (*Should*, FR-CMP-05) · P4/P12
+- [ ] **T-1205** Form screens design pass (order builder, company, employee, catalogue editors, settings) · P12
+- [ ] **T-605** 400-order kitchen board perf on a throwaway Neon branch (Sun AM; needs O-05) · P6/P12
+- [ ] **T-1206** Concurrency + integrity probe script (Sun AM; needs O-05) · P12
+- [ ] **T-1207** README final pass + screenshots · P12
+- [ ] **T-1006** Live smoke checklist (owner, Sun 20:00 after freeze) · P10
+- [ ] **T-1102** Quality gate final run, history review, tag `v1.0.0` · P11
+- [ ] **T-1103** Submit the Google Form by 22:30 IST Sun · P11
 
 ## 🔨 In Progress
 
 
 ## ⛔ Blocked
 
+- [ ] **O-05** Throwaway Neon branch + `backend/.env.perf` (owner) blocks T-605 and T-1206
 
 ## 👀 Review / Verify
 
 
 ## ✅ Done
 
+- [x] **T-1204** Theme switch circular reveal · P12
+- [x] **T-1203** Boards, order detail, billing polish · P12
+- [x] **T-1202** Dashboards rebuilt with charts and motion · P12
+- [x] **T-1201** Brand theme + dark mode (ADR-028) · P12
 - [x] **T-1005** Production verification · P10
 - [x] **T-109** UptimeRobot keep-alive on /api/health · P1
 - [x] **T-108** Provision Neon/Render/Vercel + deploy skeleton · P1

@@ -6,7 +6,7 @@ Built for the Heizen engineering assignment with the mandatory stack: **Next.js*
 
 | | |
 |---|---|
-| **Live app** | https://ktichen-management-hizen.vercel.app (Vercel) |
+| **Live app** | https://kitchen-management-hizen.vercel.app (Vercel) |
 | **API health** | https://fernleaf-api-l0yq.onrender.com/api/health (Render, Singapore) |
 | **Repository** | this repo |
 

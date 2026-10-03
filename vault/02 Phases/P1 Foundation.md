@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P1
-status: in-progress
+status: done
 estimate: 4h
 target: CP1 Sat 3 Oct 13:00 IST (with P2)
 ---
@@ -26,17 +26,17 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
   *Accept:* the web app calls `/api/health` through the rewrite locally.
 - [x] **T-106** ESLint 9 flat config + typescript-eslint + Prettier across the workspace; `pnpm lint` and `pnpm typecheck` clean.
 - [x] **T-107** GitHub Actions `ci.yml`: install → lint → typecheck → test (shared domain tests in a TZ matrix: UTC, America/Los_Angeles, Asia/Kolkata) → build.
-- [ ] **T-108** Provision **Neon** (project `fernleaf-kitchen-ops`, Singapore, PG17, 0.25 CU fixed, branches `dev`/`test`), **Render** (Singapore, free, build/start commands per TRD §13.2, health path `/api/health`, env), **Vercel** (root `frontend`, `API_ORIGIN`). Deploy the skeleton.
+- [x] **T-108** Provision **Neon** (project `fernleaf-kitchen-ops`, Singapore, PG17, 0.25 CU fixed, branches `dev`/`test`), **Render** (Singapore, free, build/start commands per TRD §13.2, health path `/api/health`, env), **Vercel** (root `frontend`, `API_ORIGIN`). Deploy the skeleton.
   *Accept:* the live web URL shows the health status fetched through `/api`. URLs recorded in [[Environments and Deploy]].
-- [ ] **T-109** UptimeRobot HTTP monitor → `https://<api>/api/health` every 5 min.
-- [ ] **T-110** *(optional)* `pnpm vault:commits`: regenerate [[Commit Log]] from `git log`.
+- [x] **T-109** UptimeRobot HTTP monitor → `https://<api>/api/health` every 5 min.
+- [ ] **T-110** *(optional)* `pnpm vault:commits`: regenerate [[Commit Log]] from `git log`. *Won't do:* the Commit Log is kept by hand (backfilled 2026-10-03 17:40).
 
 ## Exit criteria
 
-- [ ] CI green on `main`
-- [ ] Live web → API → DB path works on the free tiers
-- [ ] `docs/DATABASE_MODELS.md` schema validated (fixes logged as ADRs if any)
-- [ ] [[Tech Stack]] records the resolved versions; [[Runbook]] commands confirmed
+- [x] CI green on `main` (first run ee9472d; latest 2760d11, 2026-10-03 18:20)
+- [x] Live web → API → DB path works on the free tiers (2026-10-03 12:55; `/api/health/ready` 3–37 ms Render → Neon)
+- [x] `docs/DATABASE_MODELS.md` schema validated (first try, no fixes needed)
+- [x] [[Tech Stack]] records the resolved versions; [[Runbook]] commands confirmed (2026-10-03 18:55)
 
 ## Risks
 
@@ -53,5 +53,13 @@ Specs: `docs/TRD.md` §2–4, §13 · `docs/ARCHITECTURE.md` §3–4 · [[Gotcha
 - 2026-10-03 03:05: T-106 done. Root ESLint 9 flat config (typescript-eslint) for shared + backend; frontend keeps eslint-config-next. Role-name literal guard (ADR-023) verified to fire. `consistent-type-imports` is off for backend because `import type` would erase NestJS DI tokens. Prettier applied repo-wide; `pnpm lint`, `pnpm format:check`, `pnpm typecheck` clean.
 - 2026-10-03 03:10: T-107 done. `.github/workflows/ci.yml`: format, lint, typecheck, test, build; shared domain tests in a TZ matrix (UTC, America/Los_Angeles, Asia/Kolkata). The full sequence was run locally first, all green. First GitHub run (ee9472d) passed: https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment/actions/runs/37065940657
 - 2026-10-03 03:15: T-108 started. `render.yaml` Blueprint added (Singapore, free, `--prod=false` so the build gets the Prisma/Nest CLIs, health `/api/health`, TZ=UTC). Waiting for the owner to create the Render service; Vercel next.
+- 2026-10-03 12:41–12:55: T-108 done. Owner created the Render service (https://fernleaf-api-l0yq.onrender.com) and the Vercel project on their own account (root `frontend`, `API_ORIGIN`). First Vercel build failed: `shared/dist` is git-ignored (BUG-007, fixed 0175a3e, then 268744d after a CI race, BUG-008). Render `WEB_ORIGIN` set to the Vercel domain.
+- 2026-10-03 13:58: T-109 done. Owner added the UptimeRobot monitor on `/api/health` (5 min).
+- 2026-10-03 18:35: Owner renamed the Vercel domain to https://kitchen-management-hizen.vercel.app (the old one had a typo) and updated `WEB_ORIGIN`. Verified: writes with the new Origin → 204, the old Origin → 403; `/api/health` through the new domain → 200.
 
 ## Outcome
+
+Done 2026-10-03 13:58 (CP1 target Sat 13:00; code was done at 03:10, the deploy waited on accounts).
+- Built: pnpm workspace (`frontend/`, `backend/`, `shared/`), Prisma 7 on Neon with 30 CHECK constraints, Nest 11 API with one error envelope, Next 16 frontend with the `/api` rewrite, ESLint/Prettier, CI with a TZ matrix, Render + Vercel deploy, UptimeRobot keep-alive.
+- Cut: T-110 (Commit Log script); Neon `dev`/`test` branches were never created (ADR-029).
+- Follow-ups: none.

@@ -22,8 +22,8 @@ Specs: PRD FR-BIL-*, BR-BIL-*, BR-MNY-03, A-26, A-27 · TRD §8.9 · DATABASE_MO
 
 ## Exit criteria
 
-- [ ] Invoice total = Σ lines; order line amount = order total (tests)
-- [ ] The policy for changed invoiced orders is implemented and written up for the README ([[Prioritisation Notes]] / [[README Outline]])
+- [x] Invoice total = Σ lines; order line amount = order total (tests) (`billing.test.ts` BR-BIL; stored total asserted in the service)
+- [x] The policy for changed invoiced orders is implemented and written up for the README (README §6: invoices never change; credits on the next invoice)
 
 ## Log
 
@@ -31,3 +31,8 @@ Specs: PRD FR-BIL-*, BR-BIL-*, BR-MNY-03, A-26, A-27 · TRD §8.9 · DATABASE_MO
 - Gotcha hit: the backend dev server hot-reloads, so it ran the demo invoice code before the "backdate issuedAt" patch; fixed the 7 rows with a one-off script. Don't leave half-finished demo code saved while the dev server runs.
 
 ## Outcome
+
+Done 2026-10-03 11:45 (CP4 target Sun 16:30).
+- Built: uninvoiced summary per company, invoice creation in one transaction (double invoicing → `ALREADY_INVOICED`), mark paid, cancellation and short-delivery credits carried to the next invoice, printable invoice, weekly demo invoices.
+- Cut: invoice void/reissue (Could). Bug: demo invoices issued "today" after a hot reload (BUG-009, fixed by script).
+- Follow-ups: the double-invoice race goes into T-1206.

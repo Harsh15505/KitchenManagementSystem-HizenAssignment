@@ -1,6 +1,6 @@
 ---
 type: home
-updated: 2026-10-03 01:51 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 🧠 Fernleaf Kitchen Ops: Project Brain
@@ -18,8 +18,9 @@ This vault is the **single place that holds the full state of the project**. Any
 | **What** | Heizen engineering round: build the *Kitchen Operations Admin Panel* for the fictional "Fernleaf Kitchen" (corporate boxed-meal programs) |
 | **Deadline** | **Sun 4 Oct 2026, 23:59 IST**: Google Form with live link + public repo |
 | **Stack (mandatory)** | Next.js (web) · NestJS (API) · Prisma (ORM) · Postgres |
-| **Our choices** | One repo: `frontend/` + `backend/` + `shared/` (pnpm workspaces) · CASL RBAC built from permission codes · shadcn/ui + Tailwind · TanStack Query/Table · Zod everywhere · Vercel + Render + Neon (Singapore) |
+| **Our choices** | One repo: `frontend/` + `backend/` + `shared/` (pnpm workspaces) · CASL RBAC built from permission codes · shadcn/ui + Tailwind · TanStack Query/Table · Zod everywhere · Vercel + Render + Neon (Singapore, one branch: ADR-029) · warm brand theme + dark mode (ADR-028) |
 | **Time zone / money** | **Asia/Kolkata (IST)** · **USD, integer cents** (as in the brief, confirmed by owner) |
+| **Live** | Web https://kitchen-management-hizen.vercel.app · API https://fernleaf-api-l0yq.onrender.com/api/health · Repo https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment |
 | **Test accounts** | `admin@test.com` · `kitchen@test.com` · `dispatch@test.com` · `driver@test.com`, password `Test@1234` |
 | **Current state** | See [[STATUS]] |
 
@@ -46,7 +47,7 @@ This vault is the **single place that holds the full state of the project**. Any
 | Folder | What lives there |
 |---|---|
 | `01 Project/` | [[Project Brief]] · [[Requirements Matrix]] · [[Timeline and Checkpoints]] · [[Glossary]] · [[Questions and Answers]] |
-| `02 Phases/` | [[Phase Plan]] and one note per phase (P0 to P11) with tasks, exit criteria and a log |
+| `02 Phases/` | [[Phase Plan]] and one note per phase (P0 to P12) with tasks, exit criteria and a log |
 | `03 Tasks/` | [[Task Board]] (Kanban: Backlog → Next Up → In Progress → Blocked → Review → Done) |
 | `04 Bugs/` | [[Bug Tracker]] (index) and one note per non-trivial bug |
 | `05 Decisions/` | [[Decision Log]] (ADR-001…, chronological, never deleted, only superseded) |

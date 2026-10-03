@@ -77,6 +77,8 @@ flowchart TB
   GH -.->|integration tests| TEST
 ```
 
+> **As built (ADR-029):** a single Neon branch serves local dev and production; `dev`/`test` were never created. CI runs unit and service tests without a database. Bulk test scripts use a throwaway branch.
+
 | Concern | Choice | Notes |
 |---|---|---|
 | Latency | API and DB both in Singapore (≈ 60–80 ms from India); Vercel edge proxies `/api` | Same-region API↔DB keeps queries fast |
@@ -417,6 +419,9 @@ Full context, alternatives and consequences for each decision are in `vault/05 D
 | ADR-019 | **shadcn/ui + Tailwind + TanStack Query/Table + RHF** | Ant Design / Mantine | Owned components, flexible data grids, owner's preference |
 | ADR-020 | **Vitest everywhere; domain tests in a TZ matrix** | Jest (Nest default) | One fast runner; proves TZ independence |
 | ADR-021 | **Docs = spec, vault = state**; vault committed | Wiki outside repo | Any agent or human can resume from the repo alone |
+| ADR-024 → ADR-027 | Version pins; shadcn on Base UI; tier grid as a plain table; combination signature sorted by ids | — | See `vault/05 Decisions/Decision Log.md` |
+| ADR-028 | **Warm brand theme through shadcn tokens, dark mode via next-themes, CSS motion utilities, hand-built charts** | Chart library; neutral defaults | Every screen inherits the look; small bundle; reduced-motion safe |
+| ADR-029 | **One Neon branch for local dev and production (as provisioned)**; bulk test scripts on a throwaway branch; service tests with a fake Prisma | Separate `dev`/`test` branches | Matches what exists; switching databases a day before submission risks the live app |
 
 ---
 

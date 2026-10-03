@@ -1,8 +1,8 @@
 ---
 type: status
-updated: 2026-10-03 17:40 IST
-phase: deployed and smoke-tested (P0-P11 done)
-active_task: UI polish (T-UI) largely done; optional Shoulds
+updated: 2026-10-03 18:55 IST
+phase: P12 Polish and Proof (P0–P10 done, P11 README done)
+active_task: T-409 holiday conflict warning (next), then T-1205 form screens
 ---
 # 📍 STATUS: live snapshot
 
@@ -10,71 +10,65 @@ active_task: UI polish (T-UI) largely done; optional Shoulds
 
 ## TL;DR
 
-P0–P7 are done locally and CI is green: auth and permissions, staff, settings, catalogue, pricing tiers and grid, menu and preview, companies and employees, orders with cut-off processing, the kitchen board, the dispatch board, the driver view, billing and the role dashboards. A rolling demo window (~700 orders over −14…+7 days) plus an autopilot keeps every screen live. **Deployed**: web https://ktichen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. The README is written. UptimeRobot keep-alive is on (T-109) and the owner signed in with all 4 accounts on the live site: dashboards and role-limited navigation verified (T-1005). **UI redesign (ADR-028)**: warm Fernleaf brand, dark mode, motion system (rise/stagger/grow, count-up, reduced-motion safe), rebuilt dashboards for all 4 roles with charts, polished kitchen/dispatch/driver boards, order lifecycle stepper (commits 3034119…3a77ded). Remaining: optional Shoulds and smaller-screen polish of forms.
+Every Must is built, tested and **live**: web https://kitchen-management-hizen.vercel.app, API https://fernleaf-api-l0yq.onrender.com. CI is green, the repo is public, and the README is written. The owner signed in with all 4 accounts on the live app. The UI was redesigned (ADR-028: warm brand theme, dark mode, dashboards and boards rebuilt with motion). Remaining work is **P12 Polish and Proof**: holiday warning (Should), form screens design pass, 400-order perf numbers and a repeatable concurrency script (Sunday, on a throwaway Neon branch), README final pass, then the owner's live smoke test, tag and submission.
 
 ## ⏳ Deadline
 
-**Sun 4 Oct 2026, 23:59 IST.** Checkpoints: [[Timeline and Checkpoints]].
+**Sun 4 Oct 2026, 23:59 IST.** Code freeze **Sun 20:00**, submit by **22:30** ([[Timeline and Checkpoints]]).
 
 ## Current phase
 
-- **P0**: ✅ → [[P0 Planning]]
-- **P1**: code ✅ (T-101…T-107); **T-108 deploy** waiting on owner; T-109 keep-alive after deploy → [[P1 Foundation]]
-- **P2**: ✅ locally (T-201…T-210) → [[P2 Auth and Access]]
-- **P3**: ✅ → [[P3 Catalogue Pricing Menu]]
-- **P4**: ✅ Musts (T-401…405, 407, 408); T-406 CSV import deferred → [[P4 Companies and Employees]]
-- **P5**: ✅ (T-501…T-513) → [[P5 Orders and Cutoff]]
-- **P6**: ✅ (T-601…T-604; T-605 perf partly) → [[P6 Kitchen Board]]
-- **P7**: ✅ (T-701…T-706) → [[P7 Dispatch and Driver]]
-- **P8**: ✅ (T-801…T-805) → [[P8 Billing]]
-- **P9**: ✅ (T-901…T-905) → [[P9 Dashboards]]
-- **P10**: ✅ demo window, autopilot, invoices, deploy, live smoke test → [[P10 Demo Data and Deploy]]
-- **P11**: ✅ README with live links
-- **Polish (T-UI)**: ✅ brand theme, dark mode, dashboards and boards rebuilt with motion (ADR-028)
+- **P0–P10**: ✅ (see [[Phase Plan]] for actual finish times; T-605 and T-1006 open, see below)
+- **P11**: 🟨 README ✅, quality gate run 18:40 (lint/typecheck/319 tests clean, CI green); tag `v1.0.0` + Google Form pending → [[P11 README and Submission]]
+- **P12**: 🟨 T-1201…T-1204 ✅ (theme, dashboards, boards, theme reveal) → [[P12 Polish and Proof]]
 
 ## 🔨 Active task
 
-- Optional: CSV import (T-406), company-holiday warning, DB-backed concurrency tests; consider fixing the `ktichen` typo in the Vercel domain (then update Render `WEB_ORIGIN` + README).
+- **T-409** Holiday conflict warning (FR-CMP-05): when an admin adds a company holiday, show the open orders on that date.
 
 ## ⏭ Next up (in order)
 
-1. Owner checks the redesigned UI on the live site (Vercel auto-deploys from main) · optional Shoulds (CSV import, holiday warning) · form screens polish
+1. T-409 holiday warning (Sat evening)
+2. T-1205 form screens design pass: order builder, company/employee forms, catalogue editors, settings (Sat evening)
+3. T-605 perf + T-1206 concurrency/integrity script on a throwaway Neon branch (Sun morning; needs **O-05**)
+4. T-1207 README final pass + screenshots (Sun afternoon); T-406 CSV import only if ahead by 15:00
+5. Sun 20:00 freeze → owner runs T-1006 live smoke → T-1102 tag `v1.0.0` → T-1103 Google Form by 22:30
 
 ## ⛔ Blockers / waiting on owner
 
-- None blocking. Vercel build fix: frontend build now builds `shared` first (0175a3e).
-- Optional: rotate the Neon password (it was pasted in chat) and update `backend/.env` + Render.
+- **O-04**: confirm Render's `DATABASE_URL` host is `ep-autumn-forest-azgcpotr…` (same branch as local, ADR-029).
+- **O-05** (blocks T-605/T-1206, needed Sun morning): in the Neon console create a branch (e.g. `perf`) from the current one and paste its connection string into `backend/.env.perf` yourself (git-ignored; not in chat).
+- **O-06**: rotate the Neon password (it was pasted in chat), then update Render and `backend/.env`.
 
 ## 🌐 Environments
 
 | Env | URL | Status |
 |---|---|---|
-| Repo (GitHub) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ CI green |
-| DB (Neon) | `ep-autumn-forest…ap-southeast-1` | ✅ migrated (46 tables, 30 CHECKs), seeded (roles, 7 staff, reference lists, 27 dishes, 17 options, 4 tiers, 8 menu categories, 5 companies, 60 employees) |
-| API (Render) | https://fernleaf-api-l0yq.onrender.com | ✅ live (health + DB ready green) |
-| Web (Vercel) | https://ktichen-management-hizen.vercel.app | ✅ live; Render `WEB_ORIGIN` set to it (origin check verified) |
+| Repo (GitHub, public) | https://github.com/Harsh15505/KitchenManagementSystem-HizenAssignment | ✅ CI green on 2760d11 |
+| DB (Neon) | branch `br-quiet-boat-azse3ol5`, endpoint `ep-autumn-forest…ap-southeast-1` | ✅ one branch for local **and** production (ADR-029) |
+| API (Render) | https://fernleaf-api-l0yq.onrender.com | ✅ live; UptimeRobot every 5 min |
+| Web (Vercel) | https://kitchen-management-hizen.vercel.app | ✅ live; `WEB_ORIGIN` matches (verified 18:35). Old `ktichen-…` domain gets 403 on writes |
 
-## ✅ Verified locally (2026-10-03 06:30)
+## ✅ Verified (2026-10-03 18:40)
 
-- `pnpm lint / typecheck / test` clean; 319 tests (112 shared, 207 backend).
-- Pricing (06:40): Neon probe of tiers, cycles, grid, bulk set/exclude/clear, default switch, guarded delete; browser check of `/pricing` and the grid.
-- Browser (admin): create option with size extra; create dish (client validation, SKU upper-cased, station, allergen); add option group (portion error surfaced from the API, then valid save), edit, remove; deactivate/reactivate; list filters.
-- Browser (kitchen): catalogue read-only, no money columns.
-- Found and fixed BUG-003 and BUG-004 (see [[Bug Tracker]]).
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 319 tests (112 shared, 207 backend). Frontend build clean (17:33).
+- Live: origin check (new domain 204, old 403), `/api/health` through Vercel 200. Owner: 4 logins, role-limited nav, dashboards with data (13:58).
+- Browser (local, 17:20–17:35): all 4 dashboards, kitchen/dispatch boards, order detail, billing; light + dark; phone width without horizontal scroll.
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-028 in [[Decision Log]]. Latest: ADR-027 signature sorted by ids, ADR-028 warm brand theme + dark mode.
+ADR-001…ADR-029 in [[Decision Log]]. Latest: ADR-028 warm brand theme + dark mode (+ motion, theme reveal), ADR-029 one Neon branch for local and production.
 
 ## 🧷 Last commit
 
-See [[Commit Log]] (rebuilt from `git log` at 06:30).
+`2760d11` docs(vault): theme switch animation noted. Working tree: vault catch-up + README live link (this change). See [[Commit Log]].
 
 ## 🤝 Handoff notes for the next agent
 
 - Read [[AGENT PROTOCOL]] first. Every task updates the Task Board, phase note, Requirements Matrix and this note.
-- Routes need `@Public`, `@AnyUser` or `@CheckPolicies`, or the app won't boot (by design).
-- Don't `import type` classes that Nest injects (see [[Gotchas]]).
+- **Fewer commits until submission** (owner, Q-14): one commit per finished feature including its vault updates. Every push redeploys the live app.
+- **Local = production database** (ADR-029): name probe rows `ZZ Probe…` and delete them; bulk scripts only with `backend/.env.perf`.
+- Routes need `@Public`, `@AnyUser` or `@CheckPolicies`, or the app won't boot (by design). Don't `import type` classes that Nest injects ([[Gotchas]]).
 - Update schemas: never `.partial()` a schema with defaults (BUG-003). Money UI: gate on `read Money` (BUG-004).
-- Local dev: `.claude/launch.json` has `backend` (:4000) and `frontend` (:3000). After rebuilding `shared`, restart the backend.
-- Browser probes create real rows in Neon: name them `ZZ Probe…` / `ZZ-PROBE-…` and delete them afterwards.
+- Local dev: port 3000 belongs to the owner's other project; use the `backend-3001` + `frontend-3001` launch configs. Don't run `pnpm build` while dev servers run.
+- UI: use the ADR-028 utilities (`page-title`, `animate-rise`, `stagger`, `lift`, `CountUp`, `Metric`/`Panel` from `dashboard/metric.tsx`) and badge variants `success`/`warning`/`info`.

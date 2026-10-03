@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 06:30 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # ✅ Requirements Matrix (traceability)
@@ -12,7 +12,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 
 | ID | Requirement (short) | Pri | Phase | Tasks | Status | Implementation | Tests |
 |---|---|---|---|---|---|---|---|
-| FR-ACC-01 | Login/logout, cookie session; 4 test accounts | Must | P2 | T-202 T-203 T-205 | ✅ (local; live after T-108) | `backend/src/auth`, `frontend/src/app/login` | `auth.test.ts` |
+| FR-ACC-01 | Login/logout, cookie session; 4 test accounts | Must | P2 | T-202 T-203 T-205 | ✅ (live since 12:55) | `backend/src/auth`, `frontend/src/app/login` | `auth.test.ts` |
 | FR-ACC-02 | Staff management (admin) | Must | P2 | T-206 | ✅ | `backend/src/staff`, `frontend/src/app/(app)/settings/staff` | `staff.test.ts` |
 | FR-ACC-03 | Server-enforced permissions + data scoping | Must | P2 | T-204 T-210 | ✅ (driver row scoping lands in T-704) | `backend/src/authz/access.guard.ts` | `backend/test/auth.test.ts` |
 | FR-ACC-04 | Roles = data; permission-driven UI | Must | P2 | T-201 T-204 T-205 | ✅ | `shared/src/permissions/`, `shared/src/authz/rules.ts` | `rules.test.ts` |
@@ -43,7 +43,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-CMP-02 | Company calendar | Must | P4/P5 | T-403 T-502 | ✅ | company working days + holidays; `undeliverableReason` in orders | `cutoff.test.ts` BR-CAL-01, Neon probe |
 | FR-CMP-03 | Delivery defaults | Must | P4 | T-402 | ✅ | company settings form; driver via `delivery.perform` (`drivers.ts`) | Neon probe (DRIVER_REQUIRED) |
 | FR-CMP-04 | Tier + hidden menu | Must | P4 | T-402 T-404 | ✅ | `PUT /companies/:id/menu-visibility`, menu visibility card | Neon probe, browser check |
-| FR-CMP-05 | Holiday conflict warning | Should | P4 | T-403 | ⬜ (needs orders, P5) | | |
+| FR-CMP-05 | Holiday conflict warning | Should | P12 | T-409 | ⬜ (scheduled Sat evening) | | |
 | FR-EMP-01 | Employee fields, flags, allergies, prefs | Must | P4 | T-405 | ✅ | `employees.service.ts`, employees card, `/employees` | `company.test.ts` BR-EMP-01, browser check |
 | FR-EMP-02 | Move employee | Must | P4 | T-405 | ✅ | `POST /employees/:id/move`, make-owner | `companies.test.ts` BR-EMP-01/02 |
 | FR-EMP-03 | CSV import with row errors | Should | P4 | T-406 | ⏭️ deferred (see Prioritisation Notes) | | |
@@ -90,23 +90,23 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 
 | ID | Requirement | Where verified | Status |
 |---|---|---|---|
-| NFR-01 | Money: integer cents; reconciling totals | T-306 T-503 T-802 tests; DB CHECKs | ⬜ |
-| NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | 🟨 (time helpers + clock done; cut-off in T-502) |
-| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | ⬜ |
-| NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ⬜ |
-| NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | ⬜ |
-| NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ⬜ |
-| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ⬜ |
-| NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | ⬜ |
-| NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | 🟨 (cookie, guard, Origin check, throttle done) |
-| NFR-10 | Usability; driver on phone | T-705; smoke checklist | ⬜ |
+| NFR-01 | Money: integer cents; reconciling totals | T-306 T-503 T-802 tests; DB CHECKs | ✅ (`money`, `pricing`, `combinations`, `billing` tests; CHECK `total = unit × qty`; invoice total asserted) |
+| NFR-02 | Time zones (IST), TZ-independent | T-209 T-502 TZ-matrix CI | ✅ (domain tests under UTC/LA/IST in CI; server TZ=UTC on Render) |
+| NFR-03 | Concurrency safety | T-509 T-602 T-803 integration races | 🟨 (row locks, advisory lock, conditional updates, unique keys; races verified by Neon probes; repeatable script T-1206) |
+| NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
+| NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | 🟨 (server pagination ✅; board measured at 48 orders only, 400-order run T-605 on Sun) |
+| NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
+| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (319 tests: 112 shared, 207 backend) |
+| NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |
+| NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ✅ (httpOnly cookie, fail-closed guard, permission matrix, Origin check verified live 18:35, login throttle) |
+| NFR-10 | Usability; driver on phone | T-705; smoke checklist | ✅ (phone-first driver view; redesign ADR-028; final check in T-1006) |
 
 ## Deliverables
 
 | Deliverable | Task | Status |
 |---|---|---|
-| Live link with 4 working accounts | T-1005 | ⬜ |
-| Public repo, clean history | T-005 → T-1102 | ⬜ |
-| README (setup, architecture + ERD, decisions, dashboards, prioritisation, ambiguities) | T-1101 | ⬜ |
+| Live link with 4 working accounts | T-1005 | ✅ https://kitchen-management-hizen.vercel.app (owner check 13:58) |
+| Public repo, clean history | T-005 → T-1102 | 🟨 public ✅; history review + tag `v1.0.0` pending |
+| README (setup, architecture + ERD, decisions, dashboards, prioritisation, ambiguities) | T-1101 | ✅ (final pass T-1207) |
 | Google Form submitted before deadline | T-1103 | ⬜ |
-| Kept live ≥ 2 weeks | T-1104 | ⬜ |
+| Kept live ≥ 2 weeks | T-1104 | 🟨 keep-alive on |

@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-10-03 01:45 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # ⚠️ Gotchas
@@ -88,3 +88,10 @@ Read these before touching the related area. **Add a new entry every time someth
 - If port 3000 is taken by another project, use the `backend-3001` + `frontend-3001` launch configs (the API then accepts `WEB_ORIGIN=http://localhost:3001`).
 - `shared` is rebuilt by the frontend build only when `shared/dist` is missing (Vercel). Never rebuild it inside a package build that runs in parallel with others: tsup cleans `dist` first (CI race, fixed in 268744d).
 
+## Environments and agent tooling (2026-10-03, S03)
+
+- **Local dev writes to the production database** (one Neon branch, ADR-029). Every local click shows up on the live app; delete probe data; run bulk scripts (perf, races) only on a throwaway branch via `backend/.env.perf`.
+- **`WEB_ORIGIN` holds exactly one origin.** After renaming the Vercel domain, update Render; the old domain then gets 403 on every write (login included), so share only the current URL (https://kitchen-management-hizen.vercel.app).
+- **View Transitions are skipped on hidden tabs** (`InvalidStateError`, the switch still happens). Check the theme reveal with the window visible.
+- **Python on Windows** writes CRLF in text mode: open files with `newline=''` or run Prettier afterwards. Long Python edits inside a Bash heredoc can fail to parse on nested quotes: write the script to the scratchpad and run it.
+- **`gh` isn't on the Git Bash PATH.** The public GitHub REST API answers without auth (`/repos/<owner>/<repo>/actions/runs`, visibility).

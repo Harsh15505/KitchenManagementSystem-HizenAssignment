@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 🐞 Bug Tracker
@@ -26,5 +26,11 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 | BUG-004 | Dish and option lists crashed for kitchen (`formatUsd(undefined)`): the API redacts `*Cents` for roles without `money.read`, the UI still formatted them. Caught before commit | S2 | fixed | frontend | 2026-10-03 06:20, Claude (browser check as kitchen) | T-302 commit | manual (kitchen sees no cost column) |
 | BUG-005 | Menu screen didn't flag dishes explicitly "not sold" on the default tier: the check looked for source `MISSING` only, but `EXCLUDED` is just as invisible to employees. Caught before commit | S3 | fixed | backend | 2026-10-03 06:42, Claude (Neon probe) | T-310 commit | manual probe (flag false → true after exclude) |
 | BUG-006 | Opening the account menu (top right) crashed the page: "MenuGroupContext is missing". Base UI requires `Menu.GroupLabel` (our `DropdownMenuLabel`) inside a `Menu.Group`; the shell used it bare (Radix allowed that) | S2 | fixed | frontend | 2026-10-03 13:00, owner (local check) | fix(frontend) commit | manual (menu opens, no console error) |
+
+| BUG-007 | Vercel build failed: `@fernleaf/shared` not found, because `shared/dist` is git-ignored and the frontend build didn't build it | S1 | fixed | build | 2026-10-03 12:47, owner (Vercel log) | 0175a3e | CI + Vercel build |
+| BUG-008 | CI build failed after BUG-007's fix: the frontend build re-ran the shared build (tsup `clean: true`) while `pnpm -r build` was building the backend against the same `dist` | S2 | fixed | build | 2026-10-03 15:50, owner (CI) | 268744d (`ensure-shared.mjs` builds shared only when `dist/index.d.ts` is missing) | CI green |
+| BUG-009 | Demo invoices were issued "today": the backend dev server hot-reloaded half-finished demo code before the backdate patch | S3 | fixed | backend/demo | 2026-10-03 11:40, Claude (Neon probe) | one-off script; regenerate now also deletes invoices holding demo orders | manual |
+| BUG-010 | Kitchen dashboard listed today's "do not cook" items inside the Tomorrow panel, which read as tomorrow's work | S3 | fixed | frontend | 2026-10-03 13:58, owner (live screenshots) | da6be4f | manual |
+| BUG-011 | The serif page-title underline sat inline next to badges in flex headings (order detail, company page). Caught before commit | S4 | fixed | frontend | 2026-10-03 17:29, Claude (browser check) | 3a77ded | manual |
 
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

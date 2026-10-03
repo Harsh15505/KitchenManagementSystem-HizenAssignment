@@ -30,9 +30,9 @@ Specs: PRD FR-ORD-*, BR-CAL/CUT/ORD/CMB/PLN, A-14…A-21, A-36, A-40 · TRD §8.
 
 ## Exit criteria
 
-- [ ] All Must order rules enforced server-side, with actionable errors in the UI
-- [ ] Manual cut-off run twice → the second run logs 0/0
-- [ ] Orders in every status exist across past, today and the next 7 days
+- [x] All Must order rules enforced server-side, with actionable errors in the UI (shared domain tests BR-CUT/BR-CMB; builder shows field errors)
+- [x] Manual cut-off run twice → the second run logs 0/0 (Neon probe 10:42; re-checked in the live smoke test T-1006; repeatable in T-1206)
+- [x] Orders in every status exist across past, today and the next 7 days (demo window, 702 orders)
 
 ## Log
 
@@ -43,3 +43,8 @@ Specs: PRD FR-ORD-*, BR-CAL/CUT/ORD/CMB/PLN, A-14…A-21, A-36, A-40 · TRD §8.
 - Gaps to revisit: no automated DB-backed cut-off concurrency test (verified by probe); a settings change re-arms the timer only through the 5-minute request catch-up.
 
 ## Outcome
+
+Done 2026-10-03 10:54 (CP3 target Sun 10:00).
+- Built: cut-off calculator and lock, combinations engine with price capture, order builder with live quotes, edit/place/cancel/reject, admin late orders and delivery override, idempotent cut-off processing with an advisory lock, timers + catch-up, list/detail, rolling demo window with autopilot.
+- Cut: nothing. Gap: race behaviour is verified by probes, not automated (→ T-1206).
+- Follow-ups: T-1206.

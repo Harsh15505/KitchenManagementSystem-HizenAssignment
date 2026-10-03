@@ -25,7 +25,7 @@ window: Sat 3 Oct 00:25–02:00 IST
 - [x] Every ambiguity has a written interpretation (PRD §10, A-01…A-40)
 - [x] The data model is designed, with invariants and enforcement points (DATABASE_MODELS §6)
 - [x] Vault protocol written; STATUS current
-- [ ] First commit made (T-005)
+- [x] First commit made (T-005, `bf84a7f`)
 
 ## Log
 

@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 🌿 Git Conventions
@@ -40,6 +40,7 @@ Examples:
 
 - **One coherent change per commit.** Include the vault updates that belong to that change (task board, status, matrix) in the **same** commit.
 - **No WIP or "fix typo" spam** on `main`. Finish the unit, then commit.
+- **Fewer, larger commits until submission** (owner, 2026-10-03 18:33, Q-14): one commit per finished feature with its vault updates; vault-only catch-ups in one `docs(vault)` commit. Every push redeploys the live app.
 - **Never commit:** `.env*` (except `.env.example`), `backend/src/generated/`, `node_modules`, build outputs, `vault/.obsidian/`, `vault/_assets/*.pdf`.
 - **Trunk-based on `main`.** Short-lived branches are optional. **No force-push to `main`**; never rewrite published history.
 - Prefer new commits over amending.

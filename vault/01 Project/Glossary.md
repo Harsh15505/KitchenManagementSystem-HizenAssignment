@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 📖 Glossary
@@ -52,3 +52,6 @@ updated: 2026-10-03 01:30 IST
 | **Demo window** | Rolling generated data from today−14 to today+7; one `DemoDay` row per generated date |
 | **Autopilot** | Demo-only: advances seeded orders through kitchen and dispatch with the clock, up to a per-order cap |
 | **Catch-up** | Idempotent job run on bootstrap and on (throttled) requests to process anything the timers missed |
+| **Do not cook** | A kitchen card for an order cancelled or rejected after work started: shown so the cook stops, never counted as work |
+| **Neon branch** | A copy-on-write copy of the database. Production and local dev share one (ADR-029); bulk test scripts use a throwaway branch |
+| **Code freeze** | Sun 4 Oct 20:00 IST: no feature pushes after it, because every push redeploys the live app |

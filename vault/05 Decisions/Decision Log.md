@@ -1,6 +1,6 @@
 ---
 type: decisions
-updated: 2026-10-03 02:15 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 🧭 Decision Log (ADRs)
@@ -189,3 +189,9 @@ Template: `_templates/Decision Template.md`.
 - **Follow-up (17:35):** Motion utilities in `globals.css` (`animate-rise`, `stagger`, `animate-grow-x/y`, `animate-soft-pulse`, `lift`), all disabled under `prefers-reduced-motion`; `CountUp` for headline numbers; `.page-title` serif title with a saffron underline. Charts are hand-built divs/CSS (no chart library) to keep the bundle small and the theme tokens in charge.
 - **Follow-up (theme switch):** Toggling uses the View Transitions API for a circular reveal from the toggle (600 ms); instant under reduced motion or without support. `disableTransitionOnChange` stays on so element colour transitions don't fight the snapshot. Browsers skip view transitions on hidden tabs.
 
+### ADR-029: One Neon branch for local dev and production (as provisioned)
+- **Status:** Accepted · 2026-10-03 18:50 (found during the vault catch-up; owner to confirm Render's `DATABASE_URL` host matches)
+- **Context:** TRD §4.1 planned `dev`, `test` and `main` branches. The owner provisioned one Neon project and shared one connection string, used in `backend/.env` and on Render. `SELECT current_setting('neon.branch_id')` from local dev returns `br-quiet-boat-azse3ol5` (endpoint `ep-autumn-forest-azgcpotr`); the seed ran once and production showed the same data. CI never had a database: service tests boot the real Nest modules with a fake Prisma, and races were verified by probes against Neon.
+- **Decision:** Keep the single branch until submission. Anything destructive or bulk (the 400-order perf day T-605, the concurrency script T-1206) runs on a **throwaway branch** created from it in the Neon console, with its URL in the git-ignored `backend/.env.perf`. Local clicks are treated as production clicks.
+- **Alternatives:** create `dev` now and point local at it (safe for prod, but data diverges and it costs owner time a day before the deadline); run bulk scripts on a far-future date in the live branch and clean up (risk of leftovers on the live app).
+- **Consequences:** Local testing changes what reviewers see (e.g. orders moved along today). Probe data must always be deleted. TRD §4.1/§9 and ARCHITECTURE §4/§10 carry "as built" notes.

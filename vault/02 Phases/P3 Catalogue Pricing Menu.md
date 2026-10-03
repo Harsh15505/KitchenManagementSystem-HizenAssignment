@@ -30,9 +30,9 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 
 ## Exit criteria
 
-- [ ] The pricing tests pass (incl. rounding, overrides, exclusions, chains, cycle)
-- [ ] The tier grid shows missing prices; the preview hides those dishes for that tier's companies
-- [ ] The secret category is reachable only by slug
+- [x] The pricing tests pass (incl. rounding, overrides, exclusions, chains, cycle) (`pricing.test.ts`, 20 tests)
+- [x] The tier grid shows missing prices; the preview hides those dishes for that tier's companies (Saffron on Startup, 07:12)
+- [x] The secret category is reachable only by slug (Chef's Table, 07:12)
 
 ## Log
 
@@ -47,3 +47,8 @@ Specs: PRD FR-CAT-*, FR-PRC-*, FR-MEN-*, BR-PRC-*, BR-MEN-*, A-05…A-13 · TRD 
 - 2026-10-03 07:12: T-312 done, **P3 complete**. `MenuInputService.forEmployee` loads categories, dishes with groups, options with size extras, company hiding, the effective tier and the pricing context (`PricingService.loadContext`) into one `MenuInput`; P5 order validation will reuse it (BR-MEN-04). Endpoints `GET /menu/for-employee/:id` and `…/secret/:slug` (menu.read or orders.create). UI `/menu/preview`: company → employee → optional slug; prices on their tier, allergen warnings on dishes and options, diet matches. Verified on seeded data: Lumen hides Desserts and gets Enterprise prices ($3.80 bowl); Kestrel loses Cold Coffee; Saffron (Startup) sees only priced dishes; Chef's Table opens by slug (case-insensitive) and drops the lamb on Enterprise. Also: nav highlights only the most specific item.
 
 ## Outcome
+
+Done 2026-10-03 07:12 (CP2 target Sat 21:00).
+- Built: dishes, options, option groups with portions; 4 price tiers with derivation (from cost, from another tier, manual), overrides, exclusions, cycle check and a grid with missing prices and bulk edits; menu categories with a secret slug and company hiding; per-employee menu preview using the same `resolveEmployeeMenu` that order validation uses.
+- Cut: nothing. Bugs: BUG-003, BUG-004, BUG-005 (all fixed).
+- Follow-ups: none.

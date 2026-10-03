@@ -121,6 +121,8 @@
 | Test (CI/local) | — | in-process (supertest) | `test` branch (reset per run) |
 | Production | Vercel (`*.vercel.app`) | Render (`*.onrender.com`, Singapore) | `main` branch |
 
+> **As built (ADR-029):** the project was provisioned with **one** Neon branch (`br-quiet-boat-azse3ol5`, endpoint `ep-autumn-forest-…`), used by both local dev and production. There are no `dev`/`test` branches. Destructive or bulk scripts (perf, concurrency checks) run on a throwaway branch created from it.
+
 ### 4.2 Environment variables
 
 Validated at boot with Zod. A missing or invalid value crashes startup with a clear message.
@@ -784,6 +786,7 @@ Tests:
 | **Unit (domain)**: highest priority | cut-off, pricing/rounding, combinations, menu visibility, plans/lateness, stage derivation, billing maths, order-status transitions | Vitest, run under 3 `TZ` values in CI | `shared/src/domain/*.test.ts` |
 | **Service / integration** | Cut-off idempotency and concurrency, kitchen double-click race, invoice double-invoicing race, permission matrix (403s), driver scoping, money redaction | Vitest + supertest + Nest testing module against the Neon **test** branch (`prisma migrate reset --force` per run) | `backend/test/*.int.test.ts` |
 | **Seed integrity** | Every company has owner + default address; totals reconcile on all seeded orders; driver@test.com has drops today | Vitest script | `backend/test/seed.int.test.ts` |
+| **As built (ADR-029)** | Service tests boot the real Nest modules with a fake Prisma (permission matrix, auth, kitchen, dispatch, staff, companies). Races (double "done", double invoice, cut-off re-run) were verified by probes against Neon; a repeatable script for them (T-1206) runs on a throwaway Neon branch. No seed-integrity test file | Vitest + supertest | `backend/test/*.test.ts` |
 | **Performance** | Generate a 400-order day; time `GET /kitchen/board` (target p95 < 800 ms on Render free) and first render (< 1.5 s) | `scripts/perf-kitchen-board.ts` | manual, results logged in the vault |
 | **UI** | Not a coverage target (brief). Manual smoke checklist per release | `vault/09 Submission/Submission Checklist.md` | — |
 

@@ -1,6 +1,6 @@
 ---
 type: plan
-updated: 2026-10-03 01:30 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # ⏱ Timeline and Checkpoints
@@ -46,3 +46,19 @@ Every cut is logged in [[Prioritisation Notes]] (it becomes the README's "skippe
 | 2026-10-03 00:25–01:45 | S01 planning: analysis, owner decisions, docs, vault |
 | 2026-10-03 02:00–03:15 | P1 code done (T-101…T-107), CI green; Render blueprint ready |
 | 2026-10-03 03:15–06:15 | P2 done locally (auth, CASL, staff, settings, reference); **7 h ahead of CP1**, deploy pending owner |
+| 2026-10-03 06:15–07:12 | P3 catalogue, pricing, menu and P4 companies/employees (Musts). CP2 met 14 h early. Cut line A partly applied: CSV import deferred |
+| 2026-10-03 07:16–10:54 | P5 orders, cut-off processing, demo window (usage-limit pause 05:31 and 10:31) |
+| 2026-10-03 10:54–12:18 | P6 kitchen, P7 dispatch/driver, P8 billing, P9 dashboards, P10 demo status/regenerate, P11 README. CP3–CP5 met ~1 day early |
+| 2026-10-03 12:41–13:58 | Deployed (Render + Vercel on the owner's accounts), UptimeRobot on, owner smoke-tested all 4 accounts |
+| 2026-10-03 15:40–18:00 | UI redesign (ADR-028): theme, dark mode, dashboards and boards rebuilt with motion |
+| 2026-10-03 18:10–18:55 | Assessment and plan for the remaining time (P12); domain renamed to `kitchen-management-hizen`; vault caught up |
+
+## Remaining plan (owner-approved 2026-10-03 18:33)
+
+| When (IST) | What |
+|---|---|
+| Sat evening | T-409 holiday warning · T-1205 form screens pass |
+| Sun morning | T-605 perf + T-1206 concurrency script on a throwaway Neon branch (owner creates it) |
+| Sun afternoon | T-1207 README final + screenshots · T-406 CSV import only if ahead by 15:00 |
+| Sun 20:00 | **Code freeze**; owner runs the live smoke checklist (T-1006) |
+| Sun 22:30 | Tag `v1.0.0`, private-window check, Google Form submitted (T-1103) |

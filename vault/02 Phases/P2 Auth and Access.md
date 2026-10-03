@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P2
-status: done (live check pending T-108)
+status: done
 estimate: 3h
 target: CP1 Sat 3 Oct 13:00 IST
 ---
@@ -27,9 +27,9 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 
 ## Exit criteria
 
-- [ ] Each of the 4 accounts signs in **on the live app** and sees only its nav
-- [ ] Direct API calls outside the role → 403 (verified by T-210)
-- [ ] Settings editable in the UI (no DB edits)
+- [x] Each of the 4 accounts signs in **on the live app** and sees only its nav (owner, 2026-10-03 13:58)
+- [x] Direct API calls outside the role → 403 (verified by T-210)
+- [x] Settings editable in the UI (no DB edits) (browser round-trip 06:10)
 
 ## Log
 
@@ -47,4 +47,4 @@ Specs: PRD FR-ACC-*, FR-SET-*, BR-ACC-* · TRD §5.3–5.5, §5.8 · ADR-003, AD
 P2 complete locally on 2026-10-03 06:15 (CP1 target 13:00).
 - Built: permission catalogue + CASL rules from codes; idempotent seed (4 reviewer accounts); cookie JWT auth with throttled login; one global AccessGuard (revocation via tokenVersion) with a fail-closed boot check; money redaction; Origin check; frontend sign-in, ability-driven shell and dashboard sections; staff management; settings, kitchen holidays and public domains; reference lists; time helpers + ClockService.
 - Deferred: FR-SET-04 cut-off preview (needs T-502).
-- Outstanding exit criterion: "4 accounts sign in on the live app" waits on T-108 (Render).
+- Outstanding exit criterion: "4 accounts sign in on the live app" waits on T-108 (Render). *Closed 2026-10-03 13:58: owner signed in with all 4 on the live app.*

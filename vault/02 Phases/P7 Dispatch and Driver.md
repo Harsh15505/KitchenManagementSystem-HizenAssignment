@@ -23,12 +23,17 @@ Specs: PRD FR-DSP-*, BR-DSP-*, §8.4–8.5, A-22…A-24 · TRD §8.6, §5.11 · 
 
 ## Exit criteria
 
-- [ ] A step can't be skipped or repeated; out-for-delivery without a driver is refused
-- [ ] driver@test.com sees only their own drops for today; it works on a phone viewport
-- [ ] On-time stored at delivery
+- [x] A step can't be skipped or repeated; out-for-delivery without a driver is refused (`dispatch.test.ts` BR-DSP-02/03/04)
+- [x] driver@test.com sees only their own drops for today; it works on a phone viewport (BR-DSP-07; Neon probe; phone-width check 05:45 and in the live smoke test)
+- [x] On-time stored at delivery (BR-DSP-05)
 
 ## Log
 
 - 2026-10-03 11:20: P7 done. T-701 was largely P5's `orders/drops.ts` (key, upsert with default driver, strict override rules, empty-drop cleanup). `dispatch/dispatch.service.ts`: board (drops for a day with stage COOKING/KITCHEN_READY/DISPATCH_READY/OUT_FOR_DELIVERY/DELIVERED, readiness, boxes, timeliness vs the earliest planned dispatch-ready, filters, summary), assign/clear driver until out, markReady (all active orders cooked), markOut (driver required), deliver (driver: own + today, else 404; dispatch fallback), on-time stored once, events on every order, drop row lock, demo autopilot handed over. Photos: `DeliveryPhoto` bytea, JPEG/PNG/WebP, 5 MB raw, base64 JSON (body limit 8 MB), `GET /drops/:id/photo` for dispatch or the drop's driver. Tests `dispatch.test.ts` (5). Neon probe: packing a cooking drop refused, driver sees own drops only, delivery with note + photo, repeat refused, photo served. UI: `/dispatch` (stage chips, driver picker, next-step buttons) and `/driver` (phone-first, next stop, maps link, compression in the browser). Nav: "My deliveries" keys on `dashboard.driver`, so admins/dispatch don't get a driver menu.
 
 ## Outcome
+
+Done 2026-10-03 11:20 (CP4 target Sun 16:30).
+- Built: drops per company/address/time with default drivers, dispatch board with stages and readiness, driver assignment, packed → out → delivered with row locks, the driver's phone view with notes and compressed photos, on-time stored once. Redesigned 17:27 (stage stepper, readiness bars).
+- Cut: nothing.
+- Follow-ups: none.

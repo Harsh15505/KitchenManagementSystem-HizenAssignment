@@ -1,7 +1,7 @@
 ---
 type: phase
 id: P10
-status: not-started
+status: done (T-1006 live smoke checklist pending)
 estimate: 3h
 target: CP5 Sun 4 Oct 20:30 IST
 ---
@@ -23,8 +23,8 @@ Specs: PRD FR-DAT-*, A-02, A-31 · TRD §12, §13 · [[Demo Data Plan]] · [[Env
 
 ## Exit criteria
 
-- [ ] Opening the live app at any hour shows: past, today and next-week orders; each role has something to do; driver@test.com has drops today
-- [ ] A reviewer-created order is never deleted by automation
+- [x] Opening the live app at any hour shows: past, today and next-week orders; each role has something to do; driver@test.com has drops today (owner screenshots of all 4 dashboards, 13:58)
+- [x] A reviewer-created order is never deleted by automation (regenerate deletes `source: 'DEMO'` orders only; any human action clears the autopilot cap). Edge: an invoice holding demo orders is deleted on regenerate even if it also holds a staff order.
 
 ## Log
 
@@ -33,3 +33,8 @@ Specs: PRD FR-DAT-*, A-02, A-31 · TRD §12, §13 · [[Demo Data Plan]] · [[Env
 - 2026-10-03 12:15: T-1001 (static seed complete, idempotent), T-1002/T-1003 (rolling window + autopilot, built in P5 as T-513; weekly invoices added in P8) and T-1004 (`GET /demo/status`, Settings → Demo data card with Regenerate) done. Settings saves re-arm the cut-off timer. Production build passes (`pnpm -r build`). T-1005/T-1006 wait for the Render service (owner).
 
 ## Outcome
+
+Done 2026-10-03 13:58 except T-1006.
+- Built: idempotent static seed, rolling −14…+7 window, autopilot with per-drop caps, weekly invoices, regenerate + status in Settings; deployed (Render + Vercel + Neon) and checked by the owner with all 4 accounts.
+- Cut: nothing.
+- Follow-ups: T-1006 full live smoke checklist (Sun evening, owner); usage numbers in [[Environments and Deploy]].

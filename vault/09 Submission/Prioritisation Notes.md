@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 07:06 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # ⚖️ Prioritisation Notes (living, feeds the README)
@@ -16,9 +16,18 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 
 ## Built
 
-| Area | What | Notes |
+| Area | What | Phase |
 |---|---|---|
-| _tbd_ | | |
+| Access | Login, CASL abilities from permission codes, staff with self-lockout guards and session revocation, money redaction | P2 |
+| Setup | Settings, kitchen holidays, public domains, reference lists, cut-off preview (Should) | P2, P5 |
+| Food and prices | Dishes, options, groups with portions (Should), 4 tiers with derivation, overrides, exclusions and a missing-price grid; menu with secret slug and per-employee preview | P3 |
+| Customers | Companies (domains, addresses, holidays, defaults, menu visibility), employees with moves and ownership | P4 |
+| Orders | Builder with live server quotes, allergy acknowledgement (Should), cut-off lock + idempotent processing, admin late orders and overrides, list/detail | P5 |
+| Operations | Kitchen board, dispatch board, driver phone view with photos, on-time | P6, P7 |
+| Billing | Invoices, paid, credits for invoiced cancels and shortages | P8 |
+| Insight | Four role dashboards with written definitions | P9 |
+| Demo + deploy | Rolling window, autopilot (Should), regenerate (Should); live on Vercel + Render + Neon with keep-alive | P10 |
+| Polish | Warm brand theme, dark mode, dashboards and boards rebuilt with motion | P12 (ADR-028) |
 
 ## Interpretations made during the build
 
@@ -28,6 +37,11 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 | 2026-10-03 07:06 | Removing a company domain | Refused while it is the last domain or while active employees use it. Inactive employees may keep an old address; they are re-checked if edited or moved |
 | 2026-10-03 07:06 | Deactivating an owner | Treated like a move (BR-EMP-02): transfer ownership first |
 | 2026-10-03 06:40 | Excluded vs missing prices | "Missing" counts on the tier list mean no price and no decision; an explicit "not sold" is a decision and isn't counted. Both hide the dish from that tier's employees |
+| 2026-10-03 07:16 | Counting cut-off days | Kitchen working days strictly before the delivery date; N = 0 means the cut-off is on the delivery day |
+| 2026-10-03 07:16 | Lock vs processing | Locking is time-based; processing changes statuses, so a stale order can never be edited after its cut-off |
+| 2026-10-03 10:42 | Orders after the cut-off | Admin late orders are created directly as Confirmed; drafts for locked dates aren't allowed, which keeps processing idempotent |
+| 2026-10-03 10:42 | Admin powers after confirmation | Cancel, reject, change time/address/packaging; no line edits (cancel and re-create, or record a shortage) |
+| 2026-10-03 11:45 | Invoiced orders that change | Invoices never change; cancellations and shortages become credits on the next invoice |
 | 2026-10-03 05:45 | Admin vs driver views | The admin role has every permission except the driver-only ones (`delivery.perform`, `dashboard.driver`); admins act on drops through dispatch permissions |
 
 ## Skipped / simplified
@@ -38,8 +52,10 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 | 2026-10-03 (plan) | Roles editor UI (FR-ACC-06) | Could | Roles are data already; seed is enough to add one | Admin page with permission checkboxes |
 | 2026-10-03 (plan) | Invoice void/reissue | Could | Adjustments cover corrections; fewer states | Void + reissue flow with a reason |
 | 2026-10-03 07:06 | Employee CSV import (FR-EMP-03, T-406) | Should | Every Must comes first (P5–P9 are still ahead); seeded employees cover the demo | Template download, per-row validation with the same `createEmployeeSchema` + domain check, report `{row, column, message}` |
-| 2026-10-03 07:06 | Company-holiday conflict warning (FR-CMP-05) | Should | Needs orders (P5); revisit after P5 | On holiday create, list open orders on that date and warn |
+| 2026-10-03 07:06 | Company-holiday conflict warning (FR-CMP-05) | Should | Needs orders (P5); revisit after P5. **Picked up 2026-10-03 18:55 as T-409** | On holiday create, list open orders on that date and warn |
 | 2026-10-03 (plan) | Admin line edits after confirmation | Could | Would desync kitchen units and invoiced amounts | Re-plan units + adjustment if already invoiced |
+| 2026-10-03 11:05 | 400-order kitchen board perf run (T-605) | NFR | Time; measured a 48-order day (~580 ms from India). **Scheduled Sun AM** on a throwaway branch | Synthetic 400-order day, p50/p95 |
+| 2026-10-03 (P5–P8) | Automated DB-backed race tests | NFR | No test database in CI (ADR-029); races verified by probes | **T-1206** repeatable probe script; later a Neon branch per CI run |
 
 ## Next steps with more time
 

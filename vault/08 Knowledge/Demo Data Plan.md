@@ -1,11 +1,13 @@
 ---
 type: reference
-updated: 2026-10-03 01:45 IST
+updated: 2026-10-03 18:55 IST
 ---
 
 # 🌱 Demo Data Plan
 
 Goal: when a reviewer opens the live app **on any day and at any hour**, every screen has believable data and every role has something to do (FR-DAT-01..04, ADR-017). Prices are **USD**. Names are Indian (the kitchen is in India, IST). Domains use the reserved `.example` TLD, so no real company is impersonated.
+
+> **As built (2026-10-03):** 27 dishes, 17 options, 4 tiers, 7 categories + secret `chefs-table`, 5 companies, 60 employees (static seed, idempotent). Rolling window −14…+7 days built through the real menu/combination/pricing functions (first run 702 orders, 113 drops); autopilot advances today's demo orders up to per-drop caps; weekly invoices for delivered demo orders older than 7 days. Details: README §12, [[P10 Demo Data and Deploy]].
 
 ## Staff (password for the 4 reviewer accounts: `Test@1234`)
 

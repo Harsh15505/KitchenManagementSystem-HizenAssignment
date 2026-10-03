@@ -22,8 +22,8 @@ Specs: PRD FR-KIT-*, BR-KIT-*, BR-PLN-*, §8.3 · TRD §8.5, §8.8, §10 · ARCH
 
 ## Exit criteria
 
-- [ ] Only confirmed orders can be worked; no double start/finish; finish-without-start records the start
-- [ ] Kitchen-ready is set only when all units are done
+- [x] Only confirmed orders can be worked; no double start/finish; finish-without-start records the start (`kitchen.test.ts` BR-KIT-01/02; Neon race 200 + 409)
+- [x] Kitchen-ready is set only when all units are done (BR-KIT-03)
 - [ ] Perf numbers logged (target: API p95 < 800 ms on Render free, first render < 1.5 s)
 
 ## Log
@@ -33,3 +33,8 @@ Specs: PRD FR-KIT-*, BR-KIT-*, BR-PLN-*, §8.3 · TRD §8.5, §8.8, §10 · ARCH
 - Test harness: the permission-matrix fake Prisma now returns lazy failing thenables for unknown models (real Prisma queries are lazy too), which removed unhandled rejections.
 
 ## Outcome
+
+Done 2026-10-03 11:05 except T-605 (CP4 target Sun 16:30).
+- Built: board by slot and station with late/at-risk, allergen flags, do-not-cook cards, prep summary, start/done/force-complete with row locks, optimistic UI, 15 s polling. Redesigned 2026-10-03 17:27 (status stripe, slot progress, ADR-028).
+- Cut: none yet. T-605 (400-order perf numbers) is scheduled for Sun 4 Oct morning on a throwaway Neon branch (ADR-029).
+- Follow-ups: T-605.
