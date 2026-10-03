@@ -234,6 +234,17 @@
 }
 
 /* Respect "reduce motion": keep the layout, drop the movement. */
+/* Theme switch: the toggle animates a circular reveal (theme-toggle.tsx), so drop the default
+   cross-fade and keep the new snapshot on top. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
