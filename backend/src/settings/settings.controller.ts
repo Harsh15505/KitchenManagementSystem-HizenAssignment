@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { CheckPolicies } from '../authz/policies';
 import { DomainError } from '../common/domain-error';
 import { SettingsService } from './settings.service';
+import { JobsService } from '../orders/jobs.service';
 
 class UpdateSettingsDto extends createZodDto(updateSettingsSchema) {}
 class CreateHolidayDto extends createZodDto(createKitchenHolidaySchema) {}
@@ -32,7 +33,10 @@ class HolidayRangeDto extends createZodDto(
 /** FR-SET-01/02: platform values, kitchen holidays and the public-domain blocklist. */
 @Controller('settings')
 export class SettingsController {
-  constructor(private readonly settings: SettingsService) {}
+  constructor(
+    private readonly settings: SettingsService,
+    private readonly jobs: JobsService,
+  ) {}
 
   @Get()
   @CheckPolicies((a) => a.can('read', 'Settings'))
@@ -42,8 +46,10 @@ export class SettingsController {
 
   @Patch()
   @CheckPolicies((a) => a.can('update', 'Settings'))
-  update(@Body() body: UpdateSettingsDto) {
-    return this.settings.update(body);
+  async update(@Body() body: UpdateSettingsDto) {
+    const result = await this.settings.update(body);
+    this.jobs.reschedule();
+    return result;
   }
 
   @Get('kitchen-holidays')

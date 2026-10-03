@@ -236,6 +236,33 @@ export class DemoService implements OnModuleInit {
     return created;
   }
 
+  /** Settings → Demo data: what the generator has produced so far. */
+  async status() {
+    const [days, orders, settings] = await Promise.all([
+      this.prisma.demoDay.findMany({
+        orderBy: { date: 'asc' },
+        select: { date: true, generatedAt: true },
+      }),
+      this.prisma.order.count({ where: { source: 'DEMO' } }),
+      this.prisma.platformSettings.findUnique({
+        where: { id: 1 },
+        select: { demoAutopilotEnabled: true },
+      }),
+    ]);
+    const last = days.reduce<Date | null>(
+      (m, d) => (!m || d.generatedAt > m ? d.generatedAt : m),
+      null,
+    );
+    return {
+      autopilotEnabled: settings?.demoAutopilotEnabled ?? false,
+      orders,
+      days: days.length,
+      firstDate: days[0] ? fromDbDate(days[0].date) : null,
+      lastDate: days.at(-1) ? fromDbDate(days.at(-1)!.date) : null,
+      lastGeneratedAt: last?.toISOString() ?? null,
+    };
+  }
+
   /** FR-DAT-04: drop all generated data (never staff-created orders) and build the window again. */
   async regenerate(): Promise<{ orders: number }> {
     await this.prisma.$transaction(async (tx) => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { RequireAbility } from '@/components/require-ability';
+import { DemoDataCard } from './demo-data-card';
 import { HolidaysCard } from './holidays-card';
 import { PlatformSettingsForm } from './platform-settings-form';
 import { PublicDomainsCard } from './public-domains-card';
@@ -21,6 +22,7 @@ export default function SettingsPage() {
           <HolidaysCard />
           <PublicDomainsCard />
         </div>
+        <DemoDataCard />
       </div>
     </RequireAbility>
   );

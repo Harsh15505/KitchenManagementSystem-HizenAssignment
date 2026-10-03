@@ -1,4 +1,4 @@
-import { Controller, HttpCode, Module, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Module, Post } from '@nestjs/common';
 import { CheckPolicies } from '../authz/policies';
 import { BillingModule } from '../billing/billing.module';
 import { MenuModule } from '../menu/menu.module';
@@ -9,6 +9,12 @@ import { DemoService } from './demo.service';
 @Controller('demo')
 export class DemoController {
   constructor(private readonly demo: DemoService) {}
+
+  @Get('status')
+  @CheckPolicies((a) => a.can('manage', 'DemoData'))
+  status() {
+    return this.demo.status();
+  }
 
   @Post('regenerate')
   @HttpCode(200)
