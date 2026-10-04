@@ -2,7 +2,7 @@
 
 import type { SubjectName } from '@fernleaf/shared';
 import { type ReactNode, useState } from 'react';
-import { useAbility, useAuth } from '@/lib/auth';
+import { useAbility } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { AdminSection } from './admin-section';
 import { DispatchSection, DriverSection, KitchenSection } from './role-sections';
@@ -41,7 +41,6 @@ const SECTIONS: ReadonlyArray<{
 ];
 
 export default function DashboardPage() {
-  const { me } = useAuth();
   const ability = useAbility();
   const sections = SECTIONS.filter((s) => ability.can('read', s.subject));
   const [active, setActive] = useState(0);
@@ -52,7 +51,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
+        <h1 className="page-title">Dashboard</h1>
         <div ref={setSlot} className="flex flex-wrap items-center gap-2" />
       </div>
       {sections.length > 1 && (
