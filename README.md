@@ -343,7 +343,7 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
 
 ## 11. Testing
 
-* **328 automated tests** (Vitest): 118 for the pure rules in `shared/`, 210 in the API.
+* **336 automated tests** (Vitest): 122 for the pure rules in `shared/`, 214 in the API.
 * Business-rule tests are **named after their rule IDs**, for example `BR-CUT-01: Wednesday with N=2 locks Monday 16:00 IST`, `BR-CMB-01: the brief example, 10 bowls = 6 brown + 4 jeera`, `BR-KIT-02`, `BR-DSP-05`, `BR-BIL-07`. Bug fixes carry `BUG-###` regression tests.
 * A **permission matrix** boots the real application module and asserts, route by route, which of the four roles get through.
 * Domain tests pass under three server time zones (CI runs them under each).

@@ -37,4 +37,7 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 
 | BUG-013 | CI failed on 1f65a6c: `.claude/launch.json` (written by Python `json.dump`) wasn't Prettier-formatted, and CI runs `prettier --check .` | S3 | fixed | tooling | 2026-10-03 22:45, Claude (local `prettier --check`, then the CI run) | next commit (formatted) | CI format step |
 
+| BUG-014 | Signing in too often showed "ThrottlerException: Too Many Requests" (Nest's raw message) instead of a plain explanation | S3 | fixed | backend | 2026-10-04 14:35, owner (screenshot of the login form) | next commit (`ApiExceptionFilter` maps `ThrottlerException` to code `RATE_LIMITED`: "You are sending requests too quickly. Please slow down and try again in a minute.") | `dish-sku-and-throttle.test.ts` BUG-014 |
+| BUG-015 | The dishes, options and companies lists had no visible Deactivate (and dishes no Edit): the controls existed only after opening the item, so the owner thought they were missing | S4 | fixed | frontend | 2026-10-04 14:35, owner (screenshot) | next commit (Actions column on the dishes, options and companies lists: Edit, Deactivate/Reactivate; verified by typecheck, lint, build) | manual |
+
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

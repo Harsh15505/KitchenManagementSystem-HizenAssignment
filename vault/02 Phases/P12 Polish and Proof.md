@@ -52,6 +52,8 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 
 - 2026-10-03 22:45: Owner created the `perf` branch from `dev` (auto-delete after 1 day) and shared its URL (fine to have in chat, owner's call); in `backend/.env.perf`. `probe:concurrency` 9/9. `perf:kitchen` first run created only 167 orders (default deliveries already left) and showed the board at 1.3 s → script now skips those employees and gives time-flexible employees late slots; baseline at 400 orders 1525 ms → ADR-030 `relationJoins` → 584 ms, verified by identical JSON on 42 endpoints and 9/9 again. CI had failed on 1f65a6c (unformatted `.claude/launch.json`, BUG-013), fixed in this commit.
 
+- 2026-10-04 14:35: Owner feedback on screenshots: (1) throttled login showed a raw exception name → friendly 429 message (BUG-014); (2) SKU: researched (Square generates, Toast doesn't, Shopify via apps), decided to generate when blank (ADR-031, `nextSku`, retry on collision); (3) dishes, options and companies lists got Edit and Deactivate/Reactivate buttons in each row (BUG-015; the employees overview page stays read-only, its actions live on the company page). Tests 336 (122 shared, 214 backend); frontend build clean.
+
 ## Outcome
 
 Built: brand theme, dark mode and motion; rebuilt dashboards, boards and forms; the last two Shoulds (holiday warning, CSV import); perf and concurrency scripts with numbers; ADR-030 made the boards 2–3× faster. Left for the owner: live smoke test, private-window check, tag `v1.0.0`, Google Form.

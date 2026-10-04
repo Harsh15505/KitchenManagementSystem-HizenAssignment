@@ -34,6 +34,8 @@ const dishShape = {
 
 export const dishInputSchema = z.object({
   ...dishShape,
+  /** Optional on create: left blank, the API generates one (`nextSku`). */
+  sku: dishShape.sku.optional(),
   description: dishShape.description.default(''),
   imageUrl: dishShape.imageUrl.default(null),
   kitchenStationId: dishShape.kitchenStationId.default(null),

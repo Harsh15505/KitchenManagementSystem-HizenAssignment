@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 import type { ApiErrorBody, ErrorCode, FieldErrors } from '@fernleaf/shared';
 import type { Response } from 'express';
 import { ZodValidationException } from 'nestjs-zod';
@@ -73,6 +74,18 @@ export class ApiExceptionFilter implements ExceptionFilter {
     if (prismaCode === 'P2025') {
       return {
         error: { code: 'NOT_FOUND', message: 'Record not found.', status: HttpStatus.NOT_FOUND },
+      };
+    }
+
+    if (exception instanceof ThrottlerException) {
+      // Nest's default text ("ThrottlerException: Too Many Requests") is useless to a person.
+      return {
+        error: {
+          code: 'RATE_LIMITED',
+          message:
+            'You are sending requests too quickly. Please slow down and try again in a minute.',
+          status: HttpStatus.TOO_MANY_REQUESTS,
+        },
       };
     }
 

@@ -1,10 +1,11 @@
 'use client';
 
 import { type CompanyListItem, type Paginated } from '@fernleaf/shared';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Plus, Power } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -20,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { describeDays } from '@/components/weekday-picker';
-import { api } from '@/lib/api-client';
+import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 
 export default function CompaniesPage() {
@@ -36,6 +37,25 @@ function CompanyList() {
   const [q, setQ] = useState('');
   const [active, setActive] = useState('true');
   const [page, setPage] = useState(1);
+  const queryClient = useQueryClient();
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  /** Companies are never deleted (orders and invoices belong to them): switched off and on. */
+  async function toggleActive(c: CompanyListItem) {
+    setBusyId(c.id);
+    try {
+      await api(`/companies/${c.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ isActive: !c.isActive }),
+      });
+      toast.success(c.isActive ? `${c.name} deactivated` : `${c.name} reactivated`);
+      void queryClient.invalidateQueries({ queryKey: ['companies'] });
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'That did not save');
+    } finally {
+      setBusyId(null);
+    }
+  }
   const params = new URLSearchParams({ page: String(page), pageSize: '25' });
   if (q) params.set('q', q);
   if (active) params.set('active', active);
@@ -91,6 +111,7 @@ function CompanyList() {
                 <TableHead>Delivers</TableHead>
                 <TableHead>Owner</TableHead>
                 <TableHead className="text-right">Employees</TableHead>
+                {canManage && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -111,11 +132,35 @@ function CompanyList() {
                   <TableCell>{describeDays(c.workingDays)}</TableCell>
                   <TableCell>{c.owner?.name ?? '-'}</TableCell>
                   <TableCell className="text-right tabular-nums">{c.employeeCount}</TableCell>
+                  {canManage && (
+                    <TableCell className="text-right whitespace-nowrap">
+                      <Link
+                        href={`/companies/${c.id}`}
+                        className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+                        aria-label={`Edit ${c.name}`}
+                      >
+                        <Pencil className="size-3.5" aria-hidden /> Edit
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={busyId === c.id}
+                        aria-label={`${c.isActive ? 'Deactivate' : 'Reactivate'} ${c.name}`}
+                        onClick={() => void toggleActive(c)}
+                      >
+                        <Power className="size-3.5" aria-hidden />{' '}
+                        {c.isActive ? 'Deactivate' : 'Reactivate'}
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
               {companies.data?.items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={canManage ? 7 : 6}
+                    className="text-center text-muted-foreground"
+                  >
                     No companies match.
                   </TableCell>
                 </TableRow>

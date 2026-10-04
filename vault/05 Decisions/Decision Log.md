@@ -1,6 +1,6 @@
 ---
 type: decisions
-updated: 2026-10-03 22:45 IST
+updated: 2026-10-04 14:35 IST
 ---
 
 # 🧭 Decision Log (ADRs)
@@ -188,6 +188,13 @@ Template: `_templates/Decision Template.md`.
 - **Consequences:** Every screen inherits the look without per-page edits; hard-coded colours keep `dark:` variants. Next.js dev badge overlaps the logo in development only.
 - **Follow-up (17:35):** Motion utilities in `globals.css` (`animate-rise`, `stagger`, `animate-grow-x/y`, `animate-soft-pulse`, `lift`), all disabled under `prefers-reduced-motion`; `CountUp` for headline numbers; `.page-title` serif title with a saffron underline. Charts are hand-built divs/CSS (no chart library) to keep the bundle small and the theme tokens in charge.
 - **Follow-up (theme switch):** Toggling uses the View Transitions API for a circular reveal from the toggle (600 ms); instant under reduced motion or without support. `disableTransitionOnChange` stays on so element colour transitions don't fight the snapshot. Browsers skip view transitions on hidden tabs.
+
+### ADR-031: SKU generated when left blank
+- **Status:** Accepted · 2026-10-04 14:35 (owner asked: research first, then decide)
+- **Context:** Owner asked whether real software generates SKUs. Research: Square can auto-generate SKUs (a setting); Toast has no generation, SKUs are typed or scanned; Shopify has none built in (third-party apps exist); guides agree on a consistent, simple, letters-and-digits format with a category-like prefix and a sequence number. So generation is common for catalogues like ours but usually optional.
+- **Decision:** The SKU field is optional on a new dish. Blank → `FL-` + first three letters of the name + the next number for that prefix (`FL-PAN-001`, `FL-PAN-002`), via the pure `nextSku`. Numbers are never reused (the highest existing + 1), because orders capture the SKU. Typed SKUs are still accepted and checked for uniqueness. On a saved dish the SKU can be changed but not cleared.
+- **Alternatives:** manual only (status quo, error-prone); fully automatic and read-only (loses imports of existing codes); a per-category counter (dishes don't belong to one category: menu items do).
+- **Consequences:** a unique-key race between two creations is handled by retrying with the next number (service test). Seeded SKUs (`FL-BWL-001` …) follow the same format.
 
 ### ADR-030: Prisma `relationJoins` (nested reads in one SQL query)
 - **Status:** Accepted · 2026-10-03 22:45

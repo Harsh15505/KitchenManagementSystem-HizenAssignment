@@ -3,6 +3,7 @@ import {
   type CatalogueListQuery,
   type DishDetail,
   type DishInput,
+  nextSku,
   type DishListItem,
   type Paginated,
   paginated,
@@ -121,17 +122,40 @@ export class DishesService {
   }
 
   async create(input: DishInput): Promise<DishDetail> {
-    await this.assertSkuFree(input.sku);
-    const { allergenIds, dietaryTagIds, ...fields } = input;
-    const dish = await this.prisma.dish.create({
-      data: {
-        ...fields,
-        allergens: { create: allergenIds.map((allergenId) => ({ allergenId })) },
-        dietaryTags: { create: dietaryTagIds.map((dietaryTagId) => ({ dietaryTagId })) },
-      },
-      select: { id: true },
+    const { allergenIds, dietaryTagIds, sku: typed, ...fields } = input;
+    if (typed) await this.assertSkuFree(typed);
+    // A blank SKU is generated (FR-CAT-01). Two dishes created at the same moment can pick the
+    // same number, so the unique key decides and the loser simply picks the next one.
+    for (let attempt = 1; ; attempt++) {
+      const sku = typed ?? (await this.generateSku(fields.name));
+      try {
+        const dish = await this.prisma.dish.create({
+          data: {
+            ...fields,
+            sku,
+            allergens: { create: allergenIds.map((allergenId) => ({ allergenId })) },
+            dietaryTags: { create: dietaryTagIds.map((dietaryTagId) => ({ dietaryTagId })) },
+          },
+          select: { id: true },
+        });
+        return this.get(dish.id);
+      } catch (error) {
+        const duplicate = (error as { code?: string }).code === 'P2002';
+        if (!duplicate || typed || attempt >= 5) throw error;
+      }
+    }
+  }
+
+  private async generateSku(name: string): Promise<string> {
+    const prefix = nextSku(name, []).slice(0, -3);
+    const taken = await this.prisma.dish.findMany({
+      where: { sku: { startsWith: prefix } },
+      select: { sku: true },
     });
-    return this.get(dish.id);
+    return nextSku(
+      name,
+      taken.map((d) => d.sku),
+    );
   }
 
   async update(id: string, input: UpdateDishInput): Promise<DishDetail> {

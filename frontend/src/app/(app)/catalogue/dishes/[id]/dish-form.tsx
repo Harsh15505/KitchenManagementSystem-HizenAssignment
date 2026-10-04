@@ -82,7 +82,7 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const candidate = {
-      sku: form.sku,
+      sku: form.sku.trim() || undefined,
       name: form.name,
       description: form.description,
       imageUrl: form.imageUrl.trim() || null,
@@ -94,10 +94,14 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
       dietaryTagIds: form.dietaryTagIds,
     };
     const parsed = dishInputSchema.safeParse(candidate);
-    if (!parsed.success) {
+    // A saved dish keeps an SKU (orders record it), so it can be changed but not cleared.
+    const missingSku = dish && !candidate.sku;
+    if (!parsed.success || missingSku) {
       const next: FieldErrors = {};
-      for (const issue of parsed.error.issues)
-        (next[issue.path.join('.')] ??= []).push(issue.message);
+      if (!parsed.success)
+        for (const issue of parsed.error.issues)
+          (next[issue.path.join('.')] ??= []).push(issue.message);
+      if (missingSku) next.sku = ['A dish needs an SKU'];
       setErrors(next);
       return;
     }
@@ -132,14 +136,20 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
         <form onSubmit={onSubmit} noValidate>
           <fieldset disabled={!canManage || saving} className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="sku">SKU</Label>
+              <Label htmlFor="sku">{dish ? 'SKU' : 'SKU (optional)'}</Label>
               <Input
                 id="sku"
                 value={form.sku}
+                placeholder={dish ? undefined : 'Generated for you'}
                 onChange={(e) => set('sku', e.target.value)}
                 aria-invalid={!!errors.sku}
               />
               {err('sku')}
+              {!dish && (
+                <p className="text-xs text-muted-foreground">
+                  Leave blank and we&apos;ll assign one from the name, like FL-PAN-001.
+                </p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="name">Name</Label>

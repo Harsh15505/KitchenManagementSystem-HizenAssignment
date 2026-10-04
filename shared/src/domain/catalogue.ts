@@ -26,3 +26,23 @@ export function portionViolations(
     }))
     .filter((v) => v.missingSizeIds.length > 0);
 }
+
+/**
+ * FR-CAT-01: the SKU a new dish gets when the admin leaves the field blank: `FL-` + the first three
+ * letters of the name + a running number, e.g. "Paneer Wrap" → FL-PAN-001, the next dish starting
+ * with "Pan" → FL-PAN-002. Numbers are never reused, because the highest existing number is the
+ * starting point, so an SKU captured on an old order can't later mean another dish.
+ */
+export function nextSku(name: string, existingSkus: readonly string[]): string {
+  const letters = name
+    .normalize('NFD')
+    .replace(/[^A-Za-z]/g, '')
+    .toUpperCase();
+  const prefix = `FL-${(letters + 'XXX').slice(0, 3)}-`;
+  const highest = existingSkus.reduce((max, sku) => {
+    if (!sku.startsWith(prefix)) return max;
+    const n = Number(sku.slice(prefix.length));
+    return Number.isInteger(n) && n > max ? n : max;
+  }, 0);
+  return `${prefix}${String(highest + 1).padStart(3, '0')}`;
+}

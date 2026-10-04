@@ -2,7 +2,7 @@
 
 import { formatUsd, type OptionDto, optionInputSchema, type Paginated } from '@fernleaf/shared';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Pencil, Plus, Power } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ChipSelect } from '@/components/chip-select';
@@ -47,6 +47,26 @@ function OptionList() {
   const [active, setActive] = useState('true');
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<OptionDto | 'new' | null>(null);
+  const queryClient = useQueryClient();
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  /** Options are never deleted (dishes and past orders refer to them): switched off and on. */
+  async function toggleActive(option: OptionDto) {
+    setBusyId(option.id);
+    try {
+      await api(`/options/${option.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ isActive: !option.isActive }),
+      });
+      toast.success(option.isActive ? `${option.name} deactivated` : `${option.name} reactivated`);
+      void queryClient.invalidateQueries({ queryKey: ['options'] });
+      void queryClient.invalidateQueries({ queryKey: ['dish'] });
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'That did not save');
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   const params = new URLSearchParams({ page: String(page), pageSize: String(PAGE_SIZE) });
   if (q) params.set('q', q);
@@ -143,11 +163,28 @@ function OptionList() {
                       `${option.usedInGroups} group${option.usedInGroups === 1 ? '' : 's'}`
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right whitespace-nowrap">
                     {canManage && (
-                      <Button variant="ghost" size="sm" onClick={() => setEditing(option)}>
-                        Edit
-                      </Button>
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          aria-label={`Edit ${option.name}`}
+                          onClick={() => setEditing(option)}
+                        >
+                          <Pencil className="size-3.5" aria-hidden /> Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={busyId === option.id}
+                          aria-label={`${option.isActive ? 'Deactivate' : 'Reactivate'} ${option.name}`}
+                          onClick={() => void toggleActive(option)}
+                        >
+                          <Power className="size-3.5" aria-hidden />{' '}
+                          {option.isActive ? 'Deactivate' : 'Reactivate'}
+                        </Button>
+                      </>
                     )}
                   </TableCell>
                 </TableRow>

@@ -22,7 +22,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-SET-02 | Other platform values + toggles | Must | P2 | T-207 | ✅ | same | same |
 | FR-SET-03 | Reference lists CRUD | Must | P2 | T-208 | ✅ | `backend/src/reference`, `/settings/reference` | API probe + browser |
 | FR-SET-04 | Cut-off preview | Should | P5 | T-502 | ✅ (upcoming lock times on `/cutoff`, cut-off per date in the builder) | `cutoff.service.ts` overview | `cutoff.test.ts` |
-| FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ✅ | `backend/src/catalogue/dishes.service.ts`, `frontend/src/app/(app)/catalogue/dishes` | `contracts/catalogue.test.ts`, browser check |
+| FR-CAT-01 | Dish fields | Must | P3 | T-301 T-302 | ✅ (SKU auto-generated when left blank, ADR-031) | `backend/src/catalogue/dishes.service.ts`, `shared/src/domain/catalogue.ts` `nextSku`, `frontend/src/app/(app)/catalogue/dishes` | `contracts/catalogue.test.ts`, `catalogue.test.ts` (nextSku), `dish-sku-and-throttle.test.ts`, browser check |
 | FR-CAT-02 | Deactivate, never delete dishes | Must | P3 | T-302 | ✅ | no DELETE route; PATCH `isActive` | BUG-003 tests |
 | FR-CAT-03 | Reusable options | Must | P3 | T-303 | ✅ | `options.service.ts`, `frontend/src/app/(app)/catalogue/options` | browser check |
 | FR-CAT-04 | Option groups per dish | Must | P3 | T-304 | ✅ | `option-groups.service.ts`, `dishes/[id]/option-groups-editor.tsx` | browser check |
@@ -96,7 +96,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
 | NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | ✅ (board p50 584 / p95 773 ms at 400 orders, from the laptop; ADR-030) |
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
-| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (328 tests: 118 shared, 210 backend) |
+| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (336 tests: 122 shared, 214 backend) |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |
 | NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ✅ (httpOnly cookie, fail-closed guard, permission matrix, Origin check verified live 18:35, login throttle) |
 | NFR-10 | Usability; driver on phone | T-705; smoke checklist | ✅ (phone-first driver view; redesign ADR-028; final check in T-1006) |

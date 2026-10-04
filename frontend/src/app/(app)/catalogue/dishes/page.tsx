@@ -1,10 +1,11 @@
 'use client';
 
 import { type DishListItem, formatUsd, type Paginated } from '@fernleaf/shared';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Plus, Power } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -20,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { api } from '@/lib/api-client';
+import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { useReferenceList } from '@/lib/reference';
 
@@ -40,6 +41,8 @@ function DishList() {
   // Costs are redacted by the API for roles without money access (BUG-004).
   const canSeeMoney = ability.can('read', 'Money');
   const stations = useReferenceList('kitchen-stations');
+  const queryClient = useQueryClient();
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [q, setQ] = useState('');
   const [active, setActive] = useState('true');
   const [stationId, setStationId] = useState('');
@@ -55,6 +58,24 @@ function DishList() {
     queryFn: () => api<Paginated<DishListItem>>(`/dishes?${params}`),
     placeholderData: keepPreviousData,
   });
+
+  /** Dishes are never deleted (past orders keep showing them): they are switched off and on. */
+  async function toggleActive(dish: DishListItem) {
+    setBusyId(dish.id);
+    try {
+      await api(`/dishes/${dish.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ isActive: !dish.isActive }),
+      });
+      toast.success(dish.isActive ? `${dish.name} deactivated` : `${dish.name} reactivated`);
+      void queryClient.invalidateQueries({ queryKey: ['dishes'] });
+      void queryClient.invalidateQueries({ queryKey: ['dish', dish.id] });
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'That did not save');
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -116,6 +137,7 @@ function DishList() {
                 <TableHead>Temp</TableHead>
                 {canSeeMoney && <TableHead className="text-right">Cost</TableHead>}
                 <TableHead>Setup</TableHead>
+                {canManage && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -149,12 +171,33 @@ function DishList() {
                     {!dish.station && <Badge variant="outline">No station</Badge>}
                     {dish.menuPlacements === 0 && <Badge variant="outline">Not on menu</Badge>}
                   </TableCell>
+                  {canManage && (
+                    <TableCell className="text-right whitespace-nowrap">
+                      <Link
+                        href={`/catalogue/dishes/${dish.id}`}
+                        className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+                        aria-label={`Edit ${dish.name}`}
+                      >
+                        <Pencil className="size-3.5" aria-hidden /> Edit
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={busyId === dish.id}
+                        aria-label={`${dish.isActive ? 'Deactivate' : 'Reactivate'} ${dish.name}`}
+                        onClick={() => void toggleActive(dish)}
+                      >
+                        <Power className="size-3.5" aria-hidden />{' '}
+                        {dish.isActive ? 'Deactivate' : 'Reactivate'}
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
               {dishes.data?.items.length === 0 && (
                 <TableRow>
                   <TableCell
-                    colSpan={canSeeMoney ? 6 : 5}
+                    colSpan={(canSeeMoney ? 6 : 5) + (canManage ? 1 : 0)}
                     className="text-center text-muted-foreground"
                   >
                     No dishes match.

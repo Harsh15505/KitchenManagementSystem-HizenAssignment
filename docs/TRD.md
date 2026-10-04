@@ -425,7 +425,7 @@ Base path `/api`. JSON unless noted. `🔓` = public. Money fields (`*Cents`) ar
 | Method & path | Permission | Notes |
 |---|---|---|
 | `GET /dishes?q&active&stationId&page` · `GET /dishes/:id` | `catalogue.read` | Detail includes groups, options, menu placements, tiers missing a price |
-| `POST /dishes` · `PATCH /dishes/:id` · `POST /dishes/:id/activate` · `POST /dishes/:id/deactivate` | `catalogue.manage` | No DELETE route exists |
+| `POST /dishes` (SKU optional: blank → `FL-<first 3 letters of the name>-NNN`, next number for that prefix, never reused; a collision retries) · `PATCH /dishes/:id` · `POST /dishes/:id/activate` · `POST /dishes/:id/deactivate` | `catalogue.manage` | No DELETE route exists |
 | `POST /dishes/:id/option-groups` · `PATCH /option-groups/:id` · `DELETE /option-groups/:id` · `PUT /dishes/:id/option-groups/order` | `catalogue.manage` | |
 | `PUT /option-groups/:id/options` (ordered ids) · `PUT /option-groups/:id/portion-sizes` | `catalogue.manage` | Portion invariant checked (FR-CAT-05) |
 | `GET /options` · `POST /options` · `PATCH /options/:id` · `PUT /options/:id/portion-prices` | `catalogue.read` / `.manage` | |

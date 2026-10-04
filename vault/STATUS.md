@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-03 22:50 IST
+updated: 2026-10-04 14:35 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
 active_task: none — all build work done; owner steps left (smoke test, tag, form)
 ---
@@ -50,13 +50,13 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## ✅ Verified (2026-10-03 18:40)
 
-- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 328 tests (118 shared, 210 backend) at 22:45 with ADR-030; `probe:concurrency` 9/9; frontend build clean (19:56).
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 336 tests (122 shared, 214 backend) at 14:35 on Oct 4; `probe:concurrency` 9/9; frontend build clean (19:56).
 - Live: origin check (new domain 204, old 403), `/api/health` through Vercel 200. Owner: 4 logins, role-limited nav, dashboards with data (13:58).
 - Browser (local, 17:20–17:35): all 4 dashboards, kitchen/dispatch boards, order detail, billing; light + dark; phone width without horizontal scroll.
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-030 in [[Decision Log]]. Latest: ADR-028 brand theme, ADR-029 one Neon branch (`dev`), ADR-030 Prisma `relationJoins`.
+ADR-001…ADR-031 in [[Decision Log]]. Latest: ADR-029 one Neon branch (`dev`), ADR-030 Prisma `relationJoins`, ADR-031 auto SKU.
 
 ## 🧷 Last commit
 
