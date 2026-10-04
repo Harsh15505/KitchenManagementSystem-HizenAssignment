@@ -109,32 +109,31 @@ pnpm dev                                   # web on :3000, API on :4000
 
 ## 3. Architecture
 
-```mermaid
-flowchart LR
-  subgraph Browser
-    UI[Next.js app<br/>React 19 · TanStack Query · shadcn/ui]
-  end
-  subgraph Vercel
-    NX[Next.js server<br/>/api/* rewrite]
-  end
-  subgraph Render["Render (Singapore)"]
-    API[NestJS API<br/>CASL guard · Zod validation · services]
-    JOBS[Jobs: cut-off timer,<br/>catch-up, demo autopilot]
-  end
-  DB[(Neon Postgres<br/>Singapore)]
-  UI -- same-origin /api, httpOnly cookie --> NX -- HTTP --> API
-  API -- Prisma --> DB
-  JOBS --- API
-```
+**The pieces and where they run**
 
-**Repository layout** (pnpm workspaces):
+| Piece | Runs on | What it does |
+|---|---|---|
+| **Web app** | Browser | Next.js 16 + React 19 UI (TanStack Query, shadcn/ui). Shows data and forms; no business logic. |
+| **Web server** | Vercel | Serves the app and forwards every `/api/*` call to the API, so the login cookie stays on one site. |
+| **API** | Render (Singapore) | NestJS 11: checks permissions (CASL), validates input (Zod), runs every business rule and transaction. |
+| **Background jobs** | Inside the API | The cut-off timer, catch-up after the server sleeps, and the demo autopilot. |
+| **Database** | Neon Postgres (Singapore) | All data, reached only by the API through Prisma 7. |
 
-```text
-shared/    pure business rules (cut-off, pricing, menu, combinations, billing, prep summary),
-           Zod contracts, permission codes and the CASL rules built from them. Used by both apps.
-backend/   NestJS 11 API + Prisma 7 (schema, migrations, seed). Owns every transaction.
-frontend/  Next.js 16 UI. Talks to the API over HTTP only: no business logic, no database access.
-```
+**How they connect**
+
+| From | To | How |
+|---|---|---|
+| Browser | Web server | Same-origin `/api/...` calls with an `httpOnly` session cookie |
+| Web server | API | Plain HTTP (a rewrite, no logic in between) |
+| API | Database | Prisma, inside transactions |
+
+**Repository layout** (pnpm workspaces)
+
+| Folder | Contents |
+|---|---|
+| `shared/` | Pure business rules (cut-off, pricing, menu, combinations, billing, prep summary), Zod contracts, permission codes and the CASL rules built from them. Used by both apps. |
+| `backend/` | NestJS API + Prisma (schema, migrations, seed). Owns every transaction. |
+| `frontend/` | Next.js UI. Talks to the API over HTTP only: no business logic, no database access. |
 
 **A request, end to end**
 
@@ -155,41 +154,19 @@ frontend/  Next.js 16 UI. Talks to the API over HTTP only: no business logic, no
 
 ## 4. Data model
 
-46 tables, 30 CHECK constraints. The overview below shows how the main tables relate; the full schema is [`backend/prisma/schema.prisma`](backend/prisma/schema.prisma).
+46 tables and 30 CHECK constraints; the full schema is [`backend/prisma/schema.prisma`](backend/prisma/schema.prisma). The main tables, grouped by area:
 
-```mermaid
-erDiagram
-  Role ||--o{ User : "assigned to"
-  User |o--o{ Company : "default driver of"
-  User |o--o{ Drop : "drives"
-  PlatformSettings }o--|| PriceTier : "default tier"
-  PriceTier |o--o{ PriceTier : "derives from"
-  PriceTier |o--o{ Company : "prices"
-  PriceTier ||--o{ DishTierPrice : "has"
-  PriceTier ||--o{ OptionTierPrice : "has"
-  KitchenStation |o--o{ Dish : "routes"
-  Dish ||--o{ OptionGroup : "has"
-  OptionGroup ||--o{ OptionGroupItem : "offers"
-  Option ||--o{ OptionGroupItem : "offered in"
-  MenuCategory ||--o{ MenuItem : "contains"
-  Dish ||--o{ MenuItem : "placed as"
-  Company ||--|{ CompanyDomain : "owns"
-  Company ||--|{ CompanyAddress : "delivers to"
-  Company ||--|{ Employee : "employs"
-  Company |o--o| Employee : "owned by"
-  Employee ||--o{ Order : "orders"
-  Company ||--o{ Order : "billed for"
-  Order ||--|{ OrderLine : "has"
-  OrderLine ||--|{ OrderCombination : "split into (prep units)"
-  OrderCombination ||--o{ OrderCombinationChoice : "chooses"
-  Order ||--o{ OrderEvent : "timeline"
-  Drop |o--o{ Order : "groups"
-  Company ||--o{ Invoice : "receives"
-  Invoice ||--|{ InvoiceLine : "lists"
-  Order |o--o| InvoiceLine : "billed once"
-  Order ||--o{ OrderAdjustment : "corrected by"
-  OrderAdjustment |o--o| InvoiceLine : "billed once"
-```
+| Area | Tables | How they connect |
+|---|---|---|
+| **People and access** | `Role`, `User` | Each user has one role; a role holds permission codes. A user can be a company's default driver and drives drops. |
+| **Settings** | `PlatformSettings` | One row; points at exactly one default price tier. |
+| **Pricing** | `PriceTier`, `DishTierPrice`, `OptionTierPrice` | A tier can derive from another tier; it holds a price (or "not sold") per dish and per option. Each company is priced on one tier. |
+| **Catalogue** | `KitchenStation`, `Dish`, `OptionGroup`, `Option`, `OptionGroupItem` | A dish is routed to a station and has option groups; a group offers options through `OptionGroupItem`. |
+| **Menu** | `MenuCategory`, `MenuItem` | A category contains menu items; each item places one dish on the menu. |
+| **Customers** | `Company`, `CompanyDomain`, `CompanyAddress`, `Employee` | A company owns one or more email domains and delivery addresses, employs employees, and has one owner among them. |
+| **Orders** | `Order`, `OrderLine`, `OrderCombination`, `OrderCombinationChoice`, `OrderEvent` | An employee places orders (billed to their company). An order has lines; a line is split into combinations (the prep units); a combination records its chosen options. Every change is an event on the timeline. |
+| **Delivery** | `Drop` | Groups the orders for one company, address and delivery time; has a driver. |
+| **Billing** | `Invoice`, `InvoiceLine`, `OrderAdjustment` | A company receives invoices; each line bills one order or one adjustment (credit), and each can be billed only once. |
 
 **Modelling choices worth knowing**
 
