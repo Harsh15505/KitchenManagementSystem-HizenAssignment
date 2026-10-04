@@ -16,31 +16,26 @@ import { ToolbarSlotContext } from './toolbar';
 const SECTIONS: ReadonlyArray<{
   subject: SubjectName;
   title: string;
-  question: string;
   render: () => ReactNode;
 }> = [
   {
     subject: 'AdminDashboard',
     title: 'Operations',
-    question: 'Is today on track, what needs me, are we getting paid?',
     render: () => <AdminSection />,
   },
   {
     subject: 'KitchenDashboard',
     title: 'Kitchen',
-    question: 'What do I cook, by when, where are we behind?',
     render: () => <KitchenSection />,
   },
   {
     subject: 'DispatchDashboard',
     title: 'Dispatch',
-    question: 'What leaves next, who drives it, what is late?',
     render: () => <DispatchSection />,
   },
   {
     subject: 'DriverDashboard',
     title: 'My deliveries',
-    question: 'Where do I go next?',
     render: () => <DriverSection />,
   },
 ];
@@ -57,12 +52,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
-          <p className="text-sm text-muted-foreground">
-            {current ? current.question : `Signed in as ${me.role.name}`}
-          </p>
-        </div>
+        <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
         <div ref={setSlot} className="flex flex-wrap items-center gap-2" />
       </div>
       {sections.length > 1 && (
