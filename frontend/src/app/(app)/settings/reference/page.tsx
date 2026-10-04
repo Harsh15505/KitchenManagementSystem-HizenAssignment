@@ -163,6 +163,18 @@ function ReferenceList({ type }: { type: ReferenceType }) {
             ))}
           </TableBody>
         </Table>
+        {items.isPending && <p className="text-sm text-muted-foreground">Loading…</p>}
+        {items.isError && (
+          <p className="text-sm text-destructive">
+            Couldn’t load this list.{' '}
+            <button type="button" className="underline" onClick={() => void items.refetch()}>
+              Try again
+            </button>
+          </p>
+        )}
+        {items.data?.length === 0 && (
+          <p className="text-sm text-muted-foreground">Nothing in this list yet.</p>
+        )}
         {canEdit && (
           <form
             className="flex max-w-md gap-2"

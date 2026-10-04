@@ -39,3 +39,6 @@ vault/_assets/*.pdf
 
 # local throwaway scripts
 *.tmp.ts
+
+# owner's personal interview-prep notes (not part of the submission)
+prep/

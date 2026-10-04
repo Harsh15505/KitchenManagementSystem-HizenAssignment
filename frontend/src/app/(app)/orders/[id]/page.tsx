@@ -28,6 +28,7 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { DetailList, DetailRow } from '@/components/detail-list';
+import { ListBox, ListBoxHeader, ListBoxRow, ListBoxRows, QtyPill } from '@/components/list-box';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -324,40 +325,66 @@ function OrderView({ order }: { order: OrderDetail }) {
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           {order.lines.map((l) => (
-            <div key={l.id} className="rounded-lg border p-3">
-              <div className="flex justify-between font-medium">
-                <span>
-                  {l.dishName} × {l.quantity}{' '}
-                  <span className="font-mono text-xs text-muted-foreground">{l.dishSku}</span>
-                </span>
-                <span className="tabular-nums">{money(l.totalCents)}</span>
-              </div>
-              {l.combinations.map((c) => (
-                <div key={c.id} className="flex justify-between gap-2 pl-3 text-muted-foreground">
-                  <span>
-                    {c.prepDoneAt ? (
-                      <Check className="mr-1 inline size-3.5 text-green-600" aria-label="Done" />
-                    ) : null}
-                    {c.quantity} ×{' '}
-                    {c.choices
-                      .map(
-                        (ch) =>
-                          `${ch.optionName}${ch.portionSizeName ? ` (${ch.portionSizeName})` : ''}`,
-                      )
-                      .join(', ') || 'as is'}
-                  </span>
-                  <span className="tabular-nums">
-                    {canSeeMoney &&
-                      `${money(c.unitPriceCents)} × ${c.quantity} = ${money(c.totalCents)}`}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <ListBox key={l.id}>
+              <ListBoxHeader
+                title={
+                  <>
+                    {l.dishName}{' '}
+                    <span className="font-normal text-muted-foreground">× {l.quantity}</span>
+                  </>
+                }
+                meta={
+                  <>
+                    <span className="font-mono text-muted-foreground">{l.dishSku}</span>
+                    {canSeeMoney && (
+                      <span className="font-heading text-sm font-semibold tabular-nums">
+                        {money(l.totalCents)}
+                      </span>
+                    )}
+                  </>
+                }
+              />
+              <ListBoxRows>
+                {l.combinations.map((c) => (
+                  <ListBoxRow
+                    key={c.id}
+                    lead={<QtyPill value={c.quantity} tone={c.prepDoneAt ? 'done' : 'default'} />}
+                    title={
+                      c.choices
+                        .map(
+                          (ch) =>
+                            `${ch.optionName}${ch.portionSizeName ? ` (${ch.portionSizeName})` : ''}`,
+                        )
+                        .join(', ') || 'As is'
+                    }
+                    sub={
+                      c.prepDoneAt ? (
+                        <span className="inline-flex items-center gap-1 text-primary">
+                          <Check className="size-3" aria-hidden /> cooked {formatIst(c.prepDoneAt)}
+                        </span>
+                      ) : undefined
+                    }
+                    trail={
+                      canSeeMoney ? (
+                        <span className="text-muted-foreground tabular-nums">
+                          {money(c.unitPriceCents)} × {c.quantity} ={' '}
+                          <span className="font-semibold text-foreground">
+                            {money(c.totalCents)}
+                          </span>
+                        </span>
+                      ) : undefined
+                    }
+                  />
+                ))}
+              </ListBoxRows>
+            </ListBox>
           ))}
           {canSeeMoney && (
-            <div className="flex justify-between border-t pt-2 text-base font-semibold">
-              <span>Order total</span>
-              <span className="tabular-nums">{money(order.totalCents)}</span>
+            <div className="flex items-center justify-between rounded-xl bg-secondary px-4 py-3 text-secondary-foreground">
+              <span className="font-semibold">Order total</span>
+              <span className="font-heading text-xl font-semibold tabular-nums">
+                {money(order.totalCents)}
+              </span>
             </div>
           )}
         </CardContent>

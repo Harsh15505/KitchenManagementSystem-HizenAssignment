@@ -108,7 +108,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     ],
   },
   {
-    title: 'Admin',
+    title: 'Setup',
     items: [
       { href: '/settings/staff', label: 'Staff', icon: Users, anyOf: [['read', 'Staff']] },
       {

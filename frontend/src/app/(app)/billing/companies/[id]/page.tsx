@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { ListBox, ListBoxEmpty } from '@/components/list-box';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, api } from '@/lib/api-client';
 import { formatKitchenDate } from '@/lib/orders';
+import { plural } from '@/lib/utils';
 
 export default function CompanyBillingPage() {
   return (
@@ -119,30 +121,45 @@ function InvoiceBuilder() {
                   />
                 </div>
               </CardHeader>
-              <CardContent className="max-h-[28rem] space-y-1 overflow-y-auto text-sm">
-                {orders.map((o) => (
-                  <label
-                    key={o.id}
-                    className="flex items-center justify-between gap-2 rounded px-2 py-1 hover:bg-muted"
-                  >
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        className="size-4"
-                        checked={selected(o.id)}
-                        onChange={() => toggle(o.id)}
-                      />
-                      <span className="font-mono text-xs">{formatOrderNumber(o.number)}</span>
-                      {formatKitchenDate(o.deliveryDate)} · {o.employeeName}
-                      {o.status === 'CONFIRMED' && (
-                        <Badge variant="outline">Not delivered yet</Badge>
-                      )}
-                    </span>
-                    <span className="tabular-nums">{formatUsd(o.totalCents)}</span>
-                  </label>
-                ))}
-                {orders.length === 0 && (
-                  <p className="text-muted-foreground">Nothing to invoice.</p>
+              <CardContent className="text-sm">
+                {orders.length === 0 ? (
+                  <ListBox>
+                    <ListBoxEmpty>Nothing to invoice.</ListBoxEmpty>
+                  </ListBox>
+                ) : (
+                  <div className="overflow-hidden rounded-xl border">
+                    <div className="grid grid-cols-[1.5rem_6.5rem_7rem_1fr_auto] gap-3 border-b bg-muted/60 px-3 py-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                      <span />
+                      <span>Order</span>
+                      <span>Delivery</span>
+                      <span>Employee</span>
+                      <span className="text-right">Amount</span>
+                    </div>
+                    <div className="soft-scroll max-h-[26rem] divide-y divide-border/70 overflow-y-auto">
+                      {orders.map((o) => (
+                        <label
+                          key={o.id}
+                          className="grid cursor-pointer grid-cols-[1.5rem_6.5rem_7rem_1fr_auto] items-center gap-3 px-3 py-2 transition-colors hover:bg-muted/50"
+                        >
+                          <input
+                            type="checkbox"
+                            className="size-4"
+                            checked={selected(o.id)}
+                            onChange={() => toggle(o.id)}
+                          />
+                          <span className="font-mono text-xs">{formatOrderNumber(o.number)}</span>
+                          <span className="text-xs">{formatKitchenDate(o.deliveryDate)}</span>
+                          <span className="flex min-w-0 items-center gap-2">
+                            <span className="truncate">{o.employeeName}</span>
+                            {o.status === 'CONFIRMED' && (
+                              <Badge variant="outline">Not delivered yet</Badge>
+                            )}
+                          </span>
+                          <span className="text-right tabular-nums">{formatUsd(o.totalCents)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -151,13 +168,13 @@ function InvoiceBuilder() {
                 <CardHeader>
                   <CardTitle>Credits and adjustments</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
-                  {adjustments.map((a) => (
-                    <label
-                      key={a.id}
-                      className="flex items-center justify-between gap-2 rounded px-2 py-1 hover:bg-muted"
-                    >
-                      <span className="flex items-center gap-2">
+                <CardContent className="text-sm">
+                  <div className="overflow-hidden rounded-xl border divide-y divide-border/70">
+                    {adjustments.map((a) => (
+                      <label
+                        key={a.id}
+                        className="grid cursor-pointer grid-cols-[1.5rem_6.5rem_1fr_auto] items-center gap-3 px-3 py-2 transition-colors hover:bg-muted/50"
+                      >
                         <input
                           type="checkbox"
                           className="size-4"
@@ -167,13 +184,13 @@ function InvoiceBuilder() {
                         <span className="font-mono text-xs">
                           {formatOrderNumber(a.orderNumber)}
                         </span>
-                        {a.reason}
-                      </span>
-                      <span className="tabular-nums text-green-700">
-                        {formatUsd(a.amountCents)}
-                      </span>
-                    </label>
-                  ))}
+                        <span className="min-w-0 truncate">{a.reason}</span>
+                        <span className="text-right text-green-700 tabular-nums dark:text-green-400">
+                          {formatUsd(a.amountCents)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -184,7 +201,8 @@ function InvoiceBuilder() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <p>
-                {pickedOrders.length} orders, {pickedAdjustments.length} adjustments
+                {plural(pickedOrders.length, 'order')},{' '}
+                {plural(pickedAdjustments.length, 'adjustment')}
               </p>
               <p className="text-2xl font-semibold tabular-nums">{formatUsd(total)}</p>
               <p className="text-xs text-muted-foreground">

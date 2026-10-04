@@ -134,8 +134,6 @@ shared/    pure business rules (cut-off, pricing, menu, combinations, billing, p
            Zod contracts, permission codes and the CASL rules built from them. Used by both apps.
 backend/   NestJS 11 API + Prisma 7 (schema, migrations, seed). Owns every transaction.
 frontend/  Next.js 16 UI. Talks to the API over HTTP only: no business logic, no database access.
-docs/      PRD, TRD, data model and architecture specs, written before the code.
-vault/     the project's working memory (status, tasks, decisions, bugs, session handoffs).
 ```
 
 **A request, end to end**
@@ -157,7 +155,7 @@ vault/     the project's working memory (status, tasks, decisions, bugs, session
 
 ## 4. Data model
 
-46 tables, 30 CHECK constraints. Overview below; full diagrams and the schema are in [`docs/DATABASE_MODELS.md`](docs/DATABASE_MODELS.md).
+46 tables, 30 CHECK constraints. The overview below shows how the main tables relate; the full schema is [`backend/prisma/schema.prisma`](backend/prisma/schema.prisma).
 
 ```mermaid
 erDiagram
@@ -206,7 +204,7 @@ erDiagram
 
 ## 5. Business rules and where they are enforced
 
-Every rule has an ID in [`docs/PRD.md`](docs/PRD.md) §5, a pure function in `shared/src/domain/`, and tests named after it.
+Every rule has an ID (such as `BR-CUT-01`), a pure function in `shared/src/domain/`, and tests named after it.
 
 **Cut-off** (`domain/cutoff.ts`, `cutoff.test.ts`)
 - An order for date *D* locks at the cut-off time on the *N*th **kitchen working day** before *D*; kitchen holidays are skipped. Wed + N=2 at 16:00 → Mon 16:00.
@@ -424,43 +422,41 @@ Every rule has an ID in [`docs/PRD.md`](docs/PRD.md) §5, a pure function in `sh
 
 ## 8. Key decisions and trade-offs
 
-Full reasoning for each is in [`vault/05 Decisions/Decision Log.md`](vault/05%20Decisions/Decision%20Log.md).
-
 **Shape of the system**
 
-- **ADR-001/022: `frontend/` + `backend/` + `shared/` with pnpm workspaces**, no Turborepo. *Trade-off:* slightly slower builds than a cached task runner; much simpler to understand.
-- **ADR-002: Vercel + Render + Neon, all in Singapore.** *Trade-off:* free tiers sleep; mitigated with a keep-alive and database-frugal jobs.
-- **ADR-003: same-origin `/api` proxy with an `httpOnly` cookie.** *Trade-off:* one extra hop through Next.js; no CORS, no tokens in JavaScript.
-- **ADR-007/008: pure rules in `shared/`, services own transactions, shared Zod contracts.** *Trade-off:* two packages to build; one source of truth for UI and server.
+- **`frontend/` + `backend/` + `shared/` with pnpm workspaces**, no Turborepo. *Trade-off:* slightly slower builds than a cached task runner; much simpler to understand.
+- **Vercel + Render + Neon, all in Singapore.** *Trade-off:* free tiers sleep; mitigated with a keep-alive and database-frugal jobs.
+- **Same-origin `/api` proxy with an `httpOnly` cookie.** *Trade-off:* one extra hop through Next.js; no CORS, no tokens in JavaScript.
+- **Pure rules in `shared/`, services own transactions, shared Zod contracts.** *Trade-off:* two packages to build; one source of truth for UI and server.
 
 **Access**
 
-- **ADR-004/023: roles are data holding permission codes; CASL abilities are built from the codes.** *Trade-off:* a small abstraction to learn; roles change without code.
+- **Roles are data holding permission codes; CASL abilities are built from the codes.** *Trade-off:* a small abstraction to learn; roles change without code.
 
 **Data, money and time**
 
-- **ADR-005/006: integer cents (USD) and one kitchen time zone (IST).** *Trade-off:* no multi-currency or multi-kitchen yet.
-- **ADR-009/010: prices resolved on read; orders capture prices per combination.** *Trade-off:* a little computation per menu view; history never moves.
-- **ADR-011: a combination is the prep unit.** *Trade-off:* the kitchen sees one card per variant, not one per meal.
-- **ADR-027: combination signature sorted by ids, not display order.** Reordering the catalogue can't silently re-price an open order.
+- **Integer cents (USD) and one kitchen time zone (IST).** *Trade-off:* no multi-currency or multi-kitchen yet.
+- **Prices resolved on read; orders capture prices per combination.** *Trade-off:* a little computation per menu view; history never moves.
+- **A combination is the prep unit.** *Trade-off:* the kitchen sees one card per variant, not one per meal.
+- **Combination signature sorted by ids, not display order.** Reordering the catalogue can't silently re-price an open order.
 
 **Operations**
 
-- **ADR-012: time-based lock + idempotent processing.** *Trade-off:* locked-but-unprocessed orders can exist briefly; the dashboard alarms on it.
-- **ADR-013: one timer for the next cut-off + catch-up, instead of polling.** Neon's free compute stays well inside budget.
-- **ADR-014: persisted drops, derived order stage.** *Trade-off:* override moves need rules (implemented).
-- **ADR-015: immutable invoices + credit adjustments.** *Trade-off:* credits land on the next invoice instead of editing the old one.
-- **ADR-016: advisory locks, row locks and conditional updates for races.** *Trade-off:* slightly more SQL; exactly-once behaviour under concurrency.
-- **ADR-017: rolling generated data + autopilot, 7-day kitchen in the seed.** Generated data is marked (`source = DEMO`) and resettable.
-- **ADR-018: delivery photos in Postgres, compressed in the browser.** Fine at this scale; object storage later.
+- **Time-based lock + idempotent processing.** *Trade-off:* locked-but-unprocessed orders can exist briefly; the dashboard alarms on it.
+- **One timer for the next cut-off + catch-up, instead of polling.** Neon's free compute stays well inside budget.
+- **Persisted drops, derived order stage.** *Trade-off:* override moves need rules (implemented).
+- **Immutable invoices + credit adjustments.** *Trade-off:* credits land on the next invoice instead of editing the old one.
+- **Advisory locks, row locks and conditional updates for races.** *Trade-off:* slightly more SQL; exactly-once behaviour under concurrency.
+- **Rolling generated data + autopilot, 7-day kitchen in the seed.** Generated data is marked (`source = DEMO`) and resettable.
+- **Delivery photos in Postgres, compressed in the browser.** Fine at this scale; object storage later.
 
 **Performance, tooling and UI**
 
-- **ADR-026: the tier grid is a plain table over one whole-tier response.** *Trade-off:* would need pagination past a few hundred items.
-- **ADR-029: one Neon branch for local dev and production;** bulk test scripts run on a throwaway branch. *Trade-off:* local clicks change live data, so probes clean up after themselves.
-- **ADR-030: Prisma `relationJoins` (nested reads in one SQL query).** A preview feature, turned on only after 42 endpoints returned identical JSON both ways; it made the boards 2–3× faster.
-- **ADR-031: a blank SKU is generated (`FL-PAN-001`).** Square generates SKUs, Toast doesn't; numbers are never reused because orders record them.
-- **ADR-028/032: warm brand theme, dark mode, and first-glance dashboards.** No chart library: simpler charts, a smaller bundle, every animation off under "reduce motion".
+- **The tier grid is a plain table over one whole-tier response.** *Trade-off:* would need pagination past a few hundred items.
+- **One Neon branch for local dev and production;** bulk test scripts run on a throwaway branch. *Trade-off:* local clicks change live data, so probes clean up after themselves.
+- **Prisma `relationJoins` (nested reads in one SQL query).** A preview feature, turned on only after 42 endpoints returned identical JSON both ways; it made the boards 2–3× faster.
+- **A blank SKU is generated (`FL-PAN-001`).** Square generates SKUs, Toast doesn't; numbers are never reused because orders record them.
+- **Warm brand theme, dark mode, and first-glance dashboards.** No chart library: simpler charts, a smaller bundle, every animation off under "reduce motion".
 
 ---
 
@@ -505,7 +501,7 @@ The brief gives more scope than time. The rule I followed: every **Must** done p
 
 ## 10. Ambiguities and how I read them
 
-The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones that shape behaviour most:
+The brief leaves several points open. How I read the ones that shape behaviour most:
 
 - **Counting cut-off days:** kitchen working days strictly before the delivery date; N = 0 puts the cut-off on the delivery day. This matches the brief's Wed → Mon example.
 - **Deliverable dates:** must satisfy **both** calendars; the kitchen can't cook on its own holidays.
@@ -538,7 +534,7 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
   - No company without an owner or default address; every combination, line, order and invoice total reconciles.
 - **Kitchen board at 400 orders** (the brief's bar)
   - The script filled today with 400 confirmed orders through the API, then timed 30 requests each, from a laptop in India through the local API to Neon in Singapore (one database round trip ≈ 71 ms from there).
-  - The first run showed the time was mostly sequential round trips, one per relation level, so Prisma's join loading went in (ADR-030):
+  - The first run showed the time was mostly sequential round trips, one per relation level, so I switched on Prisma's join loading, which fetches nested data in one SQL query:
 
 | Request (400 orders, 568 prep units) | p50 before | p50 after | p95 after |
 |---|---|---|---|
@@ -569,8 +565,11 @@ The full list (A-01…A-40) is in [`docs/PRD.md`](docs/PRD.md) §10. The ones th
 
 ## 13. How I worked (and the AI note)
 
-- **Specs first:** `docs/` (requirements with IDs, technical design, data model, architecture) came before the code, and the build followed them phase by phase (P0–P11).
-- **A last phase (P12) for polish and proof:** the UI redesign and first-glance dashboards, the remaining Shoulds, and the repeatable perf and concurrency scripts.
-- **Decisions are recorded:** every deviation is an ADR and is reflected back into the docs.
-- **The `vault/` folder** is an Obsidian vault holding the live state (task board, phase logs, requirements matrix, bug tracker, decision log, commit log, session handoffs), so any person or agent can pick the project up mid-way.
-- **AI note:** I used an AI coding assistant (Claude) throughout, for drafting specs, writing code and tests, and probing the running app. I reviewed every change, ran the checks (lint, types, tests, build, CI) on each commit, and verified behaviour against the real database and in the browser. I can explain any line in this repository.
+- **The brief first.** Before writing code I turned the brief into numbered requirements and business rules (the IDs the tests are named after) and wrote down how I'd read each open point ([§10](#10-ambiguities-and-how-i-read-them)).
+- **Then the foundations.** The data model, its constraints and the API were designed up front, so the screens were built on something settled.
+- **Each rule written once, on the server.** A rule is a pure function in `shared/`: the API enforces it, the UI uses it for instant feedback, and its tests carry its ID.
+- **Small, finished slices.** Each feature went end to end (database → API → screen → tests) before the next one started, in the order from [§9](#9-prioritisation-built-skipped-next): every Must, then the Shoulds.
+- **Checked on every commit.** Lint, type checks, the 340 tests and a production build run locally and again in CI. Every role was also clicked through in the browser, on desktop and phone, in light and dark mode.
+- **The hard parts tested on real data.** The races and a 400-order day ran against a throwaway copy of the database ([§11](#11-testing)); the slow kitchen board this exposed was made 2–3× faster before submission.
+- **Decisions kept with their reasons.** Each trade-off was written down when it was made, which is where [§8](#8-key-decisions-and-trade-offs) comes from.
+- **AI note:** I used an AI coding assistant (Claude) throughout: to talk through the brief and the design, to write code and tests, and to probe the running app. I set the scope, made the trade-offs, reviewed every change, and checked the behaviour against the real database and in the browser. I can explain any line in this repository.

@@ -18,12 +18,20 @@ import {
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CountUp } from '@/components/count-up';
+import {
+  ListBox,
+  ListBoxEmpty,
+  ListBoxFooter,
+  ListBoxHeader,
+  ListBoxRow,
+  ListBoxRows,
+} from '@/components/list-box';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
-import { cn } from '@/lib/utils';
+import { cn, plural } from '@/lib/utils';
 import { Countdown } from './countdown';
 import { Panel, ratio } from './metric';
 
@@ -257,7 +265,8 @@ function HeroToday({
               <CountUp value={d.today.orders} />
             </div>
             <div className="mt-2 text-sm text-sidebar-foreground/80">
-              orders · {d.today.meals} meals in the boxes
+              {d.today.orders === 1 ? 'order' : 'orders'} · {plural(d.today.meals, 'meal')} in the
+              boxes
             </div>
           </div>
           <Ring
@@ -448,7 +457,7 @@ function PipelineChart({ pipeline }: { pipeline: AdminDashboardDto['pipeline'] }
                       : 'text-muted-foreground',
                   )}
                 >
-                  kitchen closed{total > 0 ? ` · ${total} orders booked` : ''}
+                  kitchen closed{total > 0 ? ` · ${plural(total, 'order')} booked` : ''}
                 </span>
               ) : (
                 <div
@@ -514,22 +523,31 @@ function GettingPaid({ d }: { d: AdminDashboardDto }) {
           dot="bg-chart-3"
           label={`Open invoices (${d.openInvoices.count})`}
           cents={d.openInvoices.cents}
-          note={daysOpen !== null ? `oldest ${daysOpen} days` : undefined}
+          note={daysOpen !== null ? `oldest ${plural(daysOpen, 'day')}` : undefined}
         />
         <Money dot="bg-primary" label="Paid, last 30 days" cents={d.paidLast30DaysCents} />
       </dl>
       {d.uninvoiced.top.length > 0 && (
-        <div className="border-t pt-2">
-          <div className="pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-            Most owed
-          </div>
-          {d.uninvoiced.top.slice(0, 3).map((t) => (
-            <div key={t.companyId} className="flex justify-between text-xs">
-              <span>{t.companyName}</span>
-              <span className="tabular-nums">{formatUsd(t.cents)}</span>
-            </div>
-          ))}
-        </div>
+        <ListBox>
+          <ListBoxHeader
+            title="Most owed"
+            meta={<span className="text-muted-foreground">not yet invoiced</span>}
+          />
+          <ListBoxRows>
+            {d.uninvoiced.top.slice(0, 3).map((t) => (
+              <ListBoxRow
+                key={t.companyId}
+                href={`/billing/companies/${t.companyId}`}
+                title={t.companyName}
+                trail={
+                  <span className="font-heading text-sm font-semibold tabular-nums">
+                    {formatUsd(t.cents)}
+                  </span>
+                }
+              />
+            ))}
+          </ListBoxRows>
+        </ListBox>
       )}
     </div>
   );
@@ -655,7 +673,7 @@ function OnTimeChart({ days }: { days: AdminDashboardDto['onTime'] }) {
 }
 
 function GapList({
-  icon: Icon,
+  icon,
   title,
   items,
 }: {
@@ -663,36 +681,41 @@ function GapList({
   title: string;
   items: Array<{ key: string; href: string; label: string; note?: string }>;
 }) {
+  const [all, setAll] = useState(false);
+  const shown = all ? items : items.slice(0, 5);
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 text-xs font-medium">
-        <span
-          className={cn(
-            'flex size-6 items-center justify-center rounded-md',
-            items.length > 0
-              ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
-              : 'bg-secondary text-secondary-foreground',
-          )}
-        >
-          <Icon className="size-3.5" aria-hidden />
-        </span>
-        {title}
-        <Badge variant={items.length > 0 ? 'warning' : 'success'} className="ml-auto">
-          {items.length}
-        </Badge>
-      </div>
-      <ul className="space-y-1 text-xs">
-        {items.slice(0, 6).map((it) => (
-          <li key={it.key}>
-            <Link href={it.href} className="hover:text-primary hover:underline">
-              {it.label}
-            </Link>
-            {it.note && <span className="text-muted-foreground"> · {it.note}</span>}
-          </li>
-        ))}
-        {items.length > 6 && <li className="text-muted-foreground">+{items.length - 6} more</li>}
-        {items.length === 0 && <li className="text-muted-foreground">None</li>}
-      </ul>
-    </div>
+    <ListBox tone={items.length > 0 ? 'warning' : 'default'}>
+      <ListBoxHeader
+        icon={icon}
+        tone={items.length > 0 ? 'warning' : 'default'}
+        title={title}
+        meta={<Badge variant={items.length > 0 ? 'warning' : 'success'}>{items.length}</Badge>}
+      />
+      {items.length === 0 ? (
+        <ListBoxEmpty>All set.</ListBoxEmpty>
+      ) : (
+        <ListBoxRows>
+          {shown.map((it) => (
+            <ListBoxRow
+              key={it.key}
+              href={it.href}
+              title={it.label}
+              trail={it.note && <Badge variant="outline">{it.note}</Badge>}
+            />
+          ))}
+        </ListBoxRows>
+      )}
+      {items.length > 5 && (
+        <ListBoxFooter>
+          <button
+            type="button"
+            onClick={() => setAll(!all)}
+            className="cursor-pointer font-medium text-primary hover:underline"
+          >
+            {all ? 'Show fewer' : `Show all ${items.length}`}
+          </button>
+        </ListBoxFooter>
+      )}
+    </ListBox>
   );
 }

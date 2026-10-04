@@ -27,6 +27,7 @@ updated: 2026-10-04 19:05 IST
 
 ## ✅ Done
 
+- [x] **T-1210** Structure pass (framed lists everywhere), menu preview redesign, README cleanup · P12
 - [x] **T-1209** README restructured (bullets, dashboard definitions per role) · P12
 - [x] **T-1208** First-glance dashboards, all roles (ADR-032) · P12
 - [x] **T-1207** README final pass + screenshots + numbers · P12

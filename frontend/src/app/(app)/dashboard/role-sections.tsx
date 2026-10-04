@@ -9,7 +9,6 @@ import {
   type DropStage,
   type KitchenBoardDto,
   minutesToHHmm,
-  type PrepStation,
 } from '@fernleaf/shared';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -17,7 +16,6 @@ import {
   ArrowRight,
   Ban,
   CalendarDays,
-  Check,
   CheckCircle2,
   ChefHat,
   Clock,
@@ -36,12 +34,21 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { CountUp } from '@/components/count-up';
 import { Badge } from '@/components/ui/badge';
+import {
+  Chip,
+  ListBox,
+  ListBoxEmpty,
+  ListBoxHeader,
+  ListBoxRow,
+  ListBoxRows,
+} from '@/components/list-box';
+import { PrepStationCard } from '@/components/prep-station-card';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
 import { nameLookup, useReferenceList } from '@/lib/reference';
-import { cn } from '@/lib/utils';
+import { cn, plural } from '@/lib/utils';
 import { Countdown } from './countdown';
 import { HeroMetric, Panel, ratio } from './metric';
 import { DashboardToolbar } from './toolbar';
@@ -226,7 +233,7 @@ export function KitchenSection() {
           label={day === 'today' ? 'Meals today' : `Meals · ${formatKitchenDate(b.date)}`}
           icon={CookingPot}
           value={totalMeals}
-          hint={`${b.summary.orders} orders · ${b.summary.units} items to cook`}
+          hint={`${plural(b.summary.orders, 'order')} · ${plural(b.summary.units, 'item')} to cook`}
           className="sm:col-span-2 lg:col-span-4 xl:col-span-3"
         >
           <div className="space-y-1.5">
@@ -277,7 +284,7 @@ export function KitchenSection() {
                   {upcoming.slice(1, 4).map((s) => (
                     <span key={s.at}>
                       <span className="font-medium text-foreground">{formatIst(s.at)}</span> ·{' '}
-                      {s.meals} meals
+                      {plural(s.meals, 'meal')}
                     </span>
                   ))}
                 </div>
@@ -327,7 +334,7 @@ export function KitchenSection() {
           className="xl:col-span-8"
           action={
             <span className="text-xs text-muted-foreground tabular-nums">
-              {prepLeft} of {totalMeals} meals left
+              {prepLeft} of {plural(totalMeals, 'meal')} left
             </span>
           }
         >
@@ -337,7 +344,7 @@ export function KitchenSection() {
             <>
               <div className="soft-scroll grid gap-3 sm:grid-cols-2 xl:max-h-[24rem] xl:overflow-y-auto xl:pr-1">
                 {b.prep.map((s) => (
-                  <PrepStationCard key={s.stationId ?? 'none'} station={s} />
+                  <PrepStationCard key={s.stationId ?? 'none'} station={s} now={b.now} />
                 ))}
               </div>
               <div className="mt-3 flex gap-3 text-[11px] text-muted-foreground">
@@ -357,44 +364,71 @@ export function KitchenSection() {
               clashes.length > 0 && <Badge variant="destructive">{clashes.length} to check</Badge>
             }
           >
-            {clashes.length === 0 ? (
-              <p className="flex items-center gap-2 text-muted-foreground">
-                <ShieldAlert className="size-4 text-primary" aria-hidden /> No dish clashes with an
-                employee’s recorded allergy.
-              </p>
-            ) : (
-              <ul className="soft-scroll max-h-40 space-y-1.5 overflow-y-auto pr-1">
-                {clashes.map((u) => (
-                  <li
-                    key={u.id}
-                    className="flex items-start gap-2 rounded-lg bg-red-500/8 p-2 text-xs dark:bg-red-500/10"
-                  >
-                    <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-red-600" aria-hidden />
-                    <span>
-                      <span className="font-medium">{u.order.employeeName}</span>: {u.dish.name}{' '}
-                      contains {u.allergenIds.map((a) => allergens.get(a)).join(', ')} · #
-                      {u.order.number} · by {formatIst(u.plannedKitchenReadyAt)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {allergenMeals.size > 0 && (
-              <div className="mt-3 border-t pt-3">
-                <div className="pb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  Meals containing
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {[...allergenMeals.entries()]
-                    .sort((a, c) => c[1] - a[1])
-                    .map(([a, m]) => (
-                      <Badge key={a} variant="outline">
-                        {allergens.get(a) ?? 'Allergen'} · {m}
-                      </Badge>
+            <div className="space-y-3">
+              {clashes.length === 0 ? (
+                <ListBox>
+                  <ListBoxEmpty>No dish clashes with an employee’s recorded allergy.</ListBoxEmpty>
+                </ListBox>
+              ) : (
+                <ListBox tone="danger">
+                  <ListBoxHeader
+                    icon={AlertTriangle}
+                    tone="danger"
+                    title="Check before packing"
+                    meta={<Badge variant="destructive">{clashes.length}</Badge>}
+                  />
+                  <ListBoxRows className="soft-scroll max-h-44 overflow-y-auto">
+                    {clashes.map((u) => (
+                      <ListBoxRow
+                        key={u.id}
+                        title={
+                          <>
+                            {u.order.employeeName}
+                            <span className="font-normal text-muted-foreground">
+                              {' '}
+                              · {u.dish.name}
+                            </span>
+                          </>
+                        }
+                        sub={
+                          <span className="flex flex-wrap gap-1">
+                            {u.allergenIds.map((a) => (
+                              <Chip key={a} tone="danger">
+                                {allergens.get(a) ?? 'Allergen'}
+                              </Chip>
+                            ))}
+                          </span>
+                        }
+                        trail={
+                          <span className="leading-tight text-muted-foreground">
+                            #{u.order.number}
+                            <span className="block">by {formatIst(u.plannedKitchenReadyAt)}</span>
+                          </span>
+                        }
+                      />
                     ))}
-                </div>
-              </div>
-            )}
+                  </ListBoxRows>
+                </ListBox>
+              )}
+              {allergenMeals.size > 0 && (
+                <ListBox>
+                  <ListBoxHeader icon={ShieldAlert} title="Meals containing" />
+                  <div className="flex flex-wrap gap-1 p-3">
+                    {[...allergenMeals.entries()]
+                      .sort((a, c) => c[1] - a[1])
+                      .map(([a, m]) => (
+                        <span
+                          key={a}
+                          className="inline-flex items-center gap-1.5 rounded-md border bg-background px-1.5 py-0.5 text-xs"
+                        >
+                          {allergens.get(a) ?? 'Allergen'}
+                          <span className="font-semibold tabular-nums">{m}</span>
+                        </span>
+                      ))}
+                  </div>
+                </ListBox>
+              )}
+            </div>
           </Panel>
 
           <Panel
@@ -420,76 +454,6 @@ export function KitchenSection() {
   );
 }
 
-/** One station of the prep summary: progress, then what is left to cook, soonest due first. */
-function PrepStationCard({ station: s }: { station: PrepStation }) {
-  const left = s.meals.total - s.meals.done;
-  return (
-    <div
-      className={cn(
-        'flex flex-col rounded-xl border bg-background/60 p-3',
-        s.stationId === null && 'border-amber-400/70',
-      )}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <span
-          className={cn(
-            'font-medium',
-            s.stationId === null && 'text-amber-800 dark:text-amber-300',
-          )}
-        >
-          {s.stationName}
-        </span>
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {left === 0 ? 'all done' : `${left} left`} · {s.meals.total} meals
-        </span>
-      </div>
-      <div className="mt-2">
-        <StackBar done={s.meals.done} active={s.meals.cooking} waiting={s.meals.notStarted} />
-      </div>
-      <ul className="mt-2.5 space-y-1.5">
-        {s.dishes.map((d) => {
-          const finished = d.remaining === 0;
-          const combos = finished ? d.combinations : d.combinations.filter((c) => c.remaining > 0);
-          return (
-            <li key={d.dishName} className={cn('text-xs', finished && 'opacity-55')}>
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="min-w-0">
-                  <span className="font-heading text-sm font-semibold tabular-nums">
-                    {finished ? d.quantity : d.remaining}×
-                  </span>{' '}
-                  {d.dishName}
-                </span>
-                <span className="shrink-0 text-[11px] text-muted-foreground">
-                  {finished ? (
-                    <span className="inline-flex items-center gap-0.5 text-primary">
-                      <Check className="size-3" aria-hidden /> done
-                    </span>
-                  ) : (
-                    <>
-                      {d.remaining < d.quantity && `of ${d.quantity} · `}
-                      by {formatIst(d.nextDueAt!)}
-                    </>
-                  )}
-                </span>
-              </div>
-              <ul className="mt-0.5 space-y-0.5 border-l-2 border-border pl-2 text-muted-foreground">
-                {combos.map((c) => (
-                  <li key={c.label}>
-                    <span className="font-medium text-foreground/80 tabular-nums">
-                      {finished ? c.quantity : c.remaining}
-                    </span>{' '}
-                    {c.label}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
 function TomorrowBlock({ board }: { board: KitchenBoardDto | undefined }) {
   if (!board) return <Skeleton className="h-20" />;
   const byStation = new Map<string, number>();
@@ -497,38 +461,47 @@ function TomorrowBlock({ board }: { board: KitchenBoardDto | undefined }) {
     const name = board.stations.find((st) => st.id === u.stationId)?.name ?? 'Unassigned';
     byStation.set(name, (byStation.get(name) ?? 0) + u.quantity);
   }
+  const confirmed = [...byStation.values()].reduce((t, m) => t + m, 0);
+  const placed = board.pending.cutoffPassed ? [] : board.pending.placedMealsByStation;
   return (
     <div className="space-y-3">
-      <div>
-        <div className="flex items-center gap-1.5 pb-1.5 text-xs text-muted-foreground">
-          <CalendarDays className="size-3.5" aria-hidden /> Confirmed meals ·{' '}
-          {formatKitchenDate(board.date)}
-        </div>
+      <ListBox>
+        <ListBoxHeader
+          icon={CalendarDays}
+          title={`Confirmed · ${formatKitchenDate(board.date)}`}
+          meta={<Badge variant="secondary">{plural(confirmed, 'meal')}</Badge>}
+        />
         {byStation.size === 0 ? (
-          <p className="text-muted-foreground">None confirmed yet.</p>
+          <ListBoxEmpty>None confirmed yet.</ListBoxEmpty>
         ) : (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1 p-3">
             {[...byStation.entries()].map(([n, m]) => (
-              <Badge key={n}>
-                {n} · {m}
-              </Badge>
+              <Chip key={n} count={m}>
+                {n}
+              </Chip>
             ))}
           </div>
         )}
-      </div>
-      {!board.pending.cutoffPassed && board.pending.placedMealsByStation.length > 0 && (
-        <div>
-          <div className="pb-1.5 text-xs text-muted-foreground">
-            May still change · cut-off {formatIst(board.pending.cutoffAt, true)}
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {board.pending.placedMealsByStation.map((s) => (
-              <Badge key={s.stationName} variant="info">
-                {s.stationName} · {s.meals}
-              </Badge>
+      </ListBox>
+      {placed.length > 0 && (
+        <ListBox>
+          <ListBoxHeader
+            icon={Clock}
+            title="May still change"
+            meta={
+              <span className="text-muted-foreground">
+                cut-off {formatIst(board.pending.cutoffAt, true)}
+              </span>
+            }
+          />
+          <div className="flex flex-wrap gap-1 p-3">
+            {placed.map((p) => (
+              <Chip key={p.stationName} count={p.meals}>
+                {p.stationName}
+              </Chip>
             ))}
           </div>
-        </div>
+        </ListBox>
       )}
     </div>
   );
@@ -664,7 +637,7 @@ export function DispatchSection() {
           className="xl:col-span-7"
           action={
             <span className="text-xs text-muted-foreground">
-              {notOut.length} of {d.summary.drops} drops still to leave
+              {notOut.length} of {plural(d.summary.drops, 'drop')} still to leave
             </span>
           }
         >
@@ -695,55 +668,57 @@ export function DispatchSection() {
             }
           >
             {attention === 0 ? (
-              <p className="flex items-center gap-2 text-muted-foreground">
-                <CheckCircle2 className="size-4 text-primary" aria-hidden /> Nothing late, and every
-                drop today and tomorrow has a driver.
-              </p>
+              <ListBox>
+                <ListBoxEmpty>
+                  Nothing late, and every drop today and tomorrow has a driver.
+                </ListBoxEmpty>
+              </ListBox>
             ) : (
-              <div className="soft-scroll max-h-56 space-y-3 overflow-y-auto pr-1">
+              <div className="soft-scroll max-h-64 space-y-3 overflow-y-auto pr-1">
                 {lateDrops.length > 0 && (
-                  <div>
-                    <div className="pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                      Late or at risk · {lateDrops.length}
-                    </div>
-                    <ul className="space-y-1.5">
+                  <ListBox tone="danger">
+                    <ListBoxHeader
+                      icon={AlertTriangle}
+                      tone="danger"
+                      title="Late or at risk"
+                      meta={<Badge variant="destructive">{lateDrops.length}</Badge>}
+                    />
+                    <ListBoxRows>
                       {lateDrops.map((x) => (
-                        <li
+                        <ListBoxRow
                           key={x.id}
-                          className="flex items-center justify-between gap-2 rounded-lg border bg-background/60 px-2.5 py-1.5"
-                        >
-                          <span className="min-w-0">
-                            <span className="block truncate font-medium">{x.company.name}</span>
-                            <span className="block text-xs text-muted-foreground">
-                              leaves by {formatIst(x.plannedDispatchReadyAt)} ·{' '}
-                              {STAGE_TEXT[x.stage].toLowerCase()}
-                            </span>
-                          </span>
-                          <Badge variant={x.timeliness === 'LATE' ? 'destructive' : 'warning'}>
-                            {x.timeliness === 'LATE' ? 'Late' : 'At risk'}
-                          </Badge>
-                        </li>
+                          href="/dispatch"
+                          title={x.company.name}
+                          sub={`leaves by ${formatIst(x.plannedDispatchReadyAt)} · ${STAGE_TEXT[x.stage].toLowerCase()}`}
+                          trail={
+                            <Badge variant={x.timeliness === 'LATE' ? 'destructive' : 'warning'}>
+                              {x.timeliness === 'LATE' ? 'Late' : 'At risk'}
+                            </Badge>
+                          }
+                        />
                       ))}
-                    </ul>
-                  </div>
+                    </ListBoxRows>
+                  </ListBox>
                 )}
                 {noDriver.length > 0 && (
-                  <div>
-                    <div className="pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                      No driver · {noDriver.length}
-                    </div>
-                    <ul className="space-y-1">
+                  <ListBox tone="warning">
+                    <ListBoxHeader
+                      icon={UserX}
+                      tone="warning"
+                      title="No driver yet"
+                      meta={<Badge variant="warning">{noDriver.length}</Badge>}
+                    />
+                    <ListBoxRows>
                       {noDriver.map((x) => (
-                        <li key={x.id} className="flex items-center gap-2 text-sm">
-                          <UserX className="size-4 shrink-0 text-amber-600" aria-hidden />
-                          <span className="truncate">
-                            {formatKitchenDate(x.deliveryDate)}{' '}
-                            {minutesToHHmm(x.deliveryTimeMinutes)} · {x.company.name}
-                          </span>
-                        </li>
+                        <ListBoxRow
+                          key={x.id}
+                          href="/dispatch"
+                          title={x.company.name}
+                          sub={`${formatKitchenDate(x.deliveryDate)} · deliver ${minutesToHHmm(x.deliveryTimeMinutes)}`}
+                        />
                       ))}
-                    </ul>
-                  </div>
+                    </ListBoxRows>
+                  </ListBox>
                 )}
               </div>
             )}
@@ -809,7 +784,7 @@ function DepartureRow({ drop: x, first }: { drop: DropDto; first: boolean }) {
         </div>
         <div className="flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
           <span>deliver {minutesToHHmm(x.deliveryTimeMinutes)}</span>
-          <span>· {x.boxes} boxes ·</span>
+          <span>· {plural(x.boxes, 'box', 'boxes')} ·</span>
           {x.driver ? (
             <span>{x.driver.name}</span>
           ) : (
@@ -825,7 +800,7 @@ function DepartureRow({ drop: x, first }: { drop: DropDto; first: boolean }) {
             />
           </div>
           <span className="text-[11px] text-muted-foreground">
-            {x.readiness.ready}/{x.readiness.total} orders cooked
+            {x.readiness.ready}/{plural(x.readiness.total, 'order')} cooked
           </span>
         </div>
       </div>

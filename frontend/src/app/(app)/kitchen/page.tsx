@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { CountUp } from '@/components/count-up';
+import { PrepStationCard } from '@/components/prep-station-card';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, api } from '@/lib/api-client';
@@ -179,38 +179,7 @@ function KitchenBoard() {
             <p className="text-sm text-muted-foreground">Nothing to cook for this day.</p>
           )}
           {data.prep.map((s) => (
-            <Card key={s.stationId ?? 'none'}>
-              <CardHeader className="flex flex-row items-center justify-between gap-2">
-                <CardTitle>{s.stationName}</CardTitle>
-                <span className="text-xs text-muted-foreground tabular-nums">
-                  {s.meals.total - s.meals.done} left of {s.meals.total} meals
-                </span>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {s.dishes.map((d) => (
-                  <div key={d.dishName} className={d.remaining === 0 ? 'opacity-55' : undefined}>
-                    <div className="flex justify-between gap-2 font-medium">
-                      <span>{d.dishName}</span>
-                      <span className="tabular-nums">
-                        {d.remaining === 0 ? 'done' : `${d.remaining} left`}
-                        <span className="font-normal text-muted-foreground"> / {d.quantity}</span>
-                      </span>
-                    </div>
-                    {d.combinations.map((c) => (
-                      <div
-                        key={c.label}
-                        className="flex justify-between gap-2 pl-3 text-muted-foreground"
-                      >
-                        <span>{c.label}</span>
-                        <span className="tabular-nums">
-                          {c.remaining} / {c.quantity}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            <PrepStationCard key={s.stationId ?? 'none'} station={s} now={data.now} />
           ))}
         </div>
       )}

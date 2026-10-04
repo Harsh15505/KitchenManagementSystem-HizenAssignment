@@ -48,3 +48,17 @@ BUG-014 … BUG-018 (all fixed).
 1. **Owner, O-09:** kitchen working days are Mon–Sat on the live database; turn Sunday back on unless deliberate (Sunday reviews would see empty boards).
 2. Owner: live smoke test on https://kitchen-management-hizen.vercel.app, private-window check, GitHub "About" link → the new domain.
 3. Tag `v1.0.0` and submit the Google Form before 23:59 IST.
+
+## Part 2 (19:40–21:05): structure pass, menu preview, README cleanup
+
+- Owner: lists still looked like floating text → `ListBox` primitives and `PrepStationCard`; applied to kitchen/dispatch/admin dashboards, kitchen board prep view, order items, billing company page, dispatch and driver order lists (BUG-020).
+- Menu preview redesigned (menu cards, choices as tables with per-size prices, employee strip, category links).
+- README: no ADR numbers, no docs/vault mentions, §13 rewritten (owner's request). `.gitignore`: `prep/` (owner's notes) ignored, file is plain UTF-8.
+- Fixed BUG-019 (demo SKU snapshot + backfill of 945 lines on `dev`), BUG-021 (plurals), BUG-022 (reference data heading and states).
+- Explained the demo autopilot to the owner (README §12 has it).
+
+### Handoff
+
+- Pushed in one commit; check CI and the Vercel/Render redeploy.
+- Owner steps left: O-09 (turn Sunday on in Settings unless deliberate), GitHub About link, live smoke test, tag `v1.0.0`, Google Form before 23:59 IST.
+

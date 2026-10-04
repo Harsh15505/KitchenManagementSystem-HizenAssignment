@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-04 19:05 IST
+updated: 2026-10-04 21:00 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
 active_task: none — all build work done; owner steps left (smoke test, tag, form)
 ---

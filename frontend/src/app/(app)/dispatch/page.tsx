@@ -9,9 +9,9 @@ import {
 } from '@fernleaf/shared';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Camera, Package, Truck } from 'lucide-react';
-import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { ListBox, ListBoxRow, ListBoxRows } from '@/components/list-box';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
-import { cn } from '@/lib/utils';
+import { cn, plural } from '@/lib/utils';
 
 const STAGE_TEXT: Record<DropStage, string> = {
   COOKING: 'In the kitchen',
@@ -208,7 +208,7 @@ function DropCard({
           </div>
           <div className="text-xs text-muted-foreground">
             {minutesToHHmm(drop.deliveryTimeMinutes)} delivery · leaves by{' '}
-            {formatIst(drop.plannedDispatchReadyAt)} · {drop.boxes} boxes
+            {formatIst(drop.plannedDispatchReadyAt)} · {plural(drop.boxes, 'box', 'boxes')}
           </div>
         </div>
         <div className="flex flex-wrap gap-1">
@@ -311,20 +311,28 @@ function DropCard({
         {open ? 'Hide' : 'Show'} {drop.orders.length} order{drop.orders.length === 1 ? '' : 's'}
       </button>
       {open && (
-        <ul className="space-y-0.5 text-xs">
-          {drop.orders.map((o) => (
-            <li key={o.id} className="flex justify-between gap-2">
-              <Link href={`/orders/${o.id}`} className="hover:underline">
-                #{o.number} {o.employeeName}
-              </Link>
-              <span
-                className={o.kitchenReady ? 'text-primary' : 'text-amber-700 dark:text-amber-300'}
-              >
-                {o.itemCount} items · {o.packaging} · {o.kitchenReady ? 'cooked' : 'cooking'}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <ListBox>
+          <ListBoxRows>
+            {drop.orders.map((o) => (
+              <ListBoxRow
+                key={o.id}
+                href={`/orders/${o.id}`}
+                title={`#${o.number} · ${o.employeeName}`}
+                sub={o.packaging}
+                trail={
+                  <>
+                    <span className="text-muted-foreground tabular-nums">
+                      {plural(o.itemCount, 'box', 'boxes')}
+                    </span>
+                    <Badge variant={o.kitchenReady ? 'success' : 'warning'}>
+                      {o.kitchenReady ? 'Cooked' : 'Cooking'}
+                    </Badge>
+                  </>
+                }
+              />
+            ))}
+          </ListBoxRows>
+        </ListBox>
       )}
     </div>
   );

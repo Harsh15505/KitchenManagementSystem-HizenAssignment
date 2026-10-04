@@ -348,6 +348,13 @@ export class DemoService implements OnModuleInit {
         s.name,
       ]),
     );
+    // Order lines snapshot the dish SKU, as real orders do (BUG-019).
+    const dishSkus = new Map(
+      (await this.prisma.dish.findMany({ select: { id: true, sku: true } })).map((d) => [
+        d.id,
+        d.sku,
+      ]),
+    );
     const packaging = await this.prisma.packagingType.findMany({
       where: { isActive: true },
       select: { id: true, name: true },
@@ -512,6 +519,7 @@ export class DemoService implements OnModuleInit {
           orderId,
           result.lines,
           sizeNames,
+          dishSkus,
           delivered ? sched : null,
           lines,
           combos,
@@ -570,6 +578,7 @@ export class DemoService implements OnModuleInit {
     orderId: string,
     normalised: NormalisedLine[],
     sizeNames: Map<string, string>,
+    dishSkus: Map<string, string>,
     sched: ReturnType<typeof schedule> | null,
     lines: Prisma.OrderLineCreateManyInput[],
     combos: Prisma.OrderCombinationCreateManyInput[],
@@ -582,7 +591,7 @@ export class DemoService implements OnModuleInit {
         orderId,
         dishId: line.dishId,
         dishName: line.dishName,
-        dishSku: line.dishSku ?? '',
+        dishSku: line.dishSku ?? dishSkus.get(line.dishId) ?? '',
         quantity: line.quantity,
         dishPriceCents: line.dishPriceCents,
         totalCents: line.totalCents,

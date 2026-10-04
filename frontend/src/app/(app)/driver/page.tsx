@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Camera, CheckCircle2, MapPin, Package } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { ListBox, ListBoxRow, ListBoxRows } from '@/components/list-box';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
-import { cn } from '@/lib/utils';
+import { cn, plural } from '@/lib/utils';
 
 export default function DriverPage() {
   return (
@@ -149,13 +150,22 @@ function DropCard({
           <summary className="cursor-pointer text-muted-foreground">
             For {drop.orders.length} {drop.orders.length === 1 ? 'person' : 'people'}
           </summary>
-          <ul className="mt-1 space-y-0.5">
-            {drop.orders.map((o) => (
-              <li key={o.id}>
-                {o.employeeName} · {o.itemCount} item{o.itemCount === 1 ? '' : 's'} (#{o.number})
-              </li>
-            ))}
-          </ul>
+          <ListBox className="mt-2">
+            <ListBoxRows>
+              {drop.orders.map((o) => (
+                <ListBoxRow
+                  key={o.id}
+                  title={o.employeeName}
+                  sub={`#${o.number} · ${o.packaging}`}
+                  trail={
+                    <span className="text-muted-foreground tabular-nums">
+                      {plural(o.itemCount, 'box', 'boxes')}
+                    </span>
+                  }
+                />
+              ))}
+            </ListBoxRows>
+          </ListBox>
         </details>
         {drop.stage === 'OUT_FOR_DELIVERY' && (
           <Button size="lg" className="w-full" onClick={onDeliver}>

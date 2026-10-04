@@ -32,7 +32,7 @@ import {
 import { api } from '@/lib/api-client';
 import { useAbility } from '@/lib/auth';
 import { formatKitchenDate, STAGE_LABEL, STATUS_LABEL, STATUS_VARIANT } from '@/lib/orders';
-import { cn } from '@/lib/utils';
+import { cn, plural } from '@/lib/utils';
 
 export default function OrdersPage() {
   return (
@@ -260,7 +260,7 @@ function OrderList() {
           </Table>
           {orders.data && (
             <div className="flex items-center justify-between gap-2 text-sm">
-              <span className="text-muted-foreground">{orders.data.total} orders</span>
+              <span className="text-muted-foreground">{plural(orders.data.total, 'order')}</span>
               {orders.data.totalPages > 1 && (
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground">
