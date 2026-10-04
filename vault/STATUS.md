@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-04 14:35 IST
+updated: 2026-10-04 18:25 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
 active_task: none — all build work done; owner steps left (smoke test, tag, form)
 ---
@@ -63,6 +63,8 @@ ADR-001…ADR-031 in [[Decision Log]]. Latest: ADR-029 one Neon branch (`dev`), 
 T-1205 commit (after `2972ad6` T-409). See [[Commit Log]].
 
 ## 🤝 Handoff notes for the next agent
+
+- Untracked `prep/` (owner's interview-prep notes, html/json not Prettier-formatted): don't commit without formatting or ignoring it, or CI's `prettier --check .` fails.
 
 - Read [[AGENT PROTOCOL]] first. Every task updates the Task Board, phase note, Requirements Matrix and this note.
 - **Fewer commits until submission** (owner, Q-14): one commit per finished feature including its vault updates. Every push redeploys the live app.

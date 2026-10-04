@@ -2,6 +2,7 @@
 
 import type { CutoffOverviewDto, CutoffRunDto } from '@fernleaf/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { CalendarCheck, LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -92,7 +93,7 @@ function CutoffView() {
           )}
         </div>
       )}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid items-start gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Waiting for processing</CardTitle>
@@ -136,22 +137,51 @@ function CutoffView() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-1 text-sm">
-              {data?.upcoming.map((u) => (
-                <li key={u.deliveryDate} className="flex justify-between">
-                  <span>{formatKitchenDate(u.deliveryDate)}</span>
-                  <span className="text-muted-foreground">locks {formatIst(u.cutoffAt, true)}</span>
-                </li>
-              ))}
+            <ul className="space-y-2">
+              {data?.upcoming.map((u, i) => {
+                const [, month, day] = u.deliveryDate.split('-');
+                const monthName = new Date(`${u.deliveryDate}T00:00:00Z`).toLocaleDateString(
+                  'en-GB',
+                  { month: 'short', timeZone: 'UTC' },
+                );
+                return (
+                  <li
+                    key={u.deliveryDate}
+                    className={`flex items-center gap-3 rounded-xl border bg-card px-3 py-2 text-sm ${i === 0 ? 'border-primary/40 bg-primary/[0.04]' : ''}`}
+                  >
+                    <span
+                      className="flex size-11 shrink-0 flex-col items-center justify-center rounded-lg bg-secondary text-secondary-foreground"
+                      aria-hidden
+                    >
+                      <span className="font-heading text-lg leading-none font-semibold">
+                        {Number(day)}
+                      </span>
+                      <span className="text-[10px] tracking-wide uppercase">
+                        {month && monthName}
+                      </span>
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium">{formatKitchenDate(u.deliveryDate)}</span>
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <LockKeyhole className="size-3" aria-hidden /> locks{' '}
+                        {formatIst(u.cutoffAt, true)}
+                      </span>
+                    </span>
+                    {i === 0 && <Badge variant="info">Next</Badge>}
+                  </li>
+                );
+              })}
             </ul>
             {canRun && (
               <form
-                className="mt-4 flex gap-2"
+                className="mt-4 flex flex-wrap items-center gap-2 rounded-xl bg-muted/60 p-3"
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (date) void run(date);
                 }}
               >
+                <CalendarCheck className="size-4 text-muted-foreground" aria-hidden />
+                <span className="text-xs text-muted-foreground">Process a date by hand:</span>
                 <Input
                   type="date"
                   aria-label="Delivery date to process"
@@ -160,7 +190,7 @@ function CutoffView() {
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <Button type="submit" variant="outline" disabled={!date}>
-                  Process a date
+                  Process
                 </Button>
               </form>
             )}

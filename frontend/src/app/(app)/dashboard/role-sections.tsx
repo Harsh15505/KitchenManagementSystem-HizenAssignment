@@ -37,7 +37,7 @@ import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
 import { nameLookup, useReferenceList } from '@/lib/reference';
 import { cn } from '@/lib/utils';
-import { Metric, Panel, ratio } from './metric';
+import { HeroMetric, Metric, Panel, ratio } from './metric';
 
 function LoadingGrid() {
   return (
@@ -158,21 +158,29 @@ export function KitchenSection() {
         </div>
       )}
 
-      <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric
+      <div className="stagger grid gap-4 lg:grid-cols-4">
+        <HeroMetric
           label="Meals today"
           icon={CookingPot}
           value={meals(work)}
           hint={`${b.summary.orders} orders · ${b.summary.units} items`}
-        />
-        <Metric
-          label="Done"
-          icon={CheckCircle2}
-          value={doneMeals}
-          hint={`${ratio(b.summary.done, b.summary.units)} of items`}
+          className="lg:col-span-2 lg:row-span-2"
         >
-          <StackBar done={doneMeals} active={0} waiting={meals(work) - doneMeals} />
-        </Metric>
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs text-sidebar-foreground/80">
+              <span>{doneMeals} meals cooked</span>
+              <span>{ratio(doneMeals, meals(work))}</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="animate-grow-x h-full rounded-full bg-sidebar-primary"
+                style={{
+                  width: `${meals(work) === 0 ? 0 : (doneMeals / meals(work)) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+        </HeroMetric>
         <Metric
           label="Late"
           icon={AlertTriangle}
@@ -187,6 +195,17 @@ export function KitchenSection() {
           tone={b.summary.atRisk > 0 ? 'amber' : undefined}
           hint="due within the warning window"
         />
+        <div className="lg:col-span-2">
+          <Metric
+            label="Done"
+            icon={CheckCircle2}
+            value={doneMeals}
+            hint={`${ratio(b.summary.done, b.summary.units)} of items finished`}
+            className="h-full"
+          >
+            <StackBar done={doneMeals} active={0} waiting={meals(work) - doneMeals} />
+          </Metric>
+        </div>
       </div>
 
       <div className="stagger grid gap-4 lg:grid-cols-3">

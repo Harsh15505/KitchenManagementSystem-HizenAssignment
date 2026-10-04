@@ -54,6 +54,8 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 
 - 2026-10-04 14:35: Owner feedback on screenshots: (1) throttled login showed a raw exception name → friendly 429 message (BUG-014); (2) SKU: researched (Square generates, Toast doesn't, Shopify via apps), decided to generate when blank (ADR-031, `nextSku`, retry on collision); (3) dishes, options and companies lists got Edit and Deactivate/Reactivate buttons in each row (BUG-015; the employees overview page stays read-only, its actions live on the company page). Tests 336 (122 shared, 214 backend); frontend build clean.
 
+- 2026-10-04 18:25: Owner feedback round 2: new favicon (SVG + apple icon + ICO), admin and kitchen dashboards rebuilt as bento (hero, tinted and plain cards, ring), floating-text fix with `DetailList` (BUG-016). Verified in the browser at 1280 px: admin dashboard, kitchen dashboard, cut-off page, order detail; typecheck, lint, 336 tests clean. Untracked `prep/` folder (owner's, not committed) fails `prettier --check .` (html/json): format it or add it to `.prettierignore` before committing it.
+
 ## Outcome
 
 Built: brand theme, dark mode and motion; rebuilt dashboards, boards and forms; the last two Shoulds (holiday warning, CSV import); perf and concurrency scripts with numbers; ADR-030 made the boards 2–3× faster. Left for the owner: live smoke test, private-window check, tag `v1.0.0`, Google Form.

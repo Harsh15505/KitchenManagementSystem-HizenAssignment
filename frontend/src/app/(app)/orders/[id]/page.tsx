@@ -9,11 +9,25 @@ import {
   type OrderDetail,
 } from '@fernleaf/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, ArrowLeft, Check } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CalendarClock,
+  Check,
+  Clock,
+  CookingPot,
+  LockKeyhole,
+  MapPin,
+  Package,
+  ReceiptText,
+  StickyNote,
+  Truck,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { DetailList, DetailRow } from '@/components/detail-list';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -198,71 +212,106 @@ function OrderView({ order }: { order: OrderDetail }) {
           <CardHeader>
             <CardTitle>Delivery</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            <p className="font-medium">
-              {formatKitchenDate(order.deliveryDate)} at {minutesToHHmm(order.deliveryTimeMinutes)}{' '}
-              IST
-            </p>
-            <p>
-              {order.address.label}:{' '}
-              {[
-                order.address.line1,
-                order.address.line2,
-                `${order.address.city} ${order.address.postalCode}`,
-              ]
-                .filter(Boolean)
-                .join(', ')}
-            </p>
-            {order.address.accessNotes && (
-              <p className="text-muted-foreground">{order.address.accessNotes}</p>
-            )}
-            <p>Packaging: {order.packaging.name}</p>
-            {order.notes && <p>Notes: {order.notes}</p>}
-            <p className="pt-2 text-muted-foreground">
-              Cut-off {formatIst(order.cutoffAt, true)}
-              {order.locked ? ' (passed)' : ''}
-            </p>
+          <CardContent>
+            <DetailList>
+              <DetailRow icon={CalendarClock} label="When">
+                {formatKitchenDate(order.deliveryDate)} at{' '}
+                {minutesToHHmm(order.deliveryTimeMinutes)} IST
+              </DetailRow>
+              <DetailRow icon={MapPin} label="Where">
+                <span className="block">
+                  {order.address.label}:{' '}
+                  {[
+                    order.address.line1,
+                    order.address.line2,
+                    `${order.address.city} ${order.address.postalCode}`,
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}
+                </span>
+                {order.address.accessNotes && (
+                  <span className="block text-xs font-normal text-muted-foreground">
+                    {order.address.accessNotes}
+                  </span>
+                )}
+              </DetailRow>
+              <DetailRow icon={Package} label="Packaging">
+                {order.packaging.name}
+              </DetailRow>
+              {order.notes && (
+                <DetailRow icon={StickyNote} label="Notes">
+                  {order.notes}
+                </DetailRow>
+              )}
+              <DetailRow icon={LockKeyhole} label="Cut-off">
+                {formatIst(order.cutoffAt, true)}
+                {order.locked && (
+                  <Badge variant="secondary" className="ml-2">
+                    passed
+                  </Badge>
+                )}
+              </DetailRow>
+            </DetailList>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle>Plan and progress</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            <Row
-              label="Kitchen-ready by"
-              plan={order.plannedKitchenReadyAt}
-              actual={order.kitchenReadyAt}
-            />
-            <Row
-              label="Leaves the kitchen by"
-              plan={order.plannedDispatchReadyAt}
-              actual={order.drop?.outForDeliveryAt ?? null}
-            />
-            <Row label="Delivered by" plan={order.deliveryAt} actual={order.deliveredAt} />
-            <p className="pt-2">
-              Prep units: {done} / {units.length} done
-            </p>
-            {order.drop ? (
-              <p>
-                Drop driver: {order.drop.driver?.name ?? 'not assigned yet'}
-                {order.drop.dispatchReadyAt && ` · packed ${formatIst(order.drop.dispatchReadyAt)}`}
-              </p>
-            ) : (
-              order.status === 'CONFIRMED' && <p className="text-muted-foreground">No drop yet.</p>
-            )}
-            {order.invoice && (
-              <p>
-                Invoice:{' '}
-                <Link href={`/billing/invoices/${order.invoice.id}`} className="hover:underline">
-                  {order.invoice.number}
-                </Link>
-              </p>
-            )}
+          <CardContent>
+            <DetailList>
+              <Row
+                label="Kitchen-ready by"
+                plan={order.plannedKitchenReadyAt}
+                actual={order.kitchenReadyAt}
+              />
+              <Row
+                label="Leaves the kitchen by"
+                plan={order.plannedDispatchReadyAt}
+                actual={order.drop?.outForDeliveryAt ?? null}
+              />
+              <Row label="Delivered by" plan={order.deliveryAt} actual={order.deliveredAt} />
+              <DetailRow icon={CookingPot} label="Prep units">
+                <span className="tabular-nums">
+                  {done} / {units.length} done
+                </span>
+                <span className="mt-1 ml-auto block h-1.5 w-28 overflow-hidden rounded-full bg-muted">
+                  <span
+                    className="block h-full rounded-full bg-primary transition-[width] duration-500"
+                    style={{ width: `${units.length ? (done / units.length) * 100 : 0}%` }}
+                  />
+                </span>
+              </DetailRow>
+              <DetailRow icon={Truck} label="Drop driver">
+                {order.drop ? (
+                  <>
+                    {order.drop.driver?.name ?? (
+                      <span className="font-normal text-muted-foreground">not assigned yet</span>
+                    )}
+                    {order.drop.dispatchReadyAt && (
+                      <span className="block text-xs font-normal text-muted-foreground">
+                        packed {formatIst(order.drop.dispatchReadyAt)}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="font-normal text-muted-foreground">
+                    {order.status === 'CONFIRMED' ? 'No drop yet' : '-'}
+                  </span>
+                )}
+              </DetailRow>
+              {order.invoice && (
+                <DetailRow icon={ReceiptText} label="Invoice">
+                  <Link href={`/billing/invoices/${order.invoice.id}`} className="hover:underline">
+                    {order.invoice.number}
+                  </Link>
+                </DetailRow>
+              )}
+            </DetailList>
             {order.allergenAcknowledged && (
-              <p className="flex items-center gap-1 text-amber-700">
-                <AlertTriangle className="size-3.5" aria-hidden /> Allergen warning acknowledged
-                when placed
+              <p className="mt-3 flex items-center gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
+                <AlertTriangle className="size-3.5 shrink-0" aria-hidden /> Allergen warning
+                acknowledged when placed
               </p>
             )}
           </CardContent>
@@ -319,19 +368,19 @@ function OrderView({ order }: { order: OrderDetail }) {
           <CardHeader>
             <CardTitle>Billing adjustments</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            {order.adjustments.map((a) => (
-              <div key={a.id} className="flex justify-between gap-2">
-                <span>
-                  {a.reason}{' '}
-                  <span className="text-muted-foreground">
-                    · {formatIst(a.createdAt, true)} ·{' '}
-                    {a.invoiced ? 'on an invoice' : 'next invoice'}
+          <CardContent>
+            <DetailList>
+              {order.adjustments.map((a) => (
+                <DetailRow key={a.id} icon={ReceiptText} label={a.reason}>
+                  <span className="tabular-nums text-green-700 dark:text-green-400">
+                    {money(a.amountCents)}
                   </span>
-                </span>
-                <span className="tabular-nums text-green-700">{money(a.amountCents)}</span>
-              </div>
-            ))}
+                  <span className="block text-xs font-normal text-muted-foreground">
+                    {formatIst(a.createdAt, true)} · {a.invoiced ? 'on an invoice' : 'next invoice'}
+                  </span>
+                </DetailRow>
+              ))}
+            </DetailList>
           </CardContent>
         </Card>
       )}
@@ -454,18 +503,17 @@ function describeEvent(data: unknown): string | null {
 function Row({ label, plan, actual }: { label: string; plan: string; actual: string | null }) {
   const late = actual ? new Date(actual) > new Date(plan) : false;
   return (
-    <p className="flex justify-between gap-2">
-      <span>{label}</span>
-      <span className="tabular-nums">
-        {formatIst(plan)}
-        {actual && (
-          <span className={late ? 'text-destructive' : 'text-green-700'}>
-            {' '}
-            · done {formatIst(actual)}
-          </span>
-        )}
-      </span>
-    </p>
+    <DetailRow icon={Clock} label={label}>
+      <span className="tabular-nums">{formatIst(plan)}</span>
+      {actual && (
+        <span
+          className={`block text-xs font-normal ${late ? 'text-destructive' : 'text-green-700 dark:text-green-400'}`}
+        >
+          done {formatIst(actual)}
+          {late ? ' (late)' : ''}
+        </span>
+      )}
+    </DetailRow>
   );
 }
 

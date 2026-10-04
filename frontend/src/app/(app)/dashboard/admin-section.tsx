@@ -13,7 +13,6 @@ import {
   MapPinOff,
   Tags,
   Timer,
-  Truck,
   UtensilsCrossed,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -25,7 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
 import { cn } from '@/lib/utils';
-import { Metric, Panel, ratio } from './metric';
+import { Panel, ratio } from './metric';
 
 /** "in 2 h 13 min" / "passed", ticking every 30 s against the server's clock. */
 function Countdown({ to, now }: { to: string; now: string }) {
@@ -96,42 +95,22 @@ export function AdminSection() {
         </div>
       )}
 
-      <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric
-          label="Orders today"
-          value={d.today.orders}
-          icon={UtensilsCrossed}
-          hint={`${d.today.meals} meals in the boxes`}
+      {/* Bento: one dark hero, tinted and plain cards of different sizes (not a row of equals). */}
+      <div className="stagger grid gap-4 lg:grid-cols-12">
+        <HeroToday
+          d={d}
+          onTimeToday={ratio(today.onTime, today.delivered)}
+          onTimeWeek={ratio(week.onTime, week.delivered)}
+          onTimeLow={today.rate !== null && today.rate < 0.8}
+          className="lg:col-span-5 lg:row-span-2"
         />
-        <Metric
-          label="Delivered"
-          value={`${d.today.dropsDelivered}/${d.today.drops}`}
-          icon={Truck}
-          hint="drops delivered today"
-        >
-          <ProgressBar value={d.today.dropsDelivered} total={d.today.drops} />
-        </Metric>
-        <Metric
-          label="On time"
-          value={ratio(today.onTime, today.delivered)}
-          icon={Timer}
-          tone={today.rate !== null && today.rate < 0.8 ? 'amber' : undefined}
-          hint={`today ${today.onTime}/${today.delivered} · 7 days ${ratio(week.onTime, week.delivered)}`}
-        />
-        <Metric
-          label="Late right now"
-          value={late}
-          icon={AlertTriangle}
-          tone={late > 0 ? 'red' : 'green'}
-          hint={`${d.today.lateUnits} kitchen item${d.today.lateUnits === 1 ? '' : 's'} · ${d.today.lateDrops} drop${d.today.lateDrops === 1 ? '' : 's'}`}
-        />
-      </div>
 
-      <div className="stagger grid gap-4 lg:grid-cols-3">
         <Panel
           title="Next cut-off"
+          tone="accent"
+          className="lg:col-span-4"
           action={
-            <Link href="/cutoff" className="text-xs text-primary hover:underline">
+            <Link href="/cutoff" className="text-xs font-medium text-primary hover:underline">
               Cut-off page →
             </Link>
           }
@@ -139,11 +118,11 @@ export function AdminSection() {
           {d.nextCutoff ? (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-card text-accent-foreground shadow-sm">
                   <LockKeyhole className="size-5" aria-hidden />
                 </span>
                 <div>
-                  <div className="font-heading text-xl font-semibold">
+                  <div className="font-heading text-2xl leading-tight font-semibold">
                     <Countdown to={d.nextCutoff.cutoffAt} now={d.now} />
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -153,17 +132,17 @@ export function AdminSection() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg bg-secondary/70 p-3">
+                <div className="rounded-xl bg-card/80 p-3">
                   <div className="font-heading text-2xl font-semibold">
                     <CountUp value={d.nextCutoff.placed} />
                   </div>
-                  <div className="text-xs text-muted-foreground">placed → will be confirmed</div>
+                  <div className="text-xs text-muted-foreground">placed → confirmed</div>
                 </div>
-                <div className="rounded-lg bg-muted p-3">
+                <div className="rounded-xl bg-card/80 p-3">
                   <div className="font-heading text-2xl font-semibold">
                     <CountUp value={d.nextCutoff.drafts} />
                   </div>
-                  <div className="text-xs text-muted-foreground">drafts → will be cancelled</div>
+                  <div className="text-xs text-muted-foreground">drafts → cancelled</div>
                 </div>
               </div>
             </div>
@@ -172,26 +151,16 @@ export function AdminSection() {
           )}
         </Panel>
 
-        <Panel title="Next 7 days">
+        <LateTile late={late} units={d.today.lateUnits} drops={d.today.lateDrops} />
+
+        <Panel title="Next 7 days" className="lg:col-span-7">
           <PipelineChart pipeline={d.pipeline} />
         </Panel>
 
-        <Panel
-          title="Getting paid"
-          action={
-            <Link href="/billing" className="text-xs text-primary hover:underline">
-              Billing →
-            </Link>
-          }
-        >
-          <GettingPaid d={d} />
-        </Panel>
-      </div>
-
-      <div className="stagger grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-8">
           <Panel
             title="Booked revenue"
+            className="h-full"
             action={
               weekDelta !== null && (
                 <Badge variant={weekDelta >= 0 ? 'success' : 'warning'}>
@@ -204,58 +173,213 @@ export function AdminSection() {
             <RevenueChart d={d} />
           </Panel>
         </div>
-        <Panel title="On time, last 7 days">
+        <Panel title="On time, last 7 days" className="lg:col-span-4">
           <OnTimeChart days={d.onTime} />
         </Panel>
-      </div>
 
-      <Panel title={gaps === 0 ? 'Setup gaps' : `Setup gaps · ${gaps}`}>
-        {gaps === 0 ? (
-          <p className="flex items-center gap-2 text-muted-foreground">
-            <BadgeCheck className="size-4 text-emerald-600" aria-hidden /> Nothing missing.
-          </p>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-3">
-            <GapList
-              icon={Tags}
-              title="Unpriced on a tier in use"
-              items={d.setupGaps.unpricedDishes.map((g) => ({
-                key: `${g.dishId}-${g.tierName}`,
-                href: `/catalogue/dishes/${g.dishId}`,
-                label: g.dishName,
-                note: g.tierName,
-              }))}
-            />
-            <GapList
-              icon={Building2}
-              title="Companies without a default driver"
-              items={d.setupGaps.companiesWithoutDriver.map((c) => ({
-                key: c.id,
-                href: `/companies/${c.id}`,
-                label: c.name,
-              }))}
-            />
-            <GapList
-              icon={MapPinOff}
-              title="Dishes without a kitchen station"
-              items={d.setupGaps.dishesWithoutStation.map((x) => ({
-                key: x.id,
-                href: `/catalogue/dishes/${x.id}`,
-                label: x.name,
-              }))}
-            />
-          </div>
-        )}
-      </Panel>
+        <Panel
+          title="Getting paid"
+          tone="soft"
+          className="lg:col-span-5"
+          action={
+            <Link href="/billing" className="text-xs font-medium text-primary hover:underline">
+              Billing →
+            </Link>
+          }
+        >
+          <GettingPaid d={d} />
+        </Panel>
+
+        <Panel
+          title={gaps === 0 ? 'Setup gaps' : `Setup gaps · ${gaps}`}
+          className="border-dashed lg:col-span-7"
+        >
+          {gaps === 0 ? (
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <BadgeCheck className="size-4 text-emerald-600" aria-hidden /> Nothing missing.
+            </p>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              <GapList
+                icon={Tags}
+                title="Unpriced on a tier in use"
+                items={d.setupGaps.unpricedDishes.map((g) => ({
+                  key: `${g.dishId}-${g.tierName}`,
+                  href: `/catalogue/dishes/${g.dishId}`,
+                  label: g.dishName,
+                  note: g.tierName,
+                }))}
+              />
+              <GapList
+                icon={Building2}
+                title="Companies without a default driver"
+                items={d.setupGaps.companiesWithoutDriver.map((c) => ({
+                  key: c.id,
+                  href: `/companies/${c.id}`,
+                  label: c.name,
+                }))}
+              />
+              <GapList
+                icon={MapPinOff}
+                title="Dishes without a kitchen station"
+                items={d.setupGaps.dishesWithoutStation.map((x) => ({
+                  key: x.id,
+                  href: `/catalogue/dishes/${x.id}`,
+                  label: x.name,
+                }))}
+              />
+            </div>
+          )}
+        </Panel>
+      </div>
     </div>
   );
 }
 
-function ProgressBar({ value, total }: { value: number; total: number }) {
-  const pct = total === 0 ? 0 : (value / total) * 100;
+/** The dark hero card: today's size, the delivery ring and the on-time figures. */
+function HeroToday({
+  d,
+  onTimeToday,
+  onTimeWeek,
+  onTimeLow,
+  className,
+}: {
+  d: AdminDashboardDto;
+  onTimeToday: string;
+  onTimeWeek: string;
+  onTimeLow: boolean;
+  className?: string;
+}) {
+  const pct = d.today.drops === 0 ? 0 : d.today.dropsDelivered / d.today.drops;
   return (
-    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-      <div className="animate-grow-x h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+    <div
+      className={cn(
+        'animate-rise relative overflow-hidden rounded-2xl bg-gradient-to-br from-[oklch(0.32_0.075_155)] to-[oklch(0.2_0.05_158)] p-6 text-sidebar-foreground shadow-(--shadow-card)',
+        className,
+      )}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-sidebar-primary/20 blur-3xl"
+      />
+      <div className="relative flex h-full flex-col justify-between gap-6">
+        <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-sidebar-primary uppercase">
+          <UtensilsCrossed className="size-4" aria-hidden /> Today · {formatKitchenDate(d.date)}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <div className="font-heading text-7xl leading-none font-semibold text-sidebar-accent-foreground">
+              <CountUp value={d.today.orders} />
+            </div>
+            <div className="mt-2 text-sm text-sidebar-foreground/80">
+              orders · {d.today.meals} meals in the boxes
+            </div>
+          </div>
+          <Ring
+            pct={pct}
+            label={`${d.today.dropsDelivered}/${d.today.drops}`}
+            caption="delivered"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-white/[0.07] p-3 ring-1 ring-white/10">
+            <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/75">
+              <Timer className="size-3.5" aria-hidden /> On time today
+            </div>
+            <div
+              className={cn(
+                'font-heading text-2xl font-semibold',
+                onTimeLow ? 'text-amber-300' : 'text-sidebar-accent-foreground',
+              )}
+            >
+              {onTimeToday}
+            </div>
+          </div>
+          <div className="rounded-xl bg-white/[0.07] p-3 ring-1 ring-white/10">
+            <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/75">
+              <CalendarClock className="size-3.5" aria-hidden /> On time, 7 days
+            </div>
+            <div className="font-heading text-2xl font-semibold text-sidebar-accent-foreground">
+              {onTimeWeek}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** A circular progress ring; the arc grows in on first paint. */
+function Ring({ pct, label, caption }: { pct: number; label: string; caption: string }) {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  const r = 46;
+  const c = 2 * Math.PI * r;
+  return (
+    <div
+      className="relative size-36 shrink-0"
+      role="img"
+      aria-label={`${label} drops ${caption}, ${Math.round(pct * 100)} percent`}
+    >
+      <svg viewBox="0 0 120 120" className="size-full -rotate-90">
+        <circle cx="60" cy="60" r={r} fill="none" strokeWidth="10" className="stroke-white/10" />
+        <circle
+          cx="60"
+          cy="60"
+          r={r}
+          fill="none"
+          strokeWidth="10"
+          strokeLinecap="round"
+          className="stroke-sidebar-primary transition-[stroke-dashoffset] duration-1000 ease-out"
+          strokeDasharray={c}
+          strokeDashoffset={shown ? c * (1 - pct) : c}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-heading text-2xl font-semibold text-sidebar-accent-foreground">
+          {label}
+        </span>
+        <span className="text-[11px] text-sidebar-foreground/75">{caption}</span>
+      </div>
+    </div>
+  );
+}
+
+/** "Late right now" as a compact status tile: green when clear, red when something is late. */
+function LateTile({ late, units, drops }: { late: number; units: number; drops: number }) {
+  const bad = late > 0;
+  return (
+    <div
+      className={cn(
+        'animate-rise flex flex-col justify-between gap-4 rounded-2xl p-5 shadow-(--shadow-card) lg:col-span-3',
+        bad
+          ? 'bg-red-50 text-red-900 ring-1 ring-red-300 dark:bg-red-950/40 dark:text-red-100 dark:ring-red-900'
+          : 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-100 dark:ring-emerald-900',
+      )}
+    >
+      <div className="flex items-center justify-between text-xs font-medium tracking-wide uppercase">
+        Late right now
+        {bad ? (
+          <AlertTriangle className="size-4" aria-hidden />
+        ) : (
+          <BadgeCheck className="size-4" aria-hidden />
+        )}
+      </div>
+      <div>
+        <div className="font-heading text-5xl leading-none font-semibold">
+          <CountUp value={late} />
+        </div>
+        <div className="mt-2 text-xs opacity-80">
+          {bad
+            ? `${units} kitchen item${units === 1 ? '' : 's'} · ${drops} drop${drops === 1 ? '' : 's'}`
+            : 'All clear: nothing is behind plan'}
+        </div>
+      </div>
     </div>
   );
 }

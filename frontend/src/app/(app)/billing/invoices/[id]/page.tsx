@@ -2,10 +2,22 @@
 
 import { formatInvoiceNumber, formatUsd, type InvoiceDetail } from '@fernleaf/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Printer } from 'lucide-react';
+import {
+  ArrowLeft,
+  BadgeCheck,
+  Building2,
+  CalendarClock,
+  CalendarRange,
+  Mail,
+  MapPin,
+  Phone,
+  Printer,
+  StickyNote,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
+import { DetailList, DetailRow } from '@/components/detail-list';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -87,23 +99,43 @@ function InvoiceView() {
             </div>
           </div>
           <Card>
-            <CardContent className="grid gap-4 pt-6 text-sm sm:grid-cols-2">
-              <div>
-                <div className="text-xs text-muted-foreground">Bill to</div>
-                <div className="font-medium">{inv.billing.name}</div>
-                <div>{inv.billing.email}</div>
-                {inv.billing.phone && <div>{inv.billing.phone}</div>}
-                {inv.billing.address && (
-                  <div className="text-muted-foreground">{inv.billing.address}</div>
+            <CardContent className="grid gap-6 text-sm sm:grid-cols-2">
+              <DetailList>
+                <DetailRow icon={Building2} label="Bill to">
+                  {inv.billing.name}
+                </DetailRow>
+                <DetailRow icon={Mail} label="Email">
+                  {inv.billing.email}
+                </DetailRow>
+                {inv.billing.phone && (
+                  <DetailRow icon={Phone} label="Phone">
+                    {inv.billing.phone}
+                  </DetailRow>
                 )}
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Period</div>
-                <div>
+                {inv.billing.address && (
+                  <DetailRow icon={MapPin} label="Address">
+                    {inv.billing.address}
+                  </DetailRow>
+                )}
+              </DetailList>
+              <DetailList>
+                <DetailRow icon={CalendarRange} label="Period">
                   {formatKitchenDate(inv.periodStart)} – {formatKitchenDate(inv.periodEnd)}
-                </div>
-                {inv.notes && <div className="mt-2 text-muted-foreground">{inv.notes}</div>}
-              </div>
+                </DetailRow>
+                <DetailRow icon={CalendarClock} label="Issued">
+                  {formatIst(inv.issuedAt, true)}
+                </DetailRow>
+                {inv.paidAt && (
+                  <DetailRow icon={BadgeCheck} label="Paid">
+                    {formatIst(inv.paidAt, true)}
+                  </DetailRow>
+                )}
+                {inv.notes && (
+                  <DetailRow icon={StickyNote} label="Notes">
+                    {inv.notes}
+                  </DetailRow>
+                )}
+              </DetailList>
             </CardContent>
           </Card>
           <Card>
