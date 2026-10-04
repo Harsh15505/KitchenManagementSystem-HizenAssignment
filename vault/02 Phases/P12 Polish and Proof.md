@@ -23,7 +23,9 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - [x] **T-605** 400-order kitchen board perf on a throwaway Neon branch → [[P6 Kitchen Board]]. *Accept:* p50/p95 for `GET /kitchen/board` logged in the P6 note and README §11.
 - [x] **T-1206** Concurrency + integrity script on the same throwaway branch: two simultaneous "done" clicks, two simultaneous invoices for one company, cut-off run twice, company integrity (owner + default address). *Accept:* `pnpm --filter @fernleaf/backend probe:concurrency` prints pass/fail per check; README §11 updated.
 - [x] **T-1207** README final pass + screenshots (light and dark), perf and concurrency numbers in §11.
-- [x] **T-406** *(Should)* CSV import → [[P4 Companies and Employees]]. Built Saturday evening (owner: push everything today).
+- [x] **T-406** *(Should)* CSV import → [[P4 Companies and Employees]].
+- [x] **T-1208** First-glance dashboards for all four roles (ADR-032). *Accept:* the role's key figures visible without scrolling at 1440×900 (driver at 375 px); figures defined in PRD §8.
+- [x] **T-1209** README restructured: bullets over dense text; §7 dashboards per role with what/why, exact calculation and what is not shown. Built Saturday evening (owner: push everything today).
 
 ## Exit criteria
 
@@ -55,6 +57,8 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 - 2026-10-04 14:35: Owner feedback on screenshots: (1) throttled login showed a raw exception name → friendly 429 message (BUG-014); (2) SKU: researched (Square generates, Toast doesn't, Shopify via apps), decided to generate when blank (ADR-031, `nextSku`, retry on collision); (3) dishes, options and companies lists got Edit and Deactivate/Reactivate buttons in each row (BUG-015; the employees overview page stays read-only, its actions live on the company page). Tests 336 (122 shared, 214 backend); frontend build clean.
 
 - 2026-10-04 18:25: Owner feedback round 2: new favicon (SVG + apple icon + ICO), admin and kitchen dashboards rebuilt as bento (hero, tinted and plain cards, ring), floating-text fix with `DetailList` (BUG-016). Verified in the browser at 1280 px: admin dashboard, kitchen dashboard, cut-off page, order detail; typecheck, lint, 336 tests clean. Untracked `prep/` folder (owner's, not committed) fails `prettier --check .` (html/json): format it or add it to `.prettierignore` before committing it.
+
+- 2026-10-04 19:05: T-1208 + T-1209 done. Kitchen, dispatch, driver and admin dashboards rebuilt around one question each and fit one screen (checked 1440×900, 1366×768, driver 375 px, dark mode). `prepSummary` moved to shared with meals left (4 FR-KIT-06 tests). PRD §8 and README fully rewritten (README: bullets, per-dashboard what/why/how/not shown, conventions). New screenshots (admin light/dark, kitchen dashboard) from the production build. Found: kitchen working days are Mon–Sat on the live database (Sunday off), against the 7-day seed (A-02): asked the owner (O-09). Tests 340 (126 shared, 214 backend).
 
 ## Outcome
 

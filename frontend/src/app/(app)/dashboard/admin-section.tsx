@@ -24,27 +24,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api-client';
 import { formatIst, formatKitchenDate } from '@/lib/orders';
 import { cn } from '@/lib/utils';
+import { Countdown } from './countdown';
 import { Panel, ratio } from './metric';
-
-/** "in 2 h 13 min" / "passed", ticking every 30 s against the server's clock. */
-function Countdown({ to, now }: { to: string; now: string }) {
-  const [offset] = useState(() => Date.parse(now) - Date.now());
-  const [tick, setTick] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setTick(Date.now()), 30_000);
-    return () => clearInterval(id);
-  }, []);
-  const ms = Date.parse(to) - (tick + offset);
-  if (ms <= 0) return <span>passed</span>;
-  const h = Math.floor(ms / 3_600_000);
-  const m = Math.floor((ms % 3_600_000) / 60_000);
-  return (
-    <span>
-      in {h > 0 ? `${h} h ` : ''}
-      {m} min
-    </span>
-  );
-}
 
 /** PRD §8.2: "Is today on track, what needs me, are we getting paid?" */
 export function AdminSection() {
@@ -95,20 +76,21 @@ export function AdminSection() {
         </div>
       )}
 
-      {/* Bento: one dark hero, tinted and plain cards of different sizes (not a row of equals). */}
+      {/* First glance, no scrolling at 1440×900: today, the next cut-off, what needs the admin,
+          the week ahead and money. Trends and the setup-gap detail follow below the fold. */}
       <div className="stagger grid gap-4 lg:grid-cols-12">
         <HeroToday
           d={d}
           onTimeToday={ratio(today.onTime, today.delivered)}
           onTimeWeek={ratio(week.onTime, week.delivered)}
           onTimeLow={today.rate !== null && today.rate < 0.8}
-          className="lg:col-span-5 lg:row-span-2"
+          className="lg:col-span-12 xl:col-span-5"
         />
 
         <Panel
           title="Next cut-off"
           tone="accent"
-          className="lg:col-span-4"
+          className="lg:col-span-7 xl:col-span-4"
           action={
             <Link href="/cutoff" className="text-xs font-medium text-primary hover:underline">
               Cut-off page →
@@ -151,10 +133,23 @@ export function AdminSection() {
           )}
         </Panel>
 
-        <LateTile late={late} units={d.today.lateUnits} drops={d.today.lateDrops} />
+        <AttentionCard d={d} late={late} gaps={gaps} className="lg:col-span-5 xl:col-span-3" />
 
         <Panel title="Next 7 days" className="lg:col-span-7">
           <PipelineChart pipeline={d.pipeline} />
+        </Panel>
+
+        <Panel
+          title="Getting paid"
+          tone="soft"
+          className="lg:col-span-5"
+          action={
+            <Link href="/billing" className="text-xs font-medium text-primary hover:underline">
+              Billing →
+            </Link>
+          }
+        >
+          <GettingPaid d={d} />
         </Panel>
 
         <div className="lg:col-span-8">
@@ -177,60 +172,49 @@ export function AdminSection() {
           <OnTimeChart days={d.onTime} />
         </Panel>
 
-        <Panel
-          title="Getting paid"
-          tone="soft"
-          className="lg:col-span-5"
-          action={
-            <Link href="/billing" className="text-xs font-medium text-primary hover:underline">
-              Billing →
-            </Link>
-          }
-        >
-          <GettingPaid d={d} />
-        </Panel>
-
-        <Panel
-          title={gaps === 0 ? 'Setup gaps' : `Setup gaps · ${gaps}`}
-          className="border-dashed lg:col-span-7"
-        >
-          {gaps === 0 ? (
-            <p className="flex items-center gap-2 text-muted-foreground">
-              <BadgeCheck className="size-4 text-emerald-600" aria-hidden /> Nothing missing.
-            </p>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-3">
-              <GapList
-                icon={Tags}
-                title="Unpriced on a tier in use"
-                items={d.setupGaps.unpricedDishes.map((g) => ({
-                  key: `${g.dishId}-${g.tierName}`,
-                  href: `/catalogue/dishes/${g.dishId}`,
-                  label: g.dishName,
-                  note: g.tierName,
-                }))}
-              />
-              <GapList
-                icon={Building2}
-                title="Companies without a default driver"
-                items={d.setupGaps.companiesWithoutDriver.map((c) => ({
-                  key: c.id,
-                  href: `/companies/${c.id}`,
-                  label: c.name,
-                }))}
-              />
-              <GapList
-                icon={MapPinOff}
-                title="Dishes without a kitchen station"
-                items={d.setupGaps.dishesWithoutStation.map((x) => ({
-                  key: x.id,
-                  href: `/catalogue/dishes/${x.id}`,
-                  label: x.name,
-                }))}
-              />
-            </div>
-          )}
-        </Panel>
+        <div id="setup-gaps" className="scroll-mt-24 lg:col-span-12">
+          <Panel
+            title={gaps === 0 ? 'Setup gaps' : `Setup gaps · ${gaps}`}
+            className="border-dashed"
+          >
+            {gaps === 0 ? (
+              <p className="flex items-center gap-2 text-muted-foreground">
+                <BadgeCheck className="size-4 text-emerald-600" aria-hidden /> Nothing missing.
+              </p>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-3">
+                <GapList
+                  icon={Tags}
+                  title="Unpriced on a tier in use"
+                  items={d.setupGaps.unpricedDishes.map((g) => ({
+                    key: `${g.dishId}-${g.tierName}`,
+                    href: `/catalogue/dishes/${g.dishId}`,
+                    label: g.dishName,
+                    note: g.tierName,
+                  }))}
+                />
+                <GapList
+                  icon={Building2}
+                  title="Companies without a default driver"
+                  items={d.setupGaps.companiesWithoutDriver.map((c) => ({
+                    key: c.id,
+                    href: `/companies/${c.id}`,
+                    label: c.name,
+                  }))}
+                />
+                <GapList
+                  icon={MapPinOff}
+                  title="Dishes without a kitchen station"
+                  items={d.setupGaps.dishesWithoutStation.map((x) => ({
+                    key: x.id,
+                    href: `/catalogue/dishes/${x.id}`,
+                    label: x.name,
+                  }))}
+                />
+              </div>
+            )}
+          </Panel>
+        </div>
       </div>
     </div>
   );
@@ -254,7 +238,7 @@ function HeroToday({
   return (
     <div
       className={cn(
-        'animate-rise relative overflow-hidden rounded-2xl bg-gradient-to-br from-[oklch(0.32_0.075_155)] to-[oklch(0.2_0.05_158)] p-6 text-sidebar-foreground shadow-(--shadow-card)',
+        'animate-rise relative overflow-hidden rounded-2xl bg-gradient-to-br from-[oklch(0.32_0.075_155)] to-[oklch(0.2_0.05_158)] p-5 text-sidebar-foreground shadow-(--shadow-card)',
         className,
       )}
     >
@@ -262,14 +246,14 @@ function HeroToday({
         aria-hidden
         className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-sidebar-primary/20 blur-3xl"
       />
-      <div className="relative flex h-full flex-col justify-between gap-6">
+      <div className="relative flex h-full flex-col justify-between gap-4">
         <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-sidebar-primary uppercase">
           <UtensilsCrossed className="size-4" aria-hidden /> Today · {formatKitchenDate(d.date)}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="font-heading text-7xl leading-none font-semibold text-sidebar-accent-foreground">
+            <div className="font-heading text-6xl leading-none font-semibold text-sidebar-accent-foreground">
               <CountUp value={d.today.orders} />
             </div>
             <div className="mt-2 text-sm text-sidebar-foreground/80">
@@ -284,7 +268,7 @@ function HeroToday({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white/[0.07] p-3 ring-1 ring-white/10">
+          <div className="rounded-xl bg-white/[0.07] px-3 py-2 ring-1 ring-white/10">
             <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/75">
               <Timer className="size-3.5" aria-hidden /> On time today
             </div>
@@ -297,7 +281,7 @@ function HeroToday({
               {onTimeToday}
             </div>
           </div>
-          <div className="rounded-xl bg-white/[0.07] p-3 ring-1 ring-white/10">
+          <div className="rounded-xl bg-white/[0.07] px-3 py-2 ring-1 ring-white/10">
             <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/75">
               <CalendarClock className="size-3.5" aria-hidden /> On time, 7 days
             </div>
@@ -322,7 +306,7 @@ function Ring({ pct, label, caption }: { pct: number; label: string; caption: st
   const c = 2 * Math.PI * r;
   return (
     <div
-      className="relative size-36 shrink-0"
+      className="relative size-28 shrink-0"
       role="img"
       aria-label={`${label} drops ${caption}, ${Math.round(pct * 100)} percent`}
     >
@@ -341,7 +325,7 @@ function Ring({ pct, label, caption }: { pct: number; label: string; caption: st
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-heading text-2xl font-semibold text-sidebar-accent-foreground">
+        <span className="font-heading text-xl font-semibold text-sidebar-accent-foreground">
           {label}
         </span>
         <span className="text-[11px] text-sidebar-foreground/75">{caption}</span>
@@ -350,36 +334,93 @@ function Ring({ pct, label, caption }: { pct: number; label: string; caption: st
   );
 }
 
-/** "Late right now" as a compact status tile: green when clear, red when something is late. */
-function LateTile({ late, units, drops }: { late: number; units: number; drops: number }) {
-  const bad = late > 0;
+/**
+ * "What needs me?": three figures that should all be zero on a good day. Each row links to where
+ * the problem is fixed. Red when work is late or a cut-off is unprocessed, amber for setup gaps.
+ */
+function AttentionCard({
+  d,
+  late,
+  gaps,
+  className,
+}: {
+  d: AdminDashboardDto;
+  late: number;
+  gaps: number;
+  className?: string;
+}) {
+  const pending = d.pendingProcessing.length;
+  const rows = [
+    {
+      label: 'Late right now',
+      value: late,
+      detail: `${d.today.lateUnits} kitchen item${d.today.lateUnits === 1 ? '' : 's'} · ${d.today.lateDrops} drop${d.today.lateDrops === 1 ? '' : 's'}`,
+      href: '/kitchen',
+      tone: 'red',
+    },
+    {
+      label: 'Cut-off not processed',
+      value: pending,
+      detail:
+        pending === 0
+          ? 'every passed cut-off is done'
+          : d.pendingProcessing.map((p) => formatKitchenDate(p.deliveryDate)).join(', '),
+      href: '/cutoff',
+      tone: 'red',
+    },
+    {
+      label: 'Setup gaps',
+      value: gaps,
+      detail: 'unpriced dishes, no driver, no station',
+      href: '#setup-gaps',
+      tone: 'amber',
+    },
+  ] as const;
+  const urgent = late > 0 || pending > 0;
   return (
     <div
       className={cn(
-        'animate-rise flex flex-col justify-between gap-4 rounded-2xl p-5 shadow-(--shadow-card) lg:col-span-3',
-        bad
-          ? 'bg-red-50 text-red-900 ring-1 ring-red-300 dark:bg-red-950/40 dark:text-red-100 dark:ring-red-900'
-          : 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-100 dark:ring-emerald-900',
+        'animate-rise flex flex-col rounded-2xl p-4 ring-1 shadow-(--shadow-card)',
+        urgent
+          ? 'bg-red-50 text-red-950 ring-red-300 dark:bg-red-950/40 dark:text-red-50 dark:ring-red-900'
+          : gaps > 0
+            ? 'bg-amber-50 text-amber-950 ring-amber-300 dark:bg-amber-950/30 dark:text-amber-50 dark:ring-amber-900'
+            : 'bg-emerald-50 text-emerald-950 ring-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-50 dark:ring-emerald-900',
+        className,
       )}
     >
       <div className="flex items-center justify-between text-xs font-medium tracking-wide uppercase">
-        Late right now
-        {bad ? (
+        Needs you
+        {urgent || gaps > 0 ? (
           <AlertTriangle className="size-4" aria-hidden />
         ) : (
           <BadgeCheck className="size-4" aria-hidden />
         )}
       </div>
-      <div>
-        <div className="font-heading text-5xl leading-none font-semibold">
-          <CountUp value={late} />
-        </div>
-        <div className="mt-2 text-xs opacity-80">
-          {bad
-            ? `${units} kitchen item${units === 1 ? '' : 's'} · ${drops} drop${drops === 1 ? '' : 's'}`
-            : 'All clear: nothing is behind plan'}
-        </div>
-      </div>
+      <ul className="mt-3 flex flex-1 flex-col justify-between gap-2">
+        {rows.map((r) => (
+          <li key={r.label}>
+            <Link
+              href={r.href}
+              className="flex items-center justify-between gap-3 rounded-lg bg-white/65 px-3 py-2 transition-colors hover:bg-white/90 dark:bg-white/5 dark:hover:bg-white/10"
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-medium">{r.label}</span>
+                <span className="block truncate text-[11px] opacity-75">{r.detail}</span>
+              </span>
+              <span
+                className={cn(
+                  'font-heading text-2xl font-semibold tabular-nums',
+                  r.value > 0 && r.tone === 'red' && 'text-red-700 dark:text-red-300',
+                  r.value > 0 && r.tone === 'amber' && 'text-amber-700 dark:text-amber-300',
+                )}
+              >
+                {r.value}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -398,8 +439,16 @@ function PipelineChart({ pipeline }: { pipeline: AdminDashboardDto['pipeline'] }
               title={`${p.confirmed} confirmed · ${p.placed} placed · ${p.draft} draft`}
             >
               {p.kitchenHoliday ? (
-                <span className="px-2 text-[11px] leading-5 text-muted-foreground">
-                  kitchen closed
+                // A kitchen holiday with orders booked is a conflict to resolve, not a quiet gap.
+                <span
+                  className={cn(
+                    'px-2 text-[11px] leading-5',
+                    total > 0
+                      ? 'font-medium text-red-700 dark:text-red-300'
+                      : 'text-muted-foreground',
+                  )}
+                >
+                  kitchen closed{total > 0 ? ` · ${total} orders booked` : ''}
                 </span>
               ) : (
                 <div

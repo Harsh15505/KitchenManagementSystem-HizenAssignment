@@ -6,6 +6,7 @@ import { useAbility, useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { AdminSection } from './admin-section';
 import { DispatchSection, DriverSection, KitchenSection } from './role-sections';
+import { ToolbarSlotContext } from './toolbar';
 
 /**
  * Every role lands here (FR-DSH-01). The page is composed of the sections the user's abilities
@@ -49,15 +50,20 @@ export default function DashboardPage() {
   const ability = useAbility();
   const sections = SECTIONS.filter((s) => ability.can('read', s.subject));
   const [active, setActive] = useState(0);
+  // The section's own controls render into this slot, on the title row (see toolbar.tsx).
+  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const current = sections[Math.min(active, sections.length - 1)];
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
-        <p className="text-sm text-muted-foreground">
-          {current ? current.question : `Signed in as ${me.role.name}`}
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="page-title">Good to see you, {me.user.name.split(' ')[0]}</h1>
+          <p className="text-sm text-muted-foreground">
+            {current ? current.question : `Signed in as ${me.role.name}`}
+          </p>
+        </div>
+        <div ref={setSlot} className="flex flex-wrap items-center gap-2" />
       </div>
       {sections.length > 1 && (
         <div role="tablist" aria-label="Dashboard" className="flex flex-wrap gap-1 border-b">
@@ -80,11 +86,13 @@ export default function DashboardPage() {
           ))}
         </div>
       )}
-      {current ? (
-        current.render()
-      ) : (
-        <p className="text-sm text-muted-foreground">No dashboard for your role.</p>
-      )}
+      <ToolbarSlotContext.Provider value={slot}>
+        {current ? (
+          current.render()
+        ) : (
+          <p className="text-sm text-muted-foreground">No dashboard for your role.</p>
+        )}
+      </ToolbarSlotContext.Provider>
     </div>
   );
 }

@@ -471,7 +471,7 @@ Base path `/api`. JSON unless noted. `🔓` = public. Money fields (`*Cents`) ar
 
 | Method & path | Permission | Notes |
 |---|---|---|
-| `GET /kitchen/board?date&stationId` | `kitchen.read` | Units, plan, lateness, summary (one round trip) |
+| `GET /kitchen/board?date&stationId` | `kitchen.read` | Units, plan, lateness, summary, and the prep summary per station with meals left (`prepSummary`), in one round trip |
 | `POST /kitchen/units/:id/start` · `POST /kitchen/units/:id/done` | `kitchen.work` | |
 | `POST /kitchen/orders/:id/force-complete` | `kitchen.forceComplete` | |
 | `GET /dispatch/board?date` · `GET /dispatch/drivers` | `dispatch.read` | Drivers = active users with `delivery.perform` |

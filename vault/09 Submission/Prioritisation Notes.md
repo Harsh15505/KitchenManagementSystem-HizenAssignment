@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # ⚖️ Prioritisation Notes (living, feeds the README)
@@ -42,6 +42,7 @@ Write an entry **at the moment** something is cut, simplified or deferred, or wh
 | 2026-10-03 10:42 | Orders after the cut-off | Admin late orders are created directly as Confirmed; drafts for locked dates aren't allowed, which keeps processing idempotent |
 | 2026-10-03 10:42 | Admin powers after confirmation | Cancel, reject, change time/address/packaging; no line edits (cancel and re-create, or record a shortage) |
 | 2026-10-03 11:45 | Invoiced orders that change | Invoices never change; cancellations and shortages become credits on the next invoice |
+| 2026-10-04 19:05 | "A kitchen lead at 6 am" (brief §4.11) | The kitchen dashboard leads with what to cook and by when (prep summary with meals left, next deadline), then safety (allergens), then lateness; everything on one screen; no money |
 | 2026-10-03 05:45 | Admin vs driver views | The admin role has every permission except the driver-only ones (`delivery.perform`, `dashboard.driver`); admins act on drops through dispatch permissions |
 
 ## Skipped / simplified

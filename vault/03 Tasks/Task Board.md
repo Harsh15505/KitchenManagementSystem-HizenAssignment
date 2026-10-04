@@ -1,7 +1,7 @@
 ---
 kanban-plugin: basic
 type: board
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 ## 🗂 Backlog
@@ -27,6 +27,8 @@ updated: 2026-10-03 18:47 IST
 
 ## ✅ Done
 
+- [x] **T-1209** README restructured (bullets, dashboard definitions per role) · P12
+- [x] **T-1208** First-glance dashboards, all roles (ADR-032) · P12
 - [x] **T-1207** README final pass + screenshots + numbers · P12
 - [x] **T-1206** Concurrency + integrity probe (9/9) · P12
 - [x] **T-605** 400-order kitchen board perf + ADR-030 · P6/P12

@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # 🐞 Bug Tracker
@@ -41,5 +41,8 @@ Log **every** bug here the moment it's found, even if it's fixed in the same min
 | BUG-015 | The dishes, options and companies lists had no visible Deactivate (and dishes no Edit): the controls existed only after opening the item, so the owner thought they were missing | S4 | fixed | frontend | 2026-10-04 14:35, owner (screenshot) | next commit (Actions column on the dishes, options and companies lists: Edit, Deactivate/Reactivate; verified by typecheck, lint, build) | manual |
 
 | BUG-016 | Fact lists inside cards (cut-off "upcoming lock times", order delivery and plan, invoice header) were plain lines with the value floating far right and empty card space below | S4 | fixed | frontend | 2026-10-04 18:25, owner (screenshots) | next commit (`DetailList`/`DetailRow`, tile rows, grid `items-start`) | manual (browser) |
+
+| BUG-017 | Kitchen dashboard "Next deadline" said "Nothing outstanding: everything due is cooked" while an item was past its ready-by time (only future slots were considered). Caught before commit | S3 | fixed | frontend | 2026-10-04 19:05, Claude (browser check) | ADR-032 commit (message names the late items) | manual |
+| BUG-018 | Admin "Next 7 days" hid the bar on a kitchen-closed day even when orders were booked on it (8 orders on Sun 11 Oct after Sunday was switched off) | S3 | fixed | frontend | 2026-10-04 19:05, Claude (browser check) | ADR-032 commit ("kitchen closed · N orders booked" in red) | manual |
 
 Status values: `open` · `in-progress` · `fixed` · `won't fix (reason)`.

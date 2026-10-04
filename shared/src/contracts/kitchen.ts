@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { Timeliness } from '../domain/cutoff';
+import type { PrepStation } from '../domain/kitchen';
 import { calendarDateString } from './settings';
 
 export const kitchenBoardQuerySchema = z.object({
@@ -59,14 +60,6 @@ export interface KitchenBoardDto {
   };
   /** Units grouped by planned kitchen-ready time, earliest first. */
   slots: Array<{ plannedKitchenReadyAt: string; units: KitchenUnitDto[] }>;
-  /** FR-KIT-06: station → dish → combination totals for the day. */
-  prep: Array<{
-    stationId: string | null;
-    stationName: string;
-    dishes: Array<{
-      dishName: string;
-      quantity: number;
-      combinations: Array<{ label: string; quantity: number }>;
-    }>;
-  }>;
+  /** FR-KIT-06: station → dish → combination totals and what is left (`prepSummary`). */
+  prep: PrepStation[];
 }

@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # ⚠️ Gotchas
@@ -99,4 +99,6 @@ Read these before touching the related area. **Add a new entry every time someth
 - **pg warns "client.query() when the client is already executing a query"** (from the running API, seen in the perf runs): some code runs queries in parallel on one connection, probably `Promise.all` inside an interactive transaction. Harmless today, removed in pg 9: run those sequentially when touching that code.
 - **CI runs `prettier --check .`**: any JSON/TS written by a script (e.g. `.claude/launch.json`) must be formatted before committing (BUG-013).
 - **`nest build` and the perf scripts share `backend/dist`**: stop the dev API before building for `perf:kitchen` / `probe:concurrency`.
+- **Kitchen working days are a live setting.** On 2026-10-04 the live database had Mon–Sat (Sunday off), which empties Sunday's boards and makes the demo window book orders the kitchen won't cook. Check Settings before a review day.
+- **README screenshots:** build the frontend, run `frontend-prod-3002` (no dev badge), sign in on :3001 (the cookie is shared across localhost ports; logins from :3002 fail the Origin check), capture at 1440×900.
 - **`gh` isn't on the Git Bash PATH.** The public GitHub REST API answers without auth (`/repos/<owner>/<repo>/actions/runs`, visibility).

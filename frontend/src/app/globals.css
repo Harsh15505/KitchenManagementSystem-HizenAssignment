@@ -142,6 +142,11 @@
 
 /* Sidebar navigation: no scrollbar on the phone's horizontal strip; a thin, quiet one on desktop. */
 @layer utilities {
+  /* Bounded lists inside cards (prep summary, allergen watch): a thin scrollbar in theme colours. */
+  .soft-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
+  }
   .nav-scroll {
     scrollbar-width: none;
   }

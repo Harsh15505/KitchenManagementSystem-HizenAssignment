@@ -1,6 +1,6 @@
 ---
 type: tracker
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # ✅ Requirements Matrix (traceability)
@@ -62,7 +62,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-KIT-03 | Kitchen started/ready times | Must | P6 | T-602 | ✅ | `markOrderStarted` / `markReadyIfComplete` | `kitchen.test.ts` BR-KIT-03 |
 | FR-KIT-04 | Plans, late/at-risk | Must | P6 | T-601 T-604 | ✅ | planned times on cards, LATE/AT RISK | `cutoff.test.ts` BR-PLN-04 |
 | FR-KIT-05 | Force-complete | Must | P6 | T-603 | ✅ | `POST /kitchen/orders/:id/force-complete` | `kitchen.test.ts` BR-KIT-04 |
-| FR-KIT-06 | Prep summary | Must | P6 | T-601 T-604 | ✅ | prep summary view | browser check |
+| FR-KIT-06 | Prep summary | Must | P6 | T-601 T-604 T-1208 | ✅ (meals left, soonest due first) | `shared/src/domain/kitchen.ts` `prepSummary`; kitchen board prep view; kitchen dashboard | `kitchen.test.ts` FR-KIT-06 ×4, browser check |
 | FR-KIT-07 | 400-order performance | Must | P6 | T-605 | ✅ | single query, in-memory shaping | 48-order day ~580 ms from India to Neon (network-bound); 400-order perf script not run |
 | FR-KIT-08 | Do-not-cook flags | Should | P6 | T-604 | ✅ | do-not-cook cards | code review |
 | FR-DSP-01 | Sequential, non-repeatable stages | Must | P7 | T-702 | ✅ | `dispatch.service.ts` markReady/markOut/deliver | `dispatch.test.ts` BR-DSP-02..04, Neon probe |
@@ -76,11 +76,11 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | FR-BIL-04 | Post-invoice change policy | Must | P8 | T-804 | ✅ | immutable invoices; cancel/reject of invoiced orders → credit in the same TX | `billing.test.ts` BR-BIL-06, Neon probe |
 | FR-BIL-05 | Short delivery credit | Must | P8 | T-804 T-805 | ✅ | `POST /orders/:id/shortage`, shortage form | `billing.test.ts` BR-BIL-07, Neon probe |
 | FR-DSH-01 | Land on permission-composed dashboard | Must | P2/P9 | T-205 T-901..T-904 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
-| FR-DSH-02 | Admin dashboard | Must | P9 | T-901 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
-| FR-DSH-03 | Kitchen dashboard | Must | P9 | T-902 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
-| FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
-| FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
-| FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ✅ | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-02 | Admin dashboard | Must | P9 | T-901 | ✅ (first glance, ADR-032) | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-03 | Kitchen dashboard | Must | P9 | T-902 | ✅ (first glance, ADR-032) | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-04 | Dispatch dashboard | Must | P9 | T-903 | ✅ (first glance, ADR-032) | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-05 | Driver dashboard | Must | P9 | T-904 | ✅ (first glance, ADR-032) | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
+| FR-DSH-06 | README definitions | Must | P9/P11 | T-905 T-1101 | ✅ (README §7 per role: what/why, calculation, not shown) | `/dashboard` (sections by ability), `GET /dashboard/admin`, kitchen/dispatch/driver boards | figures recomputed independently on Neon (T-905 probe) |
 | FR-DAT-01 | Realistic data on any review day | Must | P5/P10 | T-513 T-1001 T-1002 | ✅ | `demo.service.ts` (orders window + weekly invoices) | Neon: ~700 orders, 7 weekly invoices |
 | FR-DAT-02 | Fresh data without manual work | Must | P10 | T-1002 | ✅ (window extends on startup, timer and requests) | `DemoService.tick` via `JobsService` | |
 | FR-DAT-03 | Demo autopilot | Should | P10 | T-1003 | ✅ | `DemoService.autopilot` | Neon: today's drops advance |
@@ -96,7 +96,7 @@ Definitions: `docs/PRD.md` §4 (FR), §5 (BR), §9 (NFR). Update this table in t
 | NFR-04 | Server validation, actionable errors | T-103 envelope; every form | ✅ (shared Zod schemas, one error envelope with field paths, inline form errors) |
 | NFR-05 | Pagination; kitchen board @400 orders | T-511; T-605 perf script | ✅ (board p50 584 / p95 773 ms at 400 orders, from the laptop; ADR-030) |
 | NFR-06 | Code quality; lint + typecheck clean | T-106 T-107 CI | ✅ (clean 18:40; CI green) |
-| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (336 tests: 122 shared, 214 backend) |
+| NFR-07 | Tests: cut-off, pricing, combinations, invoicing | T-306 T-502 T-503 T-802 | ✅ (340 tests: 126 shared, 214 backend) |
 | NFR-08 | Live for 2+ weeks | T-108 T-109 T-1005 T-1104 | 🟨 (live + UptimeRobot since 13:58; 2-week watch T-1104) |
 | NFR-09 | Security (cookie, authZ, CSRF) | T-203 T-204 T-210 | ✅ (httpOnly cookie, fail-closed guard, permission matrix, Origin check verified live 18:35, login throttle) |
 | NFR-10 | Usability; driver on phone | T-705; smoke checklist | ✅ (phone-first driver view; redesign ADR-028; final check in T-1006) |

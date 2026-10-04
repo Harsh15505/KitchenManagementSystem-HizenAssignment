@@ -75,6 +75,7 @@ export function HeroMetric({
   hint,
   icon: Icon,
   className,
+  compact = false,
   children,
 }: {
   label: string;
@@ -82,12 +83,15 @@ export function HeroMetric({
   hint?: ReactNode;
   icon?: LucideIcon;
   className?: string;
+  /** Smaller number and padding, for a first row that must stay short. */
+  compact?: boolean;
   children?: ReactNode;
 }) {
   return (
     <div
       className={cn(
-        'animate-rise relative overflow-hidden rounded-2xl bg-gradient-to-br from-[oklch(0.32_0.075_155)] to-[oklch(0.2_0.05_158)] p-6 text-sidebar-foreground shadow-(--shadow-card)',
+        'animate-rise relative overflow-hidden rounded-2xl bg-gradient-to-br from-[oklch(0.32_0.075_155)] to-[oklch(0.2_0.05_158)] text-sidebar-foreground shadow-(--shadow-card)',
+        compact ? 'p-4' : 'p-6',
         className,
       )}
     >
@@ -95,12 +99,19 @@ export function HeroMetric({
         aria-hidden
         className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-sidebar-primary/20 blur-3xl"
       />
-      <div className="relative flex h-full flex-col justify-between gap-6">
+      <div
+        className={cn('relative flex h-full flex-col justify-between', compact ? 'gap-3' : 'gap-6')}
+      >
         <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-sidebar-primary uppercase">
           {Icon && <Icon className="size-4" aria-hidden />} {label}
         </div>
         <div>
-          <div className="font-heading text-7xl leading-none font-semibold text-sidebar-accent-foreground">
+          <div
+            className={cn(
+              'font-heading leading-none font-semibold text-sidebar-accent-foreground',
+              compact ? 'text-5xl' : 'text-7xl',
+            )}
+          >
             <CountUp value={value} />
           </div>
           {hint && <div className="mt-2 text-sm text-sidebar-foreground/80">{hint}</div>}

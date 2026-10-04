@@ -190,7 +190,7 @@ Format: `FR-<AREA>-nn [Priority]`, followed by acceptance notes.
 * **FR-KIT-03 [Must]** An order's *kitchen started* time is its first unit's start. Its *kitchen ready* time is set only when every unit is done.
 * **FR-KIT-04 [Must]** Every order shows its planned kitchen-ready and planned dispatch-ready times (BR-PLN-*). Late and at-risk work is impossible to miss, and the plan follows any delivery-time change.
 * **FR-KIT-05 [Must]** An admin can force-complete a whole order.
-* **FR-KIT-06 [Must]** A prep summary for the day shows totals per station → dish → combination.
+* **FR-KIT-06 [Must]** A prep summary for the day shows totals per station → dish → combination, with the meals still left to cook, soonest due first (pure `prepSummary` in `shared/src/domain/kitchen.ts`).
 * **FR-KIT-07 [Must]** The board stays responsive for a 400-order day (about 800–1,000 units).
 * **FR-KIT-08 [Should]** Orders cancelled after confirmation stay on the board flagged "Do not cook" if any unit was already started; otherwise they are removed.
 
@@ -417,74 +417,82 @@ stateDiagram-v2
 
 ## 8. Dashboards: figures and exact definitions
 
-These definitions go into the README as they are. They are written so a reviewer can recompute every number.
+These definitions go into the README (§7 there, as bullets). They are written so a reviewer can recompute every number. **Layout rule (ADR-032):** each dashboard answers one question, and everything needed for it fits on one 1440×900 screen without scrolling (the driver's on a phone); trends and detail sit below.
 
 ### 8.1 Conventions (apply to every figure unless stated)
 
-* **Time zone:** Asia/Kolkata. "Today" is the kitchen-local date on the **server** when the request arrives.
+* **Time zone:** Asia/Kolkata. "Today" is the kitchen-local date on the **server** when the request arrives. Dashboards refresh every 30–60 s.
 * **Date grouping:** by the order's **delivery date**, never its creation date.
-* **Active orders** are Confirmed + Delivered. The **pipeline** is Draft + Placed. **Cancelled and Rejected orders are excluded** from every count and sum unless a figure says otherwise.
-* **Meals** = Σ combination quantities, where one meal is one boxed meal.
-* **Money** = Σ stored integer cents, shown in USD. Order sums are gross (before adjustments), and adjustments are shown as their own figure.
-* A **drop** counts only if it holds at least one non-cancelled order.
+* **Active orders** are Confirmed + Delivered. The **pipeline** is Draft + Placed. **Cancelled and Rejected orders are excluded** from every count and sum unless a figure says otherwise (the kitchen's "Do not cook" list never adds to a figure).
+* **Meals** = Σ combination quantities (one meal = one boxed meal). An **item** is one prep unit (one distinct combination on an order line).
+* A **drop** counts only if it holds at least one active order. **Boxes** = the drop's meals.
+* **Late / at risk** per BR-PLN-04 (at-risk window from Settings, default 30 min).
+* **Money** = Σ stored integer cents, shown in USD. Order sums are gross; adjustments are their own figure. Kitchen and dispatch never receive money fields.
 * **Missing data is shown, not hidden:** dishes without a station appear as "Unassigned", drops without a driver as "No driver", and a ratio with no denominator shows "—" (never 0% or 100%).
 
 ### 8.2 Admin: "Is today on track, what needs me, are we getting paid?"
 
+First glance: Today · Next cut-off · Needs you · Next 7 days · Getting paid. Below: Booked revenue · On time (7 days) · Setup gaps.
+
 | Figure | Exact definition | Why the admin needs it |
 |---|---|---|
-| Orders today / Meals today | Count of active orders with deliveryDate = today / Σ meals of those orders | Size of today's service |
-| Delivery progress | Delivered drops ÷ all drops for today | Is service on track? |
-| On-time rate (today, last 7 days) | Drops with `deliveredOnTime = true` ÷ drops delivered, grouped by drop delivery date; "—" if none delivered | Service quality, client retention |
-| Late right now | Kitchen units late + drops late, per BR-PLN-04, for today | Needs intervention now |
-| Next cut-off | Earliest future `cutoffAt` among the next deliverable dates, with that date's Draft count ("will be cancelled") and Placed count ("will be confirmed") | Chase incomplete drafts before they expire |
-| Cut-off processing pending | Dates with `cutoffAt ≤ now` that still have Draft/Placed orders (should be 0; shows a "Run now" action) | Integrity alarm |
-| Next 7 days pipeline | For each date today+1..today+7: Confirmed / Placed / Draft counts and meals; kitchen holidays flagged | Capacity and purchasing |
-| Booked revenue | Σ `totalCents` of active orders by delivery date: last 14 days (actuals) and next 7 days (Confirmed only). Week-over-week comparison uses Mon–Sun weeks | Demand trend |
-| Uninvoiced | Σ billable orders with no invoice line + Σ uninvoiced adjustments; top 5 companies | Cash collection |
+| Orders today / meals | Count of active orders with deliveryDate = today / Σ meals of those orders | Size of today's service |
+| Delivered (ring) | Delivered drops ÷ all drops for today | Is service on track? |
+| On time (today, 7 days) | Drops with `deliveredOnTime = true` ÷ drops delivered, for delivery date = today and for today−6…today; "—" if none delivered | Service quality, client retention |
+| Next cut-off | Earliest future `cutoffAt` among the next deliverable dates, with that date's Placed count ("will be confirmed") and Draft count ("will be cancelled") | Chase incomplete drafts before they expire |
+| Needs you: late right now | Kitchen items late + drops late for today (BR-PLN-04; at risk not counted) | Needs intervention now |
+| Needs you: cut-off not processed | Dates with `cutoffAt ≤ now` that still have Draft/Placed orders (should be 0) | Integrity alarm |
+| Needs you: setup gaps | Total of the three setup-gap lists | Prevents "why can't they see X?" calls |
+| Next 7 days | For each date today+1…today+7: Confirmed / Placed / Draft counts and their meals. A day the kitchen doesn't work is flagged "kitchen closed", in red with the order count if orders are booked on it | Capacity, purchasing, calendar conflicts |
+| Not yet invoiced | Σ billable orders with no invoice line + Σ uninvoiced adjustments; top 3 companies | Cash collection |
 | Open invoices | Count and Σ of Issued invoices; age of the oldest (`issuedAt`) | Chase payments |
 | Paid (30 days) | Σ invoices with `paidAt` within the last 30 days | Cash in |
-| Setup gaps | (a) dishes on an active menu item with no price on a tier used by ≥1 company (or the default tier); (b) companies without a default driver; (c) active dishes without a station | Prevents "why can't they see X?" calls |
+| Booked revenue (below) | Σ `totalCents` of active orders by delivery date: today−14…today (Confirmed + Delivered) and the next 7 days (Confirmed only). Week comparison: Monday…today vs the same weekdays last week | Demand trend |
+| Setup gaps (below) | (a) active dishes on an active menu item with no price **and no "not sold" decision** on a tier in use (the default tier or any active company's tier); (b) active companies without a default driver; (c) active dishes without a station | Fix before employees notice |
 
-**Not shown, and why:** profit or margin (costs are typed by hand and option costs are often missing, so the number would mislead); per-employee spend (not needed for operations, and a privacy concern); forecasts and decorative charts that don't lead to a decision.
+**Not shown, and why:** profit or margin (costs are typed by hand and option costs are often missing, so the number would mislead); per-employee spend (not needed for operations, and a privacy concern); forecasts beyond confirmed orders; charts that don't lead to a decision.
 
 ### 8.3 Kitchen: "What do I cook, by when, where are we behind?"
 
-(The date selector defaults to today; tomorrow is one click away.)
+First glance: Meals today · Next deadline · Late · At risk · Prep summary by station · Allergen watch · Tomorrow. The date defaults to today; Tomorrow is one click away (title row).
 
 | Figure | Exact definition | Why |
 |---|---|---|
-| Production status | Units and meals by state (not started / in progress / done) over **Confirmed** orders for the date, per station including "Unassigned" | Know the load per station |
-| Next deadlines | The next 3 distinct `plannedKitchenReadyAt` slots ≥ now, with outstanding (not done) meals per station | Sequence the work |
-| Late / at risk | Count of units late / at risk (BR-PLN-04); clicking opens the filtered board | Fix bottlenecks first |
-| Prep summary | Station → dish → combination (options and portions) → Σ quantity over not-cancelled units, ordered by the earliest planned kitchen-ready | "Cook 46 paneer bowls, brown rice, large" |
-| Allergen watch | Meals per allergen (dish allergens ∪ chosen-option allergens); list of combinations whose allergens intersect the **employee's** recorded allergies (employee, dish, allergen) | Safety |
-| Tomorrow | Confirmed meals by station. If tomorrow's cut-off hasn't passed, Placed meals are listed separately as "may still change" | Prep planning |
+| Meals today | Σ meals of items of active orders for the date; orders = distinct orders; items = prep units; cooked = Σ meals of done items (÷ meals for the %) | Size of the day and progress |
+| Next deadline | The earliest `plannedKitchenReadyAt` ≥ now that still has unfinished items: meals left for it per station, a countdown, then the next three such times with their meals. Past times are excluded (they are Late) | What to cook first |
+| Late / at risk | Count of items late / at risk (BR-PLN-04, kitchen step) | Fix bottlenecks first |
+| Prep summary | `prepSummary` (FR-KIT-06): per station (kitchen order, "Unassigned" last, stations without work hidden): meals done / cooking / not started; per dish: meals left of total and the ready-by of its soonest unfinished item; per combination (options and portions, "As is" when none): meals left. Dishes still to cook first, soonest due first; finished dishes last | "Cook 46 paneer bowls, brown rice, large" |
+| Allergen watch | Items whose allergens (dish ∪ chosen options) intersect the **employee's** recorded allergies (employee, dish, allergen, order, ready-by); meals per allergen | Safety |
+| Tomorrow | Confirmed meals by station. If tomorrow's cut-off hasn't passed, Placed meals are listed separately as "may still change"; Drafts excluded | Prep planning |
 
-Orders cancelled after confirmation are listed separately as "Do not cook" if work had started. **Not shown:** prices, revenue, billing, customer contact details.
+Orders cancelled or rejected after work started are listed separately as "Do not cook" and never counted. **Not shown:** prices, revenue, billing (no money access); customer contact details (privacy); today's drafts and placed orders (processing confirms or cancels them at the cut-off); per-cook productivity and trends.
 
 ### 8.4 Dispatch: "What leaves next, who drives it, what's late?"
 
-| Figure | Exact definition | Why |
-|---|---|---|
-| Drops today by stage | Drops for today counted by derived stage: *Waiting on kitchen* (≥1 order not kitchen-ready), *Ready to stage* (all kitchen-ready, not dispatch-ready), *Dispatch-ready*, *Out for delivery*, *Delivered* | Pipeline at a glance |
-| Late / at risk drops | Drops not yet out for delivery that are late / at risk against their planned dispatch-ready (BR-PLN-04) | Act before it's late |
-| No driver | Drops today and tomorrow with no driver | Assign drivers in time |
-| Next departures | The next 5 not-out drops by planned dispatch-ready, with readiness (x/y orders kitchen-ready) and driver | Order of work |
-| Driver load | Per driver, today: assigned / out / delivered / on-time | Balance the routes |
-| On-time today | On-time drops ÷ delivered drops today; "—" if none | Quality |
-
-**Not shown:** money, and menu details beyond box counts.
-
-### 8.5 Driver: "Where do I go next?"
+First glance: Drops by stage · On time today · Next departures · Needs a decision · Driver load.
 
 | Figure | Exact definition | Why |
 |---|---|---|
-| My drops today | Count of drops assigned to me with delivery date = today; delivered vs remaining | Progress |
-| Next stop | The earliest of my not-delivered drops: time, company, address, boxes, instructions | Go |
+| Drops today by stage | *Waiting on kitchen* (≥1 order not kitchen-ready), *Ready to pack* (all kitchen-ready, not dispatch-ready; highlighted when > 0), *Packed* (dispatch-ready), *Out* (out for delivery), *Delivered* | Pipeline at a glance |
+| On time today | On-time drops ÷ delivered drops today, with the counts; "—" if none | Quality |
+| Next departures | The next 6 not-out drops by planned dispatch-ready (earliest of their orders): leave-by, company and address, delivery time, boxes, driver or "No driver", x/y orders kitchen-ready, stage, late/at-risk | Order of work |
+| Needs a decision | Late or at risk: not-out drops late / at risk against planned dispatch-ready (BR-PLN-04). No driver: not-out drops for today and tomorrow with no driver | Act before it's late |
+| Driver load | Per driver with drops today: delivered / assigned, out, on-time ÷ delivered | Balance the routes |
+
+**Not shown:** money (no money access); menu details beyond box counts; employee contact details; routes and ETAs (no maps integration).
+
+### 8.5 Driver: "Where do I go next?" (phone first)
+
+First glance: Next stop · Delivered · On time today · Later today.
+
+| Figure | Exact definition | Why |
+|---|---|---|
+| Next stop | Among my not-delivered drops for today: the one out for delivery, else the earliest by delivery time. Time, company, address (map link), access notes, boxes, packaging, standing instructions, status | Go |
+| Delivered | My drops delivered today ÷ my drops today | Progress |
 | On time today | My on-time drops ÷ my delivered drops today; "—" if none | Feedback |
+| Later today | My other not-delivered drops in time order, with status | What comes after |
 
-**Not shown:** other drivers' drops, prices, billing.
+**Not shown:** other drivers' drops (the API returns only mine), prices, billing, tomorrow's drops, order contents.
 
 ---
 

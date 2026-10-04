@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # ❓ Questions and Answers (owner decisions)
@@ -22,6 +22,7 @@ Every question asked of the owner, with the answer and when it was given. Answer
 | Q-11 | 2026-10-03 17:04 | Scope of the redesign | "the dashboards and everything else also needs some clean rebuilds and animations too" | ADR-028 follow-up, P12 |
 | Q-12 | 2026-10-03 17:58 | Theme switch feel | "should be smoother", not sudden → circular reveal | T-1204 |
 | Q-13 | 2026-10-03 18:33 | Plan for the remaining time | **Approved** (quality gate, vault, holiday warning, form polish; perf/concurrency Sunday). Domain typo already fixed by the owner: https://kitchen-management-hizen.vercel.app | [[P12 Polish and Proof]] |
+| Q-15 | 2026-10-04 18:30 | Dashboards and README | First-glance dashboards (no scrolling for key figures; kitchen leads with prep summary, meals, late, at risk, next deadline, allergens); document per dashboard what/why, calculation, not shown; README easy to read with bullets | ADR-032, T-1208, T-1209 |
 | Q-14 | 2026-10-03 18:33 | Working style for the rest | **Update the whole vault first, then continue; reduce the number of commits** | [[Git Conventions]] |
 
 ## Open (waiting on owner)
@@ -34,5 +35,6 @@ Every question asked of the owner, with the answer and when it was given. Answer
 | O-04 | Is Render's `DATABASE_URL` host `ep-autumn-forest-azgcpotr…` (same branch as local, ADR-029)? | T-605 |
 | ~~O-05~~ | ~~Throwaway `perf` branch~~ — done 2026-10-03 (auto-deletes after 1 day). Was: create a throwaway Neon branch (e.g. `perf`) **from `dev`** (the one with the data); paste its connection string into `backend/.env.perf` yourself (not in chat) | T-605, T-1206 (Sun morning) |
 | ~~O-07~~ | ~~Remove the expiry on `dev`~~ — done by the owner 2026-10-03 | — |
+| O-09 | Kitchen working days on the live database are **Mon–Sat** (Sunday off), but the seed and A-02 assume a 7-day kitchen so any review day has live work. Turn Sunday back on in Settings? (Someone changed it; not the agent) | **before submission** |
 | O-08 | Optional: set the `dev` compute's max autoscale to 0.25 CU (it shows 0.25 ↔ 2) so the free 100 CU-h/month lasts the 2-week review | before submission |
 | ~~O-06~~ | ~~Rotate the Neon password~~ — owner: not needed. Was: rotate the Neon password (it was pasted in chat); update Render and `backend/.env` | before submission |

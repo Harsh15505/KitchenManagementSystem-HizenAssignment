@@ -1,6 +1,6 @@
 ---
 type: status
-updated: 2026-10-04 18:25 IST
+updated: 2026-10-04 19:05 IST
 phase: P12 Polish and Proof (P0–P10 done, P11 README done)
 active_task: none — all build work done; owner steps left (smoke test, tag, form)
 ---
@@ -36,6 +36,8 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## ⛔ Blockers / waiting on owner
 
+- **O-09 (before submission):** kitchen working days on the live database are Mon–Sat. The seed and A-02 assume 7 days so Sunday reviews have live work. Turn Sunday back on in Settings unless it was deliberate.
+
 - **O-08** (optional): cap `dev` autoscaling at 0.25 CU to protect the 100 CU-h/month free budget.
 - Submission (owner): live smoke test (T-1006), private-window check, tag `v1.0.0`, Google Form (T-1103).
 
@@ -50,13 +52,13 @@ Every Must is built, tested and **live**: web https://kitchen-management-hizen.v
 
 ## ✅ Verified (2026-10-03 18:40)
 
-- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 336 tests (122 shared, 214 backend) at 14:35 on Oct 4; `probe:concurrency` 9/9; frontend build clean (19:56).
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` clean: 340 tests (126 shared, 214 backend) at 19:00 on Oct 4; `probe:concurrency` 9/9; frontend build clean (19:56).
 - Live: origin check (new domain 204, old 403), `/api/health` through Vercel 200. Owner: 4 logins, role-limited nav, dashboards with data (13:58).
 - Browser (local, 17:20–17:35): all 4 dashboards, kitchen/dispatch boards, order detail, billing; light + dark; phone width without horizontal scroll.
 
 ## 🧾 Key decisions
 
-ADR-001…ADR-031 in [[Decision Log]]. Latest: ADR-029 one Neon branch (`dev`), ADR-030 Prisma `relationJoins`, ADR-031 auto SKU.
+ADR-001…ADR-032 in [[Decision Log]]. Latest: ADR-030 Prisma `relationJoins`, ADR-031 auto SKU, ADR-032 first-glance dashboards.
 
 ## 🧷 Last commit
 

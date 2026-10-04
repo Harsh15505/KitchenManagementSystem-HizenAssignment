@@ -4,8 +4,10 @@ import {
   type KitchenBoardDto,
   type KitchenBoardQuery,
   type KitchenUnitDto,
+  prepSummary,
   timeliness,
   toDbDate,
+  UNASSIGNED_STATION,
 } from '@fernleaf/shared';
 import type { CurrentUserInfo } from '../authz/current-user';
 import { ClockService } from '../clock/clock.service';
@@ -15,7 +17,7 @@ import { PlanningService } from '../orders/planning.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 type Tx = Prisma.TransactionClient;
-const UNASSIGNED = 'Unassigned';
+const UNASSIGNED = UNASSIGNED_STATION;
 
 /** FR-KIT-01..08, BR-KIT-01..05 (TRD §8.8). */
 @Injectable()
@@ -160,33 +162,6 @@ export class KitchenService {
       slots.set(u.plannedKitchenReadyAt, list);
     }
 
-    // FR-KIT-06 prep summary.
-    const prep = new Map<
-      string,
-      {
-        stationId: string | null;
-        stationName: string;
-        dishes: Map<string, { quantity: number; combos: Map<string, number> }>;
-      }
-    >();
-    for (const u of work) {
-      const key = u.stationId ?? 'none';
-      const station = prep.get(key) ?? {
-        stationId: u.stationId,
-        stationName: u.stationId ? (stationName.get(u.stationId) ?? 'Station') : UNASSIGNED,
-        dishes: new Map(),
-      };
-      const dish = station.dishes.get(u.dish.name) ?? {
-        quantity: 0,
-        combos: new Map<string, number>(),
-      };
-      dish.quantity += u.quantity;
-      const label = u.choices.join(', ') || 'As is';
-      dish.combos.set(label, (dish.combos.get(label) ?? 0) + u.quantity);
-      station.dishes.set(u.dish.name, dish);
-      prep.set(key, station);
-    }
-
     const placedByStation = new Map<string, number>();
     for (const l of placed) {
       const name = l.dish.kitchenStationId
@@ -220,21 +195,8 @@ export class KitchenService {
         plannedKitchenReadyAt,
         units: list,
       })),
-      prep: [...prep.values()]
-        .sort((a, b) => a.stationName.localeCompare(b.stationName))
-        .map((s) => ({
-          stationId: s.stationId,
-          stationName: s.stationName,
-          dishes: [...s.dishes.entries()]
-            .sort((a, b) => b[1].quantity - a[1].quantity)
-            .map(([dishName, d]) => ({
-              dishName,
-              quantity: d.quantity,
-              combinations: [...d.combos.entries()]
-                .sort((a, b) => b[1] - a[1])
-                .map(([label, quantity]) => ({ label, quantity })),
-            })),
-        })),
+      // FR-KIT-06: station → dish → combination totals and meals left, soonest due first.
+      prep: prepSummary(work, stations),
     };
   }
 

@@ -1,6 +1,6 @@
 ---
 type: decisions
-updated: 2026-10-04 14:35 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # 🧭 Decision Log (ADRs)
@@ -189,6 +189,20 @@ Template: `_templates/Decision Template.md`.
 - **Follow-up (17:35):** Motion utilities in `globals.css` (`animate-rise`, `stagger`, `animate-grow-x/y`, `animate-soft-pulse`, `lift`), all disabled under `prefers-reduced-motion`; `CountUp` for headline numbers; `.page-title` serif title with a saffron underline. Charts are hand-built divs/CSS (no chart library) to keep the bundle small and the theme tokens in charge.
 - **Follow-up (2026-10-04 18:25, owner: "dashboard is too linear", "text looks like it's in the air", new favicon):** (1) Bento dashboards: admin has a dark hero (orders today + delivery ring + on-time), a saffron cut-off card, a green/red "late" tile, mixed 3-12 column widths, a pale-green "getting paid" card and a dashed "setup gaps" card; kitchen has a hero "Meals today" with progress. Shared `HeroMetric`, `Panel` gained `tone` and `className`. (2) `DetailList`/`DetailRow` (`components/detail-list.tsx`): icon + small label + right-aligned value with dividers, for fact lists inside cards (order detail, invoice header, billing adjustments); the cut-off "upcoming lock times" became date-block tiles. (3) Favicon: `app/icon.svg` (cream leaf on a fern-green tile with a saffron dot), `apple-icon.png`, rebuilt `favicon.ico` (16/32/48). Guidance taken from the UI UX Pro Max skill (bento grids, Lucide SVG icons, 4.5:1 contrast, reduced motion, check 375/768/1024/1440 px); the skill itself was not installed (global CLI + Python), only its rules applied.
 - **Follow-up (theme switch):** Toggling uses the View Transitions API for a circular reveal from the toggle (600 ms); instant under reduced motion or without support. `disableTransitionOnChange` stays on so element colour transitions don't fight the snapshot. Browsers skip view transitions on hidden tabs.
+
+### ADR-032: First-glance dashboards (one question, one screen)
+- **Status:** Accepted · 2026-10-04 19:05 (owner: "it should not need scrolling to see important first glance details"; "the kitchen dashboard should communicate the prep summary, meals today, late, at risk, next deadline, allergen watch first")
+- **Context:** The bento dashboards (ADR-028 follow-up) looked varied but pushed key figures below the fold: the kitchen's prep summary and allergen watch needed scrolling, dispatch's next departures shared a row with two lists, the driver saw metrics before the next stop. The brief (§4.11) asks what each person needs to do their job, and values well-defined, honest figures over impressive charts.
+- **Decision:** Each dashboard answers one question and fits on one 1440×900 screen (the driver's on a phone):
+  - *Kitchen:* Meals today (compact hero + cooked bar) · Next deadline (countdown, meals left per station, then the next three) · Late · At risk · Prep summary by station (meals left, soonest due first) · Allergen watch · Tomorrow. "Production by station" merged into the prep station cards.
+  - *Dispatch:* stage counts + on time today · Next departures (6, leave-by order) · Needs a decision (late/at risk + no driver) · Driver load.
+  - *Driver:* Next stop first (map link, instructions) · Delivered · On time · Later today.
+  - *Admin:* compact Today hero · Next cut-off · **Needs you** (late now, cut-off not processed, setup gaps) · Next 7 days · Getting paid; revenue, on-time trend and setup-gap detail below.
+  - Section controls (Today/Tomorrow, Open the board) render into the title row through a portal (`dashboard/toolbar.tsx`) so they don't cost a row.
+  - The prep summary moved into a tested pure function `prepSummary` (`shared/src/domain/kitchen.ts`) with meals left per dish and combination, station meal states, kitchen station order, soonest due first.
+  - Honesty fixes found on the way: "Next deadline" no longer says "nothing outstanding" while items are late (BUG-017); a kitchen-closed day with orders booked shows "N orders booked" in red instead of hiding the bar (BUG-018).
+- **Alternatives:** keep the bento and add anchors (still scrolls); one generic KPI grid for every role (ignores what each person decides).
+- **Consequences:** PRD §8 and README §7 rewritten (what is shown and why, exact calculation, what is not shown, per role). Verified at 1440×900 and 1366×768 (and 375 px for the driver), light and dark.
 
 ### ADR-031: SKU generated when left blank
 - **Status:** Accepted · 2026-10-04 14:35 (owner asked: research first, then decide)

@@ -1,6 +1,6 @@
 ---
 type: log
-updated: 2026-10-03 18:47 IST
+updated: 2026-10-04 19:05 IST
 ---
 
 # 🧷 Commit Log
@@ -100,3 +100,4 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 88 | 2026-10-03 20:02 | 1f65a6c | docs: README screenshots, final decisions and prioritisation pass (CI failed: BUG-013) | T-1207 | P12 |
 | 89 | 2026-10-03 22:46 | 951935c | perf(backend): load nested relations with joins; record perf and race results | T-605, T-1206, ADR-030, BUG-013 | P12 |
 | 90 | 2026-10-04 14:41 | e01dea5 | feat: auto-generated dish SKU, plain rate-limit message, row actions on lists | FR-CAT-01, BUG-014/015, ADR-031 | P12 |
+| 91 | 2026-10-04 18:20 | 88ff695 | feat(frontend): new favicon, bento dashboards, structured detail lists | ADR-028, BUG-016 | P12 |

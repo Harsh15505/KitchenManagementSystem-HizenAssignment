@@ -180,23 +180,31 @@ function KitchenBoard() {
           )}
           {data.prep.map((s) => (
             <Card key={s.stationId ?? 'none'}>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between gap-2">
                 <CardTitle>{s.stationName}</CardTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  {s.meals.total - s.meals.done} left of {s.meals.total} meals
+                </span>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 {s.dishes.map((d) => (
-                  <div key={d.dishName}>
-                    <div className="flex justify-between font-medium">
+                  <div key={d.dishName} className={d.remaining === 0 ? 'opacity-55' : undefined}>
+                    <div className="flex justify-between gap-2 font-medium">
                       <span>{d.dishName}</span>
-                      <span className="tabular-nums">{d.quantity}</span>
+                      <span className="tabular-nums">
+                        {d.remaining === 0 ? 'done' : `${d.remaining} left`}
+                        <span className="font-normal text-muted-foreground"> / {d.quantity}</span>
+                      </span>
                     </div>
                     {d.combinations.map((c) => (
                       <div
                         key={c.label}
-                        className="flex justify-between pl-3 text-muted-foreground"
+                        className="flex justify-between gap-2 pl-3 text-muted-foreground"
                       >
                         <span>{c.label}</span>
-                        <span className="tabular-nums">{c.quantity}</span>
+                        <span className="tabular-nums">
+                          {c.remaining} / {c.quantity}
+                        </span>
                       </div>
                     ))}
                   </div>
