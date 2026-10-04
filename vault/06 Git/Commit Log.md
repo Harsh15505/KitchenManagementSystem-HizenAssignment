@@ -102,4 +102,6 @@ One row per commit, newest at the bottom. `git log` is the source of truth for h
 | 90 | 2026-10-04 14:41 | e01dea5 | feat: auto-generated dish SKU, plain rate-limit message, row actions on lists | FR-CAT-01, BUG-014/015, ADR-031 | P12 |
 | 91 | 2026-10-04 18:20 | 88ff695 | feat(frontend): new favicon, bento dashboards, structured detail lists | ADR-028, BUG-016 | P12 |
 | 92 | 2026-10-04 19:02 | d0a5b36 | feat: first-glance dashboards for every role; README rewritten | T-1208, T-1209, ADR-032, BUG-017/018 | P12 |
-| 93 | 2026-10-04 21:05 | (this commit) | feat(frontend): framed lists everywhere, menu preview redesign; README cleanup | T-1210, BUG-019…022 | P12 |
+| 93 | 2026-10-04 21:05 | 2412640 | feat(frontend): framed lists everywhere, menu preview redesign; README cleanup | T-1210, BUG-019…022 | P12 |
+| 94 | 2026-10-04 21:10 | 117bf26 | docs: README architecture and data model as tables instead of diagrams | T-1210 | P12 |
+| 95 | 2026-10-04 21:45 | (this commit) | feat: dish photos in the list, form and menu preview; seed images | T-1210 | P12 |

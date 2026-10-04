@@ -1,5 +1,6 @@
 import { deriveCents } from '@fernleaf/shared';
 import type { PrismaClient } from '../../src/generated/prisma/client';
+import { DISH_IMAGES } from './dish-images';
 
 /**
  * Catalogue, price tiers and menu from vault/08 Knowledge/Demo Data Plan.md (T-313).
@@ -516,12 +517,16 @@ export async function seedCatalogue(prisma: PrismaClient): Promise<void> {
         costPriceCents: d.cost,
         kitchenStationId: d.station ? need(stations, d.station, 'station') : null,
         minOrderQty: d.minQty ?? null,
+        imageUrl: DISH_IMAGES[d.name] ?? null,
         allergens: { create: allergenRows(d.allergens) },
         dietaryTags: { create: tagRows(d.tags) },
       },
-      select: { id: true },
+      select: { id: true, imageUrl: true },
     });
     dishIds.set(d.sku, dish.id);
+    // Fill a missing photo on dishes seeded before images existed; never replace one an admin set.
+    if (!dish.imageUrl && DISH_IMAGES[d.name])
+      await prisma.dish.update({ where: { id: dish.id }, data: { imageUrl: DISH_IMAGES[d.name] } });
 
     for (const [sortOrder, g] of (d.groups ?? []).entries()) {
       const group = await prisma.optionGroup.upsert({

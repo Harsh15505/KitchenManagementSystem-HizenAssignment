@@ -20,6 +20,7 @@ import {
   Snowflake,
 } from 'lucide-react';
 import { useState } from 'react';
+import { DishImage } from '@/components/dish-image';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -356,6 +357,7 @@ function DishCard({
         conflict && 'ring-red-300 dark:ring-red-900',
       )}
     >
+      {dish.imageUrl && <DishImage src={dish.imageUrl} alt={dish.name} className="h-36 w-full" />}
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-heading text-base leading-snug font-semibold">{dish.name}</h3>

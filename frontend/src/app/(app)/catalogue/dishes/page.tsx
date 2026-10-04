@@ -6,6 +6,7 @@ import { Pencil, Plus, Power } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { DishImage } from '@/components/dish-image';
 import { RequireAbility } from '@/components/require-ability';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -145,15 +146,24 @@ function DishList() {
                 <TableRow key={dish.id} className={dish.isActive ? undefined : 'opacity-60'}>
                   <TableCell className="font-mono text-xs">{dish.sku}</TableCell>
                   <TableCell>
-                    <Link
-                      href={`/catalogue/dishes/${dish.id}`}
-                      className="font-medium hover:underline"
-                    >
-                      {dish.name}
-                    </Link>
-                    {!dish.isActive && (
-                      <span className="ml-2 text-xs text-muted-foreground">inactive</span>
-                    )}
+                    <div className="flex items-center gap-3">
+                      <DishImage
+                        src={dish.imageUrl}
+                        alt=""
+                        className="size-10 shrink-0 rounded-md"
+                      />
+                      <div>
+                        <Link
+                          href={`/catalogue/dishes/${dish.id}`}
+                          className="font-medium hover:underline"
+                        >
+                          {dish.name}
+                        </Link>
+                        {!dish.isActive && (
+                          <span className="ml-2 text-xs text-muted-foreground">inactive</span>
+                        )}
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell>
                     {dish.station?.name ?? (

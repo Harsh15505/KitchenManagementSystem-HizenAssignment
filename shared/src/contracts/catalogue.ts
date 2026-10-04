@@ -108,6 +108,7 @@ export interface DishListItem {
   id: string;
   sku: string;
   name: string;
+  imageUrl: string | null;
   temperature: 'HOT' | 'COLD';
   costPriceCents: number;
   isActive: boolean;
@@ -129,7 +130,6 @@ export interface OptionGroupDto {
 
 export interface DishDetail extends DishListItem {
   description: string;
-  imageUrl: string | null;
   minOrderQty: number | null;
   allergenIds: string[];
   dietaryTagIds: string[];

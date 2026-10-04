@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { DishImage } from '@/components/dish-image';
 import { ChipSelect } from '@/components/chip-select';
 import { MoneyInput } from '@/components/money-input';
 import { Button } from '@/components/ui/button';
@@ -226,13 +227,27 @@ export function DishForm({ dish }: { dish?: DishDetail }) {
             </div>
             <div className="space-y-1.5 md:col-span-2">
               <Label htmlFor="image">Image URL (optional)</Label>
-              <Input
-                id="image"
-                value={form.imageUrl}
-                onChange={(e) => set('imageUrl', e.target.value)}
-                aria-invalid={!!errors.imageUrl}
-              />
-              {err('imageUrl')}
+              <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <Input
+                    id="image"
+                    placeholder="https://…"
+                    value={form.imageUrl}
+                    onChange={(e) => set('imageUrl', e.target.value)}
+                    aria-invalid={!!errors.imageUrl}
+                  />
+                  {err('imageUrl')}
+                  <p className="text-xs text-muted-foreground">
+                    A link to a hosted photo. Shown in the dish list and the menu.
+                  </p>
+                </div>
+                <DishImage
+                  key={form.imageUrl}
+                  src={form.imageUrl.trim() || null}
+                  alt="Preview"
+                  className="h-20 w-28 shrink-0 rounded-lg ring-1 ring-foreground/10"
+                />
+              </div>
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label>Allergens</Label>

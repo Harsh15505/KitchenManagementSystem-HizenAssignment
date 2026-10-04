@@ -62,6 +62,8 @@ Specs: brief §7 (quality bar) · `docs/PRD.md` FR-CMP-05, NFR-03, NFR-05 · ADR
 
 - 2026-10-04 21:00: T-1210 done. Owner round 3: every list that floated now sits in a frame (`components/list-box.tsx`: header band, rows with dividers, footer; `PrepStationCard` shared by dashboard and board; billing orders as a table with column headings; order items with a total bar; dispatch/driver order rows show boxes). Menu preview rebuilt: employee strip with counts, sticky category links, compact dish cards with an allergen band, choices behind a toggle as tables (radio/checkbox mark, one price column per size with the real added price). README: ADR numbers and docs/vault mentions removed, §13 rewritten (owner's call). `.gitignore` tidied (`prep/`). BUG-019…022 fixed. Verified in the browser as admin, kitchen, dispatch and driver; gate clean (340 tests, build).
 
+- 2026-10-04 21:40: Dish images shown (dish list thumbnail, dish form preview, menu preview banner; `DishImage` falls back to an icon). Seed gives all 27 dishes a Wikimedia Commons photo by URL and fills only empty image fields (ran on `dev`: 27/27). README §9: image upload/object storage skipped with the reason; §3/§4 diagrams replaced by tables. Fixed a stale Turbopack module after adding `plural` (dev-only; restart).
+
 ## Outcome
 
 Built: brand theme, dark mode and motion; rebuilt dashboards, boards and forms; the last two Shoulds (holiday warning, CSV import); perf and concurrency scripts with numbers; ADR-030 made the boards 2–3× faster. Left for the owner: live smoke test, private-window check, tag `v1.0.0`, Google Form.
